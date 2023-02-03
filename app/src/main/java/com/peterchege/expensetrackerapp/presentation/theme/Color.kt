@@ -1,4 +1,4 @@
-package com.peterchege.expensetrackerapp.ui.theme
+package com.peterchege.expensetrackerapp.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
