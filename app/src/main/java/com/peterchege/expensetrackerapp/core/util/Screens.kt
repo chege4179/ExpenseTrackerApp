@@ -1,0 +1,11 @@
+package com.peterchege.expensetrackerapp.core.util
+
+
+object Screens {
+    const val HOME_SCREEN = "HOME_SCREEN"
+    const val ANALYTICS_SCREEN = "ANALYTICS_SCREEN"
+    const val BOTTOM_TAB_NAVIGATION = "BOTTOM_TAB_NAVIGATION"
+    const val ADD_EDIT_CATEGORY_SCREEN ="ADD_EDIT_CATEGORY_SCREEN"
+    const val ADD_EDIT_EXPENSE_SCREEN ="ADD_EDIT_EXPENSE_SCREEN"
+    const val ADD_EDIT_TRANSACTION_SCREEN = "ADD_EDIT_TRANSACTION_SCREEN"
+}
