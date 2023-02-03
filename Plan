@@ -1,0 +1,34 @@
+Data
+1. Expense
+2. Transactions
+3. Category
+4. wishlist
+
+
+
+Category
+1. CategoryId
+2. CategoryName
+3. createdAt
+4. createdOn
+
+Expense
+1. Expense Name
+2. Expense Amount
+3. Expense CreatedAt
+4. Expense CreatedOn
+5. Expense Category
+
+Transactions
+1. Transaction Name
+2. Transaction Price
+3. Transaction CreatedAt
+4. Transaction CreatedOn
+
+
+Wishlist
+1. name
+2. price
+3. createdAt
+4. createdOn
+5.
