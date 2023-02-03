@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.ShowChart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,9 +46,9 @@ fun BottomNavigationWrapper(
                         icon = Icons.Default.Home
                     ),
                     BottomNavItem(
-                        name="Search",
+                        name="Analytics",
                         route = Screens.ANALYTICS_SCREEN   ,
-                        icon = Icons.Default.Search
+                        icon = Icons.Outlined.BarChart
                     ),
                 ),
                 navController = navController,
@@ -61,7 +63,10 @@ fun BottomNavigationWrapper(
             .background(Color.LightGray)
             .padding(innerPadding)
         ) {
-            BottomNavigation(navController = navController, navHostController = navHostController)
+            BottomNavigation(
+                navController = navController,
+                navHostController = navHostController
+            )
         }
 
     }

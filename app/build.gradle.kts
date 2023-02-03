@@ -67,6 +67,7 @@ dependencies {
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.compose.foundation:foundation:1.3.1")
     implementation("androidx.compose.foundation:foundation-layout:1.3.1")
+    implementation ("androidx.navigation:navigation-compose:2.5.3")
 
     // retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")

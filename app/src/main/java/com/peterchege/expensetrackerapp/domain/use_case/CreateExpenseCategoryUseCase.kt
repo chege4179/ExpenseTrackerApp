@@ -1,0 +1,31 @@
+package com.peterchege.expensetrackerapp.domain.use_case
+
+import com.peterchege.expensetrackerapp.core.util.Resource
+import com.peterchege.expensetrackerapp.core.util.Response
+import com.peterchege.expensetrackerapp.domain.models.Expense
+import com.peterchege.expensetrackerapp.domain.models.ExpenseCategory
+import com.peterchege.expensetrackerapp.domain.repository.ExpenseCategoryRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import okio.IOException
+import javax.inject.Inject
+
+class CreateExpenseCategoryUseCase @Inject constructor(
+    private val repository: ExpenseCategoryRepository
+){
+
+    suspend operator fun invoke(expenseCategory: ExpenseCategory): Flow<Resource<Response>> = flow {
+        try {
+            emit(Resource.Loading())
+            val existingExpenseCategory = repository.getExpenseCategoryByName(name = expenseCategory.expenseCategoryName)
+            if (existingExpenseCategory == null){
+                repository.saveExpenseCategory(expenseCategory = expenseCategory)
+                emit(Resource.Success(Response(msg = "Expense Category Added")))
+            }else{
+                emit(Resource.Error(message = "An expense category with a similar name already exists"))
+            }
+        }catch (e:IOException){
+            emit(Resource.Error(message = e.localizedMessage?: "An unexpected error occurred"))
+        }
+    }
+}

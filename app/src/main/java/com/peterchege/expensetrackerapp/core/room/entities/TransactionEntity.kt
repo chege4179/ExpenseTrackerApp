@@ -1,6 +1,11 @@
-package com.peterchege.expensetrackerapp.domain.models
+package com.peterchege.expensetrackerapp.core.room.entities
 
-data class Transaction (
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "Transactions")
+data class TransactionEntity (
+    @PrimaryKey
     val transactionId :String,
     val transactionName:String,
     val transactionAmount:Int,
@@ -10,4 +15,4 @@ data class Transaction (
 
     val transactionUpdatedAt:String,
     val transactionUpdatedOn:String
-        )
+    )

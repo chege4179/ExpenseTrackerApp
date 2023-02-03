@@ -1,0 +1,99 @@
+package com.peterchege.expensetrackerapp.domain
+
+import com.peterchege.expensetrackerapp.core.room.entities.ExpenseCategoryEntity
+import com.peterchege.expensetrackerapp.core.room.entities.ExpenseEntity
+import com.peterchege.expensetrackerapp.core.room.entities.TransactionCategoryEntity
+import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
+import com.peterchege.expensetrackerapp.domain.models.Expense
+import com.peterchege.expensetrackerapp.domain.models.ExpenseCategory
+import com.peterchege.expensetrackerapp.domain.models.Transaction
+import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
+
+
+fun Transaction.toEntity(): TransactionEntity {
+    return TransactionEntity(
+        transactionId = transactionId,
+        transactionName = transactionName,
+        transactionAmount = transactionAmount,
+        transactionCreatedAt = transactionCreatedAt,
+        transactionCreatedOn =transactionCreatedOn,
+        transactionUpdatedAt = transactionUpdatedAt,
+        transactionUpdatedOn = transactionUpdatedAt
+    )
+}
+
+fun TransactionEntity.toExternalModel():Transaction{
+    return Transaction(
+        transactionId = transactionId,
+        transactionName = transactionName,
+        transactionAmount = transactionAmount,
+        transactionCreatedAt = transactionCreatedAt,
+        transactionCreatedOn =transactionCreatedOn,
+        transactionUpdatedAt = transactionUpdatedAt,
+        transactionUpdatedOn = transactionUpdatedAt
+    )
+}
+
+
+fun Expense.toEntity():ExpenseEntity{
+    return ExpenseEntity(
+        expenseId = expenseId ,
+        expenseName = expenseName,
+        expenseAmount = expenseAmount,
+        expenseCategoryId = expenseCategoryId,
+        expenseCreatedAt = expenseCreatedAt ,
+        expenseCreatedOn = expenseCreatedOn,
+        expenseUpdatedOn = expenseUpdatedOn,
+        expenseUpdatedAt =expenseUpdatedAt
+    )
+}
+
+fun ExpenseEntity.toExternalModel():Expense{
+    return Expense(
+        expenseId = expenseId ,
+        expenseName = expenseName,
+        expenseAmount = expenseAmount,
+        expenseCategoryId = expenseCategoryId,
+        expenseCreatedAt = expenseCreatedAt ,
+        expenseCreatedOn = expenseCreatedOn,
+        expenseUpdatedOn = expenseUpdatedOn,
+        expenseUpdatedAt =expenseUpdatedAt
+    )
+}
+
+
+fun TransactionCategory.toEntity():TransactionCategoryEntity{
+    return TransactionCategoryEntity(
+        transactionCategoryId = transactionCategoryId,
+        transactionCategoryName = transactionCategoryName,
+        transactionCategoryCreatedAt = transactionCategoryCreatedAt,
+        transactionCategoryCreatedOn = transactionCategoryCreatedOn
+    )
+}
+
+fun TransactionCategoryEntity.toExternalModel():TransactionCategory{
+    return TransactionCategory(
+        transactionCategoryId = transactionCategoryId,
+        transactionCategoryName = transactionCategoryName,
+        transactionCategoryCreatedAt = transactionCategoryCreatedAt,
+        transactionCategoryCreatedOn = transactionCategoryCreatedOn
+    )
+}
+
+fun ExpenseCategory.toEntity():ExpenseCategoryEntity{
+    return ExpenseCategoryEntity(
+        expenseCategoryId = expenseCategoryId,
+        expenseCategoryName = expenseCategoryName,
+        expenseCategoryCreatedAt = expenseCategoryCreatedAt,
+        expenseCategoryCreatedOn = expenseCategoryCreatedOn,
+    )
+}
+
+fun ExpenseCategoryEntity.toExternalModel():ExpenseCategory{
+    return ExpenseCategory(
+        expenseCategoryId = expenseCategoryId,
+        expenseCategoryName = expenseCategoryName,
+        expenseCategoryCreatedAt = expenseCategoryCreatedAt,
+        expenseCategoryCreatedOn = expenseCategoryCreatedOn,
+    )
+}
