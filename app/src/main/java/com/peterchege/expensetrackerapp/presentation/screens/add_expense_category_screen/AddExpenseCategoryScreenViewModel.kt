@@ -1,11 +1,10 @@
-package com.peterchege.expensetrackerapp.presentation.screens.add_edit_expense_category_screen
+package com.peterchege.expensetrackerapp.presentation.screens.add_expense_category_screen
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide.init
 import com.peterchege.expensetrackerapp.core.util.Resource
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.domain.models.ExpenseCategory
@@ -22,7 +21,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class AddEditExpenseCategoryScreenViewModel @Inject constructor(
+class AddExpenseCategoryScreenViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val createExpenseCategoryUseCase: CreateExpenseCategoryUseCase,
 ) : ViewModel() {
@@ -34,8 +33,7 @@ class AddEditExpenseCategoryScreenViewModel @Inject constructor(
     val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> =_isLoading
 
-    val _mode = mutableStateOf("")
-    val mode: State<String> = _mode
+
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -45,13 +43,8 @@ class AddEditExpenseCategoryScreenViewModel @Inject constructor(
 
     }
 
-    init {
-        savedStateHandle.get<String>("mode").let {
-            _mode.value = it!!
-        }
-    }
 
-    fun addExpense() {
+    fun addExpenseCategory() {
         viewModelScope.launch {
             if (_expenseCategoryName.value.isBlank()) {
                 _eventFlow.emit(UiEvent.ShowSnackbar(uiText = "Expense Category Name cannot be black"))

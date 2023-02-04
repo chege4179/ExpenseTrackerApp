@@ -6,7 +6,9 @@ import androidx.room.Room
 import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.data.ExpenseCategoryRepositoryImpl
+import com.peterchege.expensetrackerapp.data.ExpenseRepositoryImpl
 import com.peterchege.expensetrackerapp.domain.repository.ExpenseCategoryRepository
+import com.peterchege.expensetrackerapp.domain.repository.ExpenseRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,6 +35,14 @@ object AppModule {
     fun provideExpenseCategoryRepository(database:ExpenseTrackerAppDatabase):
             ExpenseCategoryRepository {
         return ExpenseCategoryRepositoryImpl(
+            db = database
+        )
+    }
+    @Provides
+    @Singleton
+    fun provideExpenseRepository(database:ExpenseTrackerAppDatabase):
+            ExpenseRepository {
+        return ExpenseRepositoryImpl(
             db = database
         )
     }

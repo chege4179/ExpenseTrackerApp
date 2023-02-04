@@ -1,4 +1,4 @@
-package com.peterchege.expensetrackerapp.presentation.screens.add_edit_expense_screen
+package com.peterchege.expensetrackerapp.presentation.screens.add_transaction_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
@@ -11,21 +11,21 @@ import androidx.navigation.NavController
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AddEditExpenseScreen(
+fun AddTransactionScreen(
     navController: NavController
 ) {
     Scaffold(
         modifier= Modifier.fillMaxSize()
     ) {
+
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
 
-            Text(text = "Add edit expense screen")
+            Text(text = "Add edit TRANSACTION screen")
 
         }
-        
-        
     }
-    
+
+
 }

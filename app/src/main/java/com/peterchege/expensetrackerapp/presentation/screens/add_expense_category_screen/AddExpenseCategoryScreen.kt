@@ -1,4 +1,4 @@
-package com.peterchege.expensetrackerapp.presentation.screens.add_edit_expense_category_screen
+package com.peterchege.expensetrackerapp.presentation.screens.add_expense_category_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
@@ -16,9 +16,9 @@ import kotlinx.coroutines.flow.collectLatest
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AddEditExpenseCategoryScreen(
+fun AddExpenseCategoryScreen(
     navController: NavController,
-    viewModel: AddEditExpenseCategoryScreenViewModel = hiltViewModel()
+    viewModel: AddExpenseCategoryScreenViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
     LaunchedEffect(key1 = true) {
@@ -41,46 +41,50 @@ fun AddEditExpenseCategoryScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text =
-                    if (viewModel.mode.value == Mode.ADD_MODE)
-                        "Create Expense Category"
-                    else
-                        "Edit Expense Category"
-                    )
+                    Text(text ="Create Expense Category")
                 }
             )
         }
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextField(
-                value = viewModel.expenseCategoryName.value,
-                onValueChange = {
-                    viewModel.onChangeExpenseName(text = it)
-                },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = {
-                    Text(text = "Expense Name")
-                }
-            )
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    viewModel.addExpense()
+        ){
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TextField(
+                    value = viewModel.expenseCategoryName.value,
+                    onValueChange = {
+                        viewModel.onChangeExpenseName(text = it)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = {
+                        Text(text = "Expense Category Name")
+                    }
+                )
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        viewModel.addExpenseCategory()
+
+                    }
+                ){
+                    Text(text = "Save")
 
                 }
-            ){
-                Text(text = "Save")
+
 
             }
-
-
+            if (viewModel.isLoading.value){
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
         }
+
 
 
     }

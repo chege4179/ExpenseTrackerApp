@@ -60,7 +60,7 @@ fun HomeScreen(
             icon = Icons.Default.Add,
             label = "Create Expense",
             onClick = {
-                navController.navigate(Screens.ADD_EDIT_EXPENSE_SCREEN + "/${Mode.ADD_MODE}")
+                navController.navigate(Screens.ADD_EXPENSE_SCREEN )
 
             }
         ),
@@ -68,21 +68,21 @@ fun HomeScreen(
             icon = Icons.Default.Add,
             label = "Create Transaction",
             onClick = {
-                navController.navigate(Screens.ADD_EDIT_TRANSACTION_SCREEN + "/${Mode.ADD_MODE}")
+                navController.navigate(Screens.ADD_TRANSACTION_SCREEN )
             }
         ),
         MinFabItem(
             icon = Icons.Default.Add,
             label = "Create Expense Category",
             onClick = {
-                navController.navigate(Screens.ADD_EDIT_EXPENSE_CATEGORY_SCREEN+ "/${Mode.ADD_MODE}")
+                navController.navigate(Screens.ADD_EXPENSE_CATEGORY_SCREEN)
             }
         ),
         MinFabItem(
             icon = Icons.Default.Add,
             label = "Create Transaction Category",
             onClick = {
-                navController.navigate(Screens.ADD_EDIT_TRANSACTION_CATEGORY_SCREEN + "/${Mode.ADD_MODE}")
+                navController.navigate(Screens.ADD_TRANSACTION_CATEGORY_SCREEN )
             }
         ),
     )
