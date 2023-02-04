@@ -26,10 +26,14 @@ fun AddExpenseScreen(
     viewModel: AddExpenseScreenViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
+
     val expenseCategories = viewModel.expenseCategories
         .collectAsStateWithLifecycle(initialValue = emptyList())
         .value
         .map { it.toExternalModel() }
+
+
+
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -99,6 +103,7 @@ fun AddExpenseScreen(
                     selectedIndex = viewModel.selectedIndex.value,
                     menuItems = expenseCategories.map { it.expenseCategoryName },
                     onChangeSelectedIndex = {
+                        viewModel.onChangeSelectedIndex(index = it)
                         val selectedExpenseCategory = expenseCategories[it]
                         viewModel.onChangeSelectedExpenseCategory(category = selectedExpenseCategory)
 

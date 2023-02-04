@@ -7,8 +7,12 @@ import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppData
 import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.data.ExpenseCategoryRepositoryImpl
 import com.peterchege.expensetrackerapp.data.ExpenseRepositoryImpl
+import com.peterchege.expensetrackerapp.data.TransactionCategoryRepositoryImpl
+import com.peterchege.expensetrackerapp.data.TransactionRepositoryImpl
 import com.peterchege.expensetrackerapp.domain.repository.ExpenseCategoryRepository
 import com.peterchege.expensetrackerapp.domain.repository.ExpenseRepository
+import com.peterchege.expensetrackerapp.domain.repository.TransactionCategoryRepository
+import com.peterchege.expensetrackerapp.domain.repository.TransactionRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,6 +47,24 @@ object AppModule {
     fun provideExpenseRepository(database:ExpenseTrackerAppDatabase):
             ExpenseRepository {
         return ExpenseRepositoryImpl(
+            db = database
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideTransactionCategoryRepository(database:ExpenseTrackerAppDatabase):
+            TransactionCategoryRepository {
+        return TransactionCategoryRepositoryImpl(
+            db = database
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideTransactionRepository(database:ExpenseTrackerAppDatabase):
+            TransactionRepository {
+        return TransactionRepositoryImpl(
             db = database
         )
     }

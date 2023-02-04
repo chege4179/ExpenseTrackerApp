@@ -18,7 +18,8 @@ fun Transaction.toEntity(): TransactionEntity {
         transactionCreatedAt = transactionCreatedAt,
         transactionCreatedOn =transactionCreatedOn,
         transactionUpdatedAt = transactionUpdatedAt,
-        transactionUpdatedOn = transactionUpdatedAt
+        transactionUpdatedOn = transactionUpdatedAt,
+        transactionCategoryId = transactionCategoryId,
     )
 }
 
@@ -30,7 +31,8 @@ fun TransactionEntity.toExternalModel():Transaction{
         transactionCreatedAt = transactionCreatedAt,
         transactionCreatedOn =transactionCreatedOn,
         transactionUpdatedAt = transactionUpdatedAt,
-        transactionUpdatedOn = transactionUpdatedAt
+        transactionUpdatedOn = transactionUpdatedAt,
+        transactionCategoryId = transactionCategoryId,
     )
 }
 

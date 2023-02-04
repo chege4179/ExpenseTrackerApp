@@ -60,6 +60,11 @@ class AddExpenseScreenViewModel @Inject constructor(
 
     }
 
+    fun onChangeSelectedIndex(index: Int) {
+        _selectedIndex.value = index
+
+    }
+
     fun onChangeExpenseAmount(text: String) {
         if (text.isBlank()){
             _expenseAmount.value = 0
