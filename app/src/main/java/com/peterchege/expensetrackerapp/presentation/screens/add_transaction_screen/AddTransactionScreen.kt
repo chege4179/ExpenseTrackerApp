@@ -14,7 +14,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
-import com.peterchege.expensetrackerapp.core.util.toNormalDate
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -104,6 +103,7 @@ fun AddTransactionScreen(
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 MenuSample(
+                    menuWidth = 300,
                     selectedIndex = viewModel.selectedIndex.value,
                     menuItems = transactionCategories.map { it.transactionCategoryName },
                     onChangeSelectedIndex = {
@@ -113,13 +113,52 @@ fun AddTransactionScreen(
                     }
                 )
                 Spacer(modifier = Modifier.size(16.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically,
+                ){
+                    Text(
+                        text =viewModel.transactionDate.value.toString(),
+                        modifier = Modifier.fillMaxWidth(0.5f)
+                    )
+                    Button(
+                        modifier = Modifier.width(150.dp),
+                        onClick = { dateDialogState.show() }
+                    ) {
+                        Text("Pick A date")
+                    }
+                }
+                Spacer(modifier = Modifier.size(16.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically,
+                ){
+                    Text(
+                        text =viewModel.transactionTime.value.toString(),
+                        modifier = Modifier.fillMaxWidth(0.5f)
+                    )
+                    Button(
+                        modifier = Modifier.width(150.dp),
+                        onClick = {
+                            timeDialogState.show()
+
+                        }
+                    ) {
+                        Text("Pick A Time")
+                    }
+                }
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
                     onClick = {
-                        dateDialogState.show()
-                        //viewModel.addTransaction()
+                        viewModel.addTransaction()
                     }
                 ){
                     Text(text = "Save Transaction")
@@ -133,7 +172,8 @@ fun AddTransactionScreen(
             MaterialDialog(
                 dialogState = dateDialogState,
                 buttons = {
-                    positiveButton(text = "Next"){
+                    positiveButton(text = "Pick"){
+                        dateDialogState.hide()
 
                     }
                     negativeButton(text = "Cancel"){
@@ -145,7 +185,7 @@ fun AddTransactionScreen(
                     initialDate = LocalDate.now(),
                     title = "Pick a date",
                 ){
-                    viewModel.onChangeTransactionDate(toNormalDate(it))
+                    viewModel.onChangeTransactionDate(date = it)
 
                 }
 
@@ -153,7 +193,8 @@ fun AddTransactionScreen(
             MaterialDialog(
                 dialogState = timeDialogState,
                 buttons = {
-                    positiveButton(text = "Next"){
+                    positiveButton(text = "Pick"){
+                        timeDialogState.hide()
 
                     }
                     negativeButton(text = "Cancel"){
@@ -165,6 +206,7 @@ fun AddTransactionScreen(
                     initialTime = LocalTime.now(),
                     title = "Pick a time",
                 ){
+                    viewModel.onChangeTransactionTime(time = it)
 
                 }
 

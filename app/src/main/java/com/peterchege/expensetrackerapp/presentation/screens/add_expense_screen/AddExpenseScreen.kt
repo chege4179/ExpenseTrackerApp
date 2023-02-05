@@ -100,6 +100,7 @@ fun AddExpenseScreen(
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 MenuSample(
+                    menuWidth = 300,
                     selectedIndex = viewModel.selectedIndex.value,
                     menuItems = expenseCategories.map { it.expenseCategoryName },
                     onChangeSelectedIndex = {

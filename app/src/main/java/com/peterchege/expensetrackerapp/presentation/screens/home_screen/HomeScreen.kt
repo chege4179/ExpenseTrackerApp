@@ -7,7 +7,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -31,10 +34,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import com.peterchege.expensetrackerapp.R
+import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.Mode
 import com.peterchege.expensetrackerapp.core.util.Screens
+import com.peterchege.expensetrackerapp.domain.toExternalModel
+import com.peterchege.expensetrackerapp.presentation.components.MenuSample
+import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 
 enum class MultiFloatingState {
     EXPANDED,
@@ -47,11 +57,18 @@ data class MinFabItem(
     val onClick: () -> Unit,
 )
 
+@OptIn(ExperimentalCoilApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
+    val transactions = viewModel.transactions
+        .collectAsStateWithLifecycle(initialValue = emptyList())
+        .value
+        .map { it.toExternalModel() }
+
     var multiFloatingState by remember {
         mutableStateOf(MultiFloatingState.COLLAPSED)
     }
@@ -60,7 +77,7 @@ fun HomeScreen(
             icon = Icons.Default.Add,
             label = "Create Expense",
             onClick = {
-                navController.navigate(Screens.ADD_EXPENSE_SCREEN )
+                navController.navigate(Screens.ADD_EXPENSE_SCREEN)
 
             }
         ),
@@ -68,7 +85,7 @@ fun HomeScreen(
             icon = Icons.Default.Add,
             label = "Create Transaction",
             onClick = {
-                navController.navigate(Screens.ADD_TRANSACTION_SCREEN )
+                navController.navigate(Screens.ADD_TRANSACTION_SCREEN)
             }
         ),
         MinFabItem(
@@ -82,12 +99,19 @@ fun HomeScreen(
             icon = Icons.Default.Add,
             label = "Create Transaction Category",
             onClick = {
-                navController.navigate(Screens.ADD_TRANSACTION_CATEGORY_SCREEN )
+                navController.navigate(Screens.ADD_TRANSACTION_CATEGORY_SCREEN)
             }
         ),
     )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "My Expense Tracker App")
+                }
+            )
+        },
         floatingActionButton = {
             MultiFloatingButton(
                 multiFloatingState = multiFloatingState,
@@ -99,7 +123,67 @@ fun HomeScreen(
 
         }
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                item {
+                    Card(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxWidth()
+                            .height(150.dp),
+                        shape = RoundedCornerShape(5),
+                        elevation = 3.dp
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
 
+                                ) {
+                                Text(
+                                    text = "Total spending",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 20.sp
+                                )
+                                Text(
+                                    text = "KES ${transactions.sumOf { it.transactionAmount }} /=",
+                                    fontSize = 17.sp,
+                                    fontWeight = FontWeight.Medium,
+                                )
+                                MenuSample(
+                                    menuWidth = 150,
+                                    selectedIndex = 0,
+                                    menuItems = FilterConstants.FilterList,
+                                    onChangeSelectedIndex = {
+
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+                items(items = transactions) {
+                    TransactionCard(
+                        transaction = it,
+                        onTransactionNavigate = {
+
+                        }
+                    )
+                }
+
+            }
+
+
+        }
     }
 
 }
@@ -212,8 +296,7 @@ fun MinFab(
                 .background(MaterialTheme.colors.surface)
                 .clip(CircleShape)
                 .width(32.dp)
-                .height(32.dp)
-                ,
+                .height(32.dp),
 
             ) {
             IconButton(onClick = {

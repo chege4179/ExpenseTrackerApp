@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -14,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -22,14 +24,15 @@ import androidx.constraintlayout.compose.Dimension
 fun MenuSample(
     selectedIndex:Int,
     onChangeSelectedIndex:(Int) -> Unit,
-    menuItems: List<String>
+    menuItems: List<String>,
+    menuWidth:Int
 ){
     var menuListExpanded by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(110.dp)
-            .padding(16.dp),
+            .width(menuWidth.dp)
+            .height(95.dp)
+            .padding(10.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         ComposeMenu(
@@ -43,7 +46,6 @@ fun MenuSample(
                 menuListExpanded = false
             },
             onMenuItemclick = { index->
-                Log.d("Index",index.toString())
                 onChangeSelectedIndex(index)
                 menuListExpanded = false
             }
@@ -66,12 +68,13 @@ fun ComposeMenu(
             .fillMaxSize()
             .wrapContentSize(Alignment.TopStart)
             .padding(top = 10.dp)
-            .border(0.5.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.5f))
+            .border(width = 0.8.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.5f))
             .clickable(
                 onClick = {
                     updateMenuExpandStatus()
                 },
             ),
+
 
         ) {
 
@@ -115,7 +118,7 @@ fun ComposeMenu(
                 expanded = menuExpandedState,
                 onDismissRequest = { onDismissMenuView() },
                 modifier = Modifier
-                    .fillMaxWidth(0.7f)
+                    .width(150.dp)
                     .background(MaterialTheme.colors.surface)
             ) {
                 menuItems.forEachIndexed { index, title ->

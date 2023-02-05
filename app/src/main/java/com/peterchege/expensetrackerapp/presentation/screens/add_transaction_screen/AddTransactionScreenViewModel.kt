@@ -7,29 +7,29 @@ import androidx.lifecycle.viewModelScope
 import com.peterchege.expensetrackerapp.core.util.Resource
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.core.util.isNumeric
-import com.peterchege.expensetrackerapp.domain.models.ExpenseCategory
+import com.peterchege.expensetrackerapp.core.util.localDateTimeToDate
 import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.use_case.CreateTransactionUseCase
-import com.peterchege.expensetrackerapp.domain.use_case.GetAllTransactionCategories
+import com.peterchege.expensetrackerapp.domain.use_case.GetAllTransactionCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class AddTransactionScreenViewModel @Inject constructor(
     private val createTransactionUseCase: CreateTransactionUseCase,
-    private val getAllTransactionCategories: GetAllTransactionCategories,
+    private val getAllTransactionCategoriesUseCase: GetAllTransactionCategoriesUseCase,
+    ) : ViewModel() {
 
-) : ViewModel(){
-
-    val transactionCategories = getAllTransactionCategories()
+    val transactionCategories = getAllTransactionCategoriesUseCase()
 
 
     val _transactionName = mutableStateOf("")
@@ -39,7 +39,7 @@ class AddTransactionScreenViewModel @Inject constructor(
     val transactionAmount: State<Int> = _transactionAmount
 
     val _isLoading = mutableStateOf(false)
-    val isLoading: State<Boolean> =_isLoading
+    val isLoading: State<Boolean> = _isLoading
 
     val _selectedTransactionCategory = mutableStateOf<TransactionCategory?>(null)
     val selectedTransactionCategory: State<TransactionCategory?> = _selectedTransactionCategory
@@ -47,21 +47,22 @@ class AddTransactionScreenViewModel @Inject constructor(
     val _selectedIndex = mutableStateOf(0)
     val selectedIndex: State<Int> = _selectedIndex
 
-    val _transactionTime = mutableStateOf("")
-    val transactionTime: State<String> = _transactionTime
+    val _transactionTime = mutableStateOf<LocalTime>(LocalTime.now())
+    val transactionTime: State<LocalTime> = _transactionTime
 
-    val _transactionDate = mutableStateOf("")
-    val transactionDate: State<String> = _transactionDate
+    val _transactionDate = mutableStateOf<LocalDate>(LocalDate.now())
+    val transactionDate: State<LocalDate> = _transactionDate
 
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    fun onChangeTransactionDate(date:Date){
-        _transactionDate.value =  SimpleDateFormat("dd/MM/yyyy").format(date)
+    fun onChangeTransactionDate(date: LocalDate) {
+        _transactionDate.value = date
     }
-    fun onChangeTransactionTime(time:Date){
-        _transactionTime.value =  SimpleDateFormat("hh:mm:ss").format(time)
+
+    fun onChangeTransactionTime(time: LocalTime) {
+        _transactionTime.value = time
     }
 
     fun onChangeTransactionName(text: String) {
@@ -74,20 +75,20 @@ class AddTransactionScreenViewModel @Inject constructor(
 
     }
 
-    fun onChangeSelectedTransactionCategory(category:TransactionCategory) {
+    fun onChangeSelectedTransactionCategory(category: TransactionCategory) {
         _selectedTransactionCategory.value = category
 
     }
 
     fun onChangeTransactionAmount(text: String) {
-        if (text.isBlank()){
+        if (text.isBlank()) {
             _transactionAmount.value = 0
             return
         }
-        if (isNumeric(text)){
+        if (isNumeric(text)) {
             _transactionAmount.value = text.toInt()
 
-        }else{
+        } else {
             _transactionAmount.value = 0
         }
     }
@@ -99,17 +100,20 @@ class AddTransactionScreenViewModel @Inject constructor(
                 _eventFlow.emit(UiEvent.ShowSnackbar(uiText = "Expense Category Name cannot be black"))
                 return@launch
             }
-            if (_selectedTransactionCategory.value ==null){
+            if (_selectedTransactionCategory.value == null) {
                 _eventFlow.emit(UiEvent.ShowSnackbar(uiText = "Please select a transaction Category"))
                 return@launch
             }
-
+            val date = localDateTimeToDate(
+                localDate = _transactionDate.value,
+                localTime = _transactionTime.value
+            )
             val transaction = Transaction(
                 transactionName = _transactionName.value,
                 transactionAmount = _transactionAmount.value,
                 transactionId = UUID.randomUUID().toString(),
-                transactionCreatedAt = Date(),
-                transactionUpdatedAt = Date(),
+                transactionCreatedAt = date,
+                transactionUpdatedAt = date,
                 transactionCategoryId = _selectedTransactionCategory.value!!.transactionCategoryId
 
             )
@@ -123,15 +127,20 @@ class AddTransactionScreenViewModel @Inject constructor(
                         _isLoading.value = false
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(
-                                uiText = result.data?.msg ?: "Expense Category added successfully"))
+                                uiText = result.data?.msg ?: "Transaction added successfully"
+                            )
+                        )
                         _transactionAmount.value = 0
                         _transactionName.value = ""
                     }
-                    is Resource.Error ->{
+                    is Resource.Error -> {
                         _isLoading.value = false
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(
-                                uiText = result.message ?:"An error occurred"))
+                                uiText = result.message
+                                    ?: "An error occurred creating this transaction"
+                            )
+                        )
 
                     }
                 }
