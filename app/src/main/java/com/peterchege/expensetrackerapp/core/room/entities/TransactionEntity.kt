@@ -2,6 +2,7 @@ package com.peterchege.expensetrackerapp.core.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity(tableName = "Transactions")
 data class TransactionEntity (
@@ -11,9 +12,9 @@ data class TransactionEntity (
     val transactionAmount:Int,
     val transactionCategoryId:String,
 
-    val transactionCreatedAt:String,
-    val transactionCreatedOn:String,
+    val transactionCreatedAt:Date,
 
-    val transactionUpdatedAt:String,
-    val transactionUpdatedOn:String
+
+    val transactionUpdatedAt: Date,
+
     )

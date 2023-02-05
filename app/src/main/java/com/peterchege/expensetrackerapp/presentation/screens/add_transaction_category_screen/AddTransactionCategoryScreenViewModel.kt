@@ -51,8 +51,7 @@ class AddTransactionCategoryScreenViewModel @Inject constructor(
                 val transactionCategory = TransactionCategory(
                     transactionCategoryName = _transactionCategoryName.value,
                     transactionCategoryId = UUID.randomUUID().toString(),
-                    transactionCategoryCreatedAt = SimpleDateFormat("hh:mm:ss").format(Date()),
-                    transactionCategoryCreatedOn = SimpleDateFormat("dd/MM/yyyy").format(Date()),
+                    transactionCategoryCreatedAt = Date(),
                 )
                 createTransactionCategoryUseCase(transactionCategory = transactionCategory).onEach { result ->
                     when (result) {

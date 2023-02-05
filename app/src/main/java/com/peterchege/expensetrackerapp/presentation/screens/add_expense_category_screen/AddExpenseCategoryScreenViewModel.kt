@@ -52,8 +52,8 @@ class AddExpenseCategoryScreenViewModel @Inject constructor(
                 val expenseCategory = ExpenseCategory(
                     expenseCategoryName = _expenseCategoryName.value,
                     expenseCategoryId = UUID.randomUUID().toString(),
-                    expenseCategoryCreatedAt = SimpleDateFormat("hh:mm:ss").format(Date()),
-                    expenseCategoryCreatedOn = SimpleDateFormat("dd/MM/yyyy").format(Date()),
+                    expenseCategoryCreatedAt = Date(),
+
                 )
                 createExpenseCategoryUseCase(expenseCategory = expenseCategory).onEach { result ->
                     when (result) {

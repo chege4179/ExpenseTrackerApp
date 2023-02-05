@@ -108,10 +108,8 @@ class AddTransactionScreenViewModel @Inject constructor(
                 transactionName = _transactionName.value,
                 transactionAmount = _transactionAmount.value,
                 transactionId = UUID.randomUUID().toString(),
-                transactionCreatedAt = SimpleDateFormat("hh:mm:ss").format(Date()),
-                transactionCreatedOn = SimpleDateFormat("dd/MM/yyyy").format(Date()),
-                transactionUpdatedAt = SimpleDateFormat("hh:mm:ss").format(Date()),
-                transactionUpdatedOn = SimpleDateFormat("dd/MM/yyyy").format(Date()),
+                transactionCreatedAt = Date(),
+                transactionUpdatedAt = Date(),
                 transactionCategoryId = _selectedTransactionCategory.value!!.transactionCategoryId
 
             )

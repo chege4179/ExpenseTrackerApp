@@ -16,9 +16,7 @@ fun Transaction.toEntity(): TransactionEntity {
         transactionName = transactionName,
         transactionAmount = transactionAmount,
         transactionCreatedAt = transactionCreatedAt,
-        transactionCreatedOn =transactionCreatedOn,
         transactionUpdatedAt = transactionUpdatedAt,
-        transactionUpdatedOn = transactionUpdatedAt,
         transactionCategoryId = transactionCategoryId,
     )
 }
@@ -29,9 +27,7 @@ fun TransactionEntity.toExternalModel():Transaction{
         transactionName = transactionName,
         transactionAmount = transactionAmount,
         transactionCreatedAt = transactionCreatedAt,
-        transactionCreatedOn =transactionCreatedOn,
         transactionUpdatedAt = transactionUpdatedAt,
-        transactionUpdatedOn = transactionUpdatedAt,
         transactionCategoryId = transactionCategoryId,
     )
 }
@@ -44,8 +40,6 @@ fun Expense.toEntity():ExpenseEntity{
         expenseAmount = expenseAmount,
         expenseCategoryId = expenseCategoryId,
         expenseCreatedAt = expenseCreatedAt ,
-        expenseCreatedOn = expenseCreatedOn,
-        expenseUpdatedOn = expenseUpdatedOn,
         expenseUpdatedAt =expenseUpdatedAt
     )
 }
@@ -57,8 +51,6 @@ fun ExpenseEntity.toExternalModel():Expense{
         expenseAmount = expenseAmount,
         expenseCategoryId = expenseCategoryId,
         expenseCreatedAt = expenseCreatedAt ,
-        expenseCreatedOn = expenseCreatedOn,
-        expenseUpdatedOn = expenseUpdatedOn,
         expenseUpdatedAt =expenseUpdatedAt
     )
 }
@@ -69,7 +61,7 @@ fun TransactionCategory.toEntity():TransactionCategoryEntity{
         transactionCategoryId = transactionCategoryId,
         transactionCategoryName = transactionCategoryName,
         transactionCategoryCreatedAt = transactionCategoryCreatedAt,
-        transactionCategoryCreatedOn = transactionCategoryCreatedOn
+
     )
 }
 
@@ -78,7 +70,7 @@ fun TransactionCategoryEntity.toExternalModel():TransactionCategory{
         transactionCategoryId = transactionCategoryId,
         transactionCategoryName = transactionCategoryName,
         transactionCategoryCreatedAt = transactionCategoryCreatedAt,
-        transactionCategoryCreatedOn = transactionCategoryCreatedOn
+
     )
 }
 
@@ -87,7 +79,7 @@ fun ExpenseCategory.toEntity():ExpenseCategoryEntity{
         expenseCategoryId = expenseCategoryId,
         expenseCategoryName = expenseCategoryName,
         expenseCategoryCreatedAt = expenseCategoryCreatedAt,
-        expenseCategoryCreatedOn = expenseCategoryCreatedOn,
+
     )
 }
 
@@ -96,6 +88,6 @@ fun ExpenseCategoryEntity.toExternalModel():ExpenseCategory{
         expenseCategoryId = expenseCategoryId,
         expenseCategoryName = expenseCategoryName,
         expenseCategoryCreatedAt = expenseCategoryCreatedAt,
-        expenseCategoryCreatedOn = expenseCategoryCreatedOn,
+
     )
 }
