@@ -4,10 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.peterchege.expensetrackerapp.core.util.Resource
-import com.peterchege.expensetrackerapp.core.util.UiEvent
-import com.peterchege.expensetrackerapp.core.util.isNumeric
-import com.peterchege.expensetrackerapp.core.util.localDateTimeToDate
+import com.peterchege.expensetrackerapp.core.util.*
 import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.use_case.CreateTransactionUseCase
@@ -18,6 +15,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.*
@@ -108,13 +106,18 @@ class AddTransactionScreenViewModel @Inject constructor(
                 localDate = _transactionDate.value,
                 localTime = _transactionTime.value
             )
+
             val transaction = Transaction(
                 transactionName = _transactionName.value,
                 transactionAmount = _transactionAmount.value,
+                transactionCategoryId = _selectedTransactionCategory.value!!.transactionCategoryId,
                 transactionId = UUID.randomUUID().toString(),
-                transactionCreatedAt = date,
-                transactionUpdatedAt = date,
-                transactionCategoryId = _selectedTransactionCategory.value!!.transactionCategoryId
+                transactionCreatedAt = SimpleDateFormat("hh:mm:ss").format(date) ,
+                transactionUpdatedAt = SimpleDateFormat("hh:mm:ss").format(date),
+                transactionUpdatedOn = generateFormatDate(date = _transactionDate.value),
+                transactionCreatedOn = generateFormatDate(date = _transactionDate.value),
+
+
 
             )
             createTransactionUseCase(transaction = transaction).onEach { result ->

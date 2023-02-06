@@ -8,8 +8,12 @@ data class Expense (
     val expenseAmount:Int,
     val expenseCategoryId:String,
 
-    val expenseCreatedAt: Date,
-    val expenseUpdatedAt:Date,
+    val expenseCreatedAt: String,
+    val expenseCreatedOn: String,
+
+
+    val expenseUpdatedAt:String,
+    val expenseUpdatedOn:String,
 
 
     )

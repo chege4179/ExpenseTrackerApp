@@ -64,10 +64,11 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
-    val transactions = viewModel.transactions
-        .collectAsStateWithLifecycle(initialValue = emptyList())
-        .value
-        .map { it.toExternalModel() }
+    LaunchedEffect(key1 = viewModel.selectedIndex.value){
+        viewModel.getTransactions(filter = FilterConstants.FilterList[viewModel.selectedIndex.value])
+
+    }
+    val transactions = viewModel.transactions.value
 
     var multiFloatingState by remember {
         mutableStateOf(MultiFloatingState.COLLAPSED)
@@ -164,6 +165,7 @@ fun HomeScreen(
                                     selectedIndex = 0,
                                     menuItems = FilterConstants.FilterList,
                                     onChangeSelectedIndex = {
+                                        viewModel.onChangeSelectedIndex(index = it)
 
                                     }
                                 )

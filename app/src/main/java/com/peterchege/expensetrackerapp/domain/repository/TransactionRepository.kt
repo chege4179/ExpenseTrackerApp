@@ -11,4 +11,8 @@ interface TransactionRepository {
     suspend fun createTransaction(transaction: Transaction)
 
     fun getAllTransactions(): Flow<List<TransactionEntity>>
+
+    fun getTransactionsForACertainDay(date:String):Flow<List<TransactionEntity>>
+
+    fun getTransactionsBetweenTwoDates(dates:List<String>):Flow<List<TransactionEntity>>
 }

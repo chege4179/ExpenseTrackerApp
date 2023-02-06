@@ -12,9 +12,10 @@ data class TransactionEntity (
     val transactionAmount:Int,
     val transactionCategoryId:String,
 
-    val transactionCreatedAt:Date,
+    val transactionCreatedAt:String,
+    val transactionCreatedOn:String,
 
-
-    val transactionUpdatedAt: Date,
+    val transactionUpdatedAt: String,
+    val transactionUpdatedOn: String,
 
     )

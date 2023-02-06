@@ -22,4 +22,10 @@ interface TransactionEntityDao {
     @Query("DELETE FROM Transactions")
     suspend fun deleteAllTransactions()
 
+    @Query("SELECT * FROM Transactions WHERE transactionCreatedOn = :date")
+    fun getTransactionsForACertainDay(date:String):Flow<List<TransactionEntity>>
+
+    @Query("SELECT * FROM Transactions WHERE transactionCreatedOn IN (:dates)")
+    fun getTransactionsBetweenTwoDates(dates:List<String>):Flow<List<TransactionEntity>>
+
 }

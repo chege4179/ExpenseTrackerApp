@@ -105,8 +105,10 @@ class AddExpenseScreenViewModel @Inject constructor(
                 expenseName = expenseName.value,
                 expenseAmount = expenseAmount.value,
                 expenseCategoryId = _selectedExpenseCategory.value!!.expenseCategoryId,
-                expenseCreatedAt = Date(),
-                expenseUpdatedAt = Date(),
+                expenseCreatedAt = SimpleDateFormat("hh:mm:ss").format(Date()),
+                expenseUpdatedAt = SimpleDateFormat("hh:mm:ss").format(Date()),
+                expenseCreatedOn = SimpleDateFormat("dd/mm/yyyy").format(Date()),
+                expenseUpdatedOn = SimpleDateFormat("dd/mm/yyyy").format(Date())
 
             )
             createExpenseUseCase(expense = newExpense).onEach { result ->

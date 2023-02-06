@@ -18,6 +18,8 @@ fun Transaction.toEntity(): TransactionEntity {
         transactionCreatedAt = transactionCreatedAt,
         transactionUpdatedAt = transactionUpdatedAt,
         transactionCategoryId = transactionCategoryId,
+        transactionUpdatedOn = transactionUpdatedOn,
+        transactionCreatedOn = transactionCreatedOn,
     )
 }
 
@@ -29,6 +31,8 @@ fun TransactionEntity.toExternalModel():Transaction{
         transactionCreatedAt = transactionCreatedAt,
         transactionUpdatedAt = transactionUpdatedAt,
         transactionCategoryId = transactionCategoryId,
+        transactionCreatedOn = transactionCreatedOn,
+        transactionUpdatedOn = transactionUpdatedOn
     )
 }
 
@@ -40,7 +44,9 @@ fun Expense.toEntity():ExpenseEntity{
         expenseAmount = expenseAmount,
         expenseCategoryId = expenseCategoryId,
         expenseCreatedAt = expenseCreatedAt ,
-        expenseUpdatedAt =expenseUpdatedAt
+        expenseUpdatedAt =expenseUpdatedAt,
+        expenseUpdatedOn = expenseUpdatedOn,
+        expenseCreatedOn = expenseCreatedOn,
     )
 }
 
@@ -51,7 +57,9 @@ fun ExpenseEntity.toExternalModel():Expense{
         expenseAmount = expenseAmount,
         expenseCategoryId = expenseCategoryId,
         expenseCreatedAt = expenseCreatedAt ,
-        expenseUpdatedAt =expenseUpdatedAt
+        expenseUpdatedAt =expenseUpdatedAt,
+        expenseUpdatedOn = expenseUpdatedOn,
+        expenseCreatedOn = expenseCreatedOn,
     )
 }
 

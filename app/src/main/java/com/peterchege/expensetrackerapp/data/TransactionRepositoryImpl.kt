@@ -22,4 +22,12 @@ class TransactionRepositoryImpl @Inject constructor(
 
     }
 
+    override fun getTransactionsForACertainDay(date: String): Flow<List<TransactionEntity>> {
+        return db.transactionEntityDao.getTransactionsForACertainDay(date = date)
+    }
+
+    override fun getTransactionsBetweenTwoDates(dates: List<String>): Flow<List<TransactionEntity>> {
+        return db.transactionEntityDao.getTransactionsBetweenTwoDates(dates = dates)
+    }
+
 }
