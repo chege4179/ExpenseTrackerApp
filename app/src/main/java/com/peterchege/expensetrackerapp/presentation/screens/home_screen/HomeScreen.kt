@@ -161,8 +161,8 @@ fun HomeScreen(
                                     fontWeight = FontWeight.Medium,
                                 )
                                 MenuSample(
-                                    menuWidth = 150,
-                                    selectedIndex = 0,
+                                    menuWidth = 170,
+                                    selectedIndex = viewModel.selectedIndex.value,
                                     menuItems = FilterConstants.FilterList,
                                     onChangeSelectedIndex = {
                                         viewModel.onChangeSelectedIndex(index = it)

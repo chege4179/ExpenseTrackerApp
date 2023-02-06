@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
@@ -63,7 +64,7 @@ fun TransactionCard(
             Spacer(modifier = Modifier.width(10.dp))
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(0.85f)
+                    .width(140.dp)
                     .fillMaxHeight(),
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
@@ -73,9 +74,14 @@ fun TransactionCard(
                     fontWeight = FontWeight.Bold,
 
                     )
-                Text(text = "KES ${transaction.transactionAmount} /=")
+                Text(text = transaction.transactionCreatedOn)
 
             }
+            Text(
+                text = "KES ${transaction.transactionAmount} /=",
+                textAlign = TextAlign.Start,
+                fontWeight = FontWeight.Bold,
+            )
             IconButton(onClick = {
                 onTransactionNavigate(transaction.transactionId)
             }) {

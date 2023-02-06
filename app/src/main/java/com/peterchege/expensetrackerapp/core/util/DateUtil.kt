@@ -66,3 +66,36 @@ fun generateFormatDate(date: LocalDate):String{
     return "${dateCount}/${monthCount}/${date.year}"
 
 }
+
+
+
+fun getWeekDates(dateString: String): List<String> {
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+    val date = dateFormat.parse(dateString)
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+    calendar.add(Calendar.DATE, -dayOfWeek + 1)
+    val weekDates = mutableListOf<String>()
+    for (i in 1..7) {
+        weekDates.add(dateFormat.format(calendar.time))
+        calendar.add(Calendar.DATE, 1)
+    }
+    return weekDates
+}
+
+
+fun getMonthDates(dateString: String): List<String> {
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+    val date = dateFormat.parse(dateString)
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+    calendar.set(Calendar.DAY_OF_MONTH, 1)
+    val monthDates = mutableListOf<String>()
+    for (i in 1..daysInMonth) {
+        monthDates.add(dateFormat.format(calendar.time))
+        calendar.add(Calendar.DATE, 1)
+    }
+    return monthDates
+}
