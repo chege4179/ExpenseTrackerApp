@@ -12,9 +12,13 @@ interface TransactionCategoryRepository {
 
     fun getAllTransactionCategories(): Flow<List<TransactionCategoryEntity>>
 
+    fun getTransactionCategoryById(transactionId:String):TransactionCategoryEntity
+
     suspend fun getTransactionCategoryByName(name:String): TransactionCategoryEntity?
 
     suspend fun updateTransactionCategory(transactionCategoryId:String,transactionCategoryName:String)
 
     suspend fun deleteTransactionCategory(transactionCategoryId:String)
+
+
 }

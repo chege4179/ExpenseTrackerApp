@@ -17,6 +17,10 @@ class TransactionCategoryRepositoryImpl @Inject constructor(
             transactionCategoryEntity = transactionCategory.toEntity())
     }
 
+    override fun getTransactionCategoryById(transactionId: String): TransactionCategoryEntity {
+        return db.transactionCategoryEntityDao.getTransactionCategoryById(transactionId = transactionId)
+    }
+
     override fun getAllTransactionCategories(): Flow<List<TransactionCategoryEntity>> {
         return db.transactionCategoryEntityDao.getTransactionCategories()
     }

@@ -19,6 +19,9 @@ interface TransactionEntityDao {
     @Query("DELETE FROM Transactions WHERE transactionId = :id")
     suspend fun deleteTransactionById(id: String)
 
+    @Query("SELECT * FROM Transactions WHERE transactionId = :id")
+    suspend fun getTransactionById(id: String):TransactionEntity?
+
     @Query("DELETE FROM Transactions")
     suspend fun deleteAllTransactions()
 

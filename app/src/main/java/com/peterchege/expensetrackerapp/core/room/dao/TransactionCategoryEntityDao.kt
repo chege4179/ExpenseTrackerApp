@@ -20,7 +20,8 @@ interface TransactionCategoryEntityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransactionCategory(transactionCategoryEntity: TransactionCategoryEntity)
 
-
+    @Query("SELECT * FROM TransactionCategory WHERE transactionCategoryId = :id")
+    suspend fun getTransactionCategoryById(id: String):TransactionCategoryEntity?
     @Query("DELETE FROM TransactionCategory WHERE transactionCategoryId = :id")
     suspend fun deleteTransactionCategoryById(id: String)
 

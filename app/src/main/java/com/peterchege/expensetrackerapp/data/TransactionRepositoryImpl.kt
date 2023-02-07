@@ -17,6 +17,10 @@ class TransactionRepositoryImpl @Inject constructor(
         )
     }
 
+    override fun getTransactionById(transactionId:String): TransactionEntity? {
+        return db.transactionEntityDao.getTransactionById(transactionId = transactionId)
+    }
+
     override fun getAllTransactions(): Flow<List<TransactionEntity>> {
         return db.transactionEntityDao.getTransactions()
 

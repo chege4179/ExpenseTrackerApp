@@ -12,6 +12,8 @@ interface TransactionRepository {
 
     fun getAllTransactions(): Flow<List<TransactionEntity>>
 
+    fun getTransactionById(transactionId:String):TransactionEntity?
+
     fun getTransactionsForACertainDay(date:String):Flow<List<TransactionEntity>>
 
     fun getTransactionsBetweenTwoDates(dates:List<String>):Flow<List<TransactionEntity>>
