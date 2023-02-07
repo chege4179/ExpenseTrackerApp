@@ -4,6 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.tehras.charts.bar.BarChartData
+import com.himanshoe.charty.bar.model.BarData
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
 import com.peterchege.expensetrackerapp.core.util.generateFormatDate
 import com.peterchege.expensetrackerapp.core.util.getWeekDates
@@ -30,21 +32,25 @@ class AnalyticsScreenViewModel @Inject constructor(
     val todayDate = generateFormatDate(LocalDate.now())
     val weekDates = getWeekDates(dateString = todayDate)
 
-    val _graphData = mutableStateOf<List<GraphDataItem>>(emptyList())
-    val graphData : State<List<GraphDataItem>> = _graphData
+    val _graphData = mutableStateOf<List<Flow<List<TransactionEntity>>>>(emptyList())
+    val graphData : State<List<Flow<List<TransactionEntity>>>> = _graphData
 
-    data class GraphDataItem(
-        val transactions: Flow<List<TransactionEntity>>,
-    )
+    val _barDataList = mutableStateOf<List<BarChartData.Bar>>(emptyList())
+    val barDataList:State<List<BarChartData.Bar>> = _barDataList
+
+
+    fun onChangeBarDataList(data:List<BarChartData.Bar>){
+        _barDataList.value = data
+    }
 
 
 
     init {
         viewModelScope.launch {
-            val defferedFlows = weekDates.map { async { getTransactionsForACertainDayUseCase(date = it) } }
-            val results = defferedFlows.awaitAll()
-            val newResults = results.map { GraphDataItem(transactions = it)}
-            _graphData.value = newResults
+            val res = weekDates.map {
+                getTransactionsForACertainDayUseCase(date = it)
+            }
+            _graphData.value = res
         }
     }
 

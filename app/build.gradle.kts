@@ -119,8 +119,11 @@ dependencies {
     // landscapist
     implementation("com.github.skydoves:landscapist-glide:1.4.8")
 
+    implementation("com.himanshoe:charty:1.0.1")
+    implementation ("com.github.tehras:charts:0.2.4-alpha")
+
 
     // date picker
     implementation ("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
-    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:1.1.6")
+    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.2")
 }
