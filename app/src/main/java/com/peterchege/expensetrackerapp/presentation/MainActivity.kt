@@ -32,6 +32,7 @@ import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.presentation.navigation.AppNavigation
 import com.peterchege.expensetrackerapp.presentation.theme.ExpenseTrackerAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -40,7 +41,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: MainViewModel = hiltViewModel()
             val theme = viewModel.theme
-                .collectAsStateWithLifecycle(initialValue = Constants.LIGHT_MODE)
+                .collectAsStateWithLifecycle(
+                    initialValue = Constants.DARK_MODE,
+                    context = Dispatchers.Main.immediate
+                )
             ExpenseTrackerAppTheme(
                 darkTheme = theme.value == Constants.DARK_MODE
             ) {

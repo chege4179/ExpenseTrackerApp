@@ -21,8 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide.init
-import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
+
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.Resource
 import com.peterchege.expensetrackerapp.domain.models.Transaction

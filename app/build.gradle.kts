@@ -88,7 +88,7 @@ dependencies {
     // view model
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha05")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-beta01")
 
     //paging
     implementation("androidx.paging:paging-common-ktx:3.1.1")
@@ -121,14 +121,12 @@ dependencies {
     implementation ("androidx.compose.material:material-icons-extended:1.4.0-alpha05")
 
     //pager
-    implementation( "com.google.accompanist:accompanist-pager:0.27.0")
-    implementation ("com.google.accompanist:accompanist-pager-indicators:0.27.0")
+    implementation( "com.google.accompanist:accompanist-pager:0.28.0")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.28.0")
 
     // swipe refresh
-    implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.2-alpha")
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.27.1")
 
-    // landscapist
-    implementation("com.github.skydoves:landscapist-glide:1.4.8")
     //timber
     implementation("com.jakewharton.timber:timber:5.0.1")
 
