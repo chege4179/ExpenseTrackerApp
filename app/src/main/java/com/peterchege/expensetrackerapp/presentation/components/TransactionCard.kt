@@ -16,19 +16,18 @@
 package com.peterchege.expensetrackerapp.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -46,8 +45,10 @@ fun TransactionCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+
             .padding(10.dp)
             .height(70.dp)
+
             .clickable {
                 onTransactionNavigate(transaction.transactionId)
 
@@ -57,6 +58,7 @@ fun TransactionCard(
     ) {
         Row(
             modifier = Modifier
+                .background(color = MaterialTheme.colors.onBackground)
                 .padding(horizontal = 10.dp)
                 .fillMaxWidth()
                 .fillMaxHeight(),
@@ -87,15 +89,20 @@ fun TransactionCard(
                 Text(
                     text = transaction.transactionName,
                     fontWeight = FontWeight.Bold,
+                    style = TextStyle(color = MaterialTheme.colors.primary)
 
-                    )
-                Text(text = transaction.transactionCreatedOn)
+                )
+                Text(
+                    text = transaction.transactionCreatedOn,
+                    style = TextStyle(color = MaterialTheme.colors.primary)
+                )
 
             }
             Text(
                 text = "KES ${transaction.transactionAmount} /=",
                 textAlign = TextAlign.Start,
                 fontWeight = FontWeight.Bold,
+                style = TextStyle(color = MaterialTheme.colors.primary)
             )
             IconButton(onClick = {
                 onTransactionNavigate(transaction.transactionId)

@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.presentation.theme
+package com.peterchege.expensetrackerapp.data
 
-import androidx.compose.ui.graphics.Color
+import com.peterchege.expensetrackerapp.core.datastore.preferences.UserPreferences
+import com.peterchege.expensetrackerapp.domain.repository.UserPreferencesRepository
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
-
-val GreyColor = Color(0xFF7D7D89)
+class UserPreferenceRepositoryImpl @Inject constructor(
+    private val preferences: UserPreferences
+):UserPreferencesRepository {
 
 
-val WhiteColorVariant = Color(0xFFE5E7EB)
-val BlueColor = Color(0xFF0B1121)
-val BlueColorVariant = Color(0xFF151E36)
-val BlackColorVariant = Color(0xFF010511)
+    override suspend fun setTheme(themeValue: String) {
+        preferences.setTheme(themeValue = themeValue)
+    }
 
+    override fun getTheme(): Flow<String> {
+        return preferences.getTheme()
+    }
+
+}

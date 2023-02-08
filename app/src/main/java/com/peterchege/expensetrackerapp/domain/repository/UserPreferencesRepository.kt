@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.presentation.theme
+package com.peterchege.expensetrackerapp.domain.repository
 
-import androidx.compose.ui.graphics.Color
+import kotlinx.coroutines.flow.Flow
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+interface UserPreferencesRepository {
 
-val GreyColor = Color(0xFF7D7D89)
+    suspend fun setTheme(themeValue:String)
 
-
-val WhiteColorVariant = Color(0xFFE5E7EB)
-val BlueColor = Color(0xFF0B1121)
-val BlueColorVariant = Color(0xFF151E36)
-val BlackColorVariant = Color(0xFF010511)
-
+    fun getTheme(): Flow<String>
+}

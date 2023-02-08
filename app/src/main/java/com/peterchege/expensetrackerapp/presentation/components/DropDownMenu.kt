@@ -30,10 +30,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+
 
 @Composable
 fun MenuSample(
@@ -103,6 +105,7 @@ fun ComposeMenu(
             if (menuItems.isNotEmpty()){
                 Text(
                     text= menuItems[selectedIndex],
+                    style = TextStyle(color = MaterialTheme.colors.primary),
                     modifier = Modifier
                         .fillMaxWidth()
                         .constrainAs(lable) {
@@ -134,14 +137,17 @@ fun ComposeMenu(
                 onDismissRequest = { onDismissMenuView() },
                 modifier = Modifier
                     .width(150.dp)
-                    .background(MaterialTheme.colors.surface)
+                    .background(MaterialTheme.colors.onBackground)
             ) {
                 menuItems.forEachIndexed { index, title ->
                     DropdownMenuItem(
                         onClick = {
                             onMenuItemclick(index)
                         }) {
-                        Text(text = title)
+                        Text(
+                            text = title,
+                            style = TextStyle(color = MaterialTheme.colors.primary)
+                        )
                     }
                 }
             }

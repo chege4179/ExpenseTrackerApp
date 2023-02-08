@@ -114,3 +114,21 @@ fun getMonthDates(dateString: String): List<String> {
     }
     return monthDates
 }
+
+fun getActualDayOfWeek(dateString: String): String {
+    val format = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+    val date = format.parse(dateString)
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+    return when (dayOfWeek) {
+        Calendar.MONDAY -> "Monday"
+        Calendar.TUESDAY -> "Tuesday"
+        Calendar.WEDNESDAY -> "Wednesday"
+        Calendar.THURSDAY -> "Thursday"
+        Calendar.FRIDAY -> "Friday"
+        Calendar.SATURDAY -> "Saturday"
+        Calendar.SUNDAY -> "Sunday"
+        else -> ""
+    }
+}

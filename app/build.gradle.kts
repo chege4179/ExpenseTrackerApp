@@ -84,11 +84,6 @@ dependencies {
     implementation("androidx.compose.foundation:foundation-layout:1.3.1")
     implementation ("androidx.navigation:navigation-compose:2.5.3")
 
-    // retrofit
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("com.squareup.okhttp3:okhttp:5.0.0-alpha.2")
-    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
 
     // view model
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
@@ -109,9 +104,9 @@ dependencies {
     // dagger hilt
     implementation ("com.google.dagger:hilt-android:2.44.2")
     kapt ("com.google.dagger:hilt-android-compiler:2.44.2")
-
     kapt ("androidx.hilt:hilt-compiler:1.0.0")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+
     // coil
     implementation ("io.coil-kt:coil-compose:2.2.2")
 
@@ -124,19 +119,21 @@ dependencies {
 
     // compose icons
     implementation ("androidx.compose.material:material-icons-extended:1.4.0-alpha05")
-    // glide
-    implementation ("dev.chrisbanes.accompanist:accompanist-glide:0.5.1")
+
     //pager
     implementation( "com.google.accompanist:accompanist-pager:0.27.0")
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.27.0")
+
     // swipe refresh
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.2-alpha")
+
     // landscapist
     implementation("com.github.skydoves:landscapist-glide:1.4.8")
+    //timber
+    implementation("com.jakewharton.timber:timber:5.0.1")
 
-    implementation("com.himanshoe:charty:1.0.1")
+    //charts
     implementation ("com.github.tehras:charts:0.2.4-alpha")
-
 
     // date picker
     implementation ("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")

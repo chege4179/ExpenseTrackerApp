@@ -16,21 +16,22 @@
 package com.peterchege.expensetrackerapp.core.di
 
 import android.app.Application
+import android.content.Context
 import android.provider.SyncStateContract
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
+import com.peterchege.expensetrackerapp.core.datastore.preferences.UserPreferences
 import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.core.util.Constants
-import com.peterchege.expensetrackerapp.data.ExpenseCategoryRepositoryImpl
-import com.peterchege.expensetrackerapp.data.ExpenseRepositoryImpl
-import com.peterchege.expensetrackerapp.data.TransactionCategoryRepositoryImpl
-import com.peterchege.expensetrackerapp.data.TransactionRepositoryImpl
-import com.peterchege.expensetrackerapp.domain.repository.ExpenseCategoryRepository
-import com.peterchege.expensetrackerapp.domain.repository.ExpenseRepository
-import com.peterchege.expensetrackerapp.domain.repository.TransactionCategoryRepository
-import com.peterchege.expensetrackerapp.domain.repository.TransactionRepository
+import com.peterchege.expensetrackerapp.data.*
+import com.peterchege.expensetrackerapp.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -83,6 +84,32 @@ object AppModule {
             db = database
         )
     }
+
+
+    @Provides
+    @Singleton
+    fun provideDatastorePreferences(@ApplicationContext context: Context):
+            DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(
+            produceFile = {
+                context.preferencesDataStoreFile(Constants.USER_PREFERENCES)
+            }
+        )
+    @Provides
+    @Singleton
+    fun provideUserPreferences(dataStore: DataStore<Preferences>):UserPreferences {
+        return UserPreferences(dataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserPreferencesRepository(userPreferences: UserPreferences):
+            UserPreferencesRepository {
+        return UserPreferenceRepositoryImpl(
+            preferences = userPreferences
+        )
+    }
+
 
 
 }

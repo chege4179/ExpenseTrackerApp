@@ -42,6 +42,9 @@ import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.domain.models.BottomNavItem
 import com.peterchege.expensetrackerapp.presentation.screens.analytics_screen.AnalyticsScreen
 import com.peterchege.expensetrackerapp.presentation.screens.home_screen.HomeScreen
+import com.peterchege.expensetrackerapp.presentation.screens.search_screen.SearchScreen
+import com.peterchege.expensetrackerapp.presentation.screens.settings_screen.SettingsScreen
+import com.peterchege.expensetrackerapp.presentation.theme.BlueColor
 
 
 @ExperimentalMaterialApi
@@ -61,9 +64,19 @@ fun BottomNavigationWrapper(
                         icon = Icons.Default.Home
                     ),
                     BottomNavItem(
+                        name="Search",
+                        route = Screens.SEARCH_SCREEN   ,
+                        icon = Icons.Default.Search
+                    ),
+                    BottomNavItem(
                         name="Analytics",
                         route = Screens.ANALYTICS_SCREEN   ,
                         icon = Icons.Outlined.BarChart
+                    ),
+                    BottomNavItem(
+                        name="Settings",
+                        route = Screens.SETTINGS_SCREEN   ,
+                        icon = Icons.Default.Settings
                     ),
                 ),
                 navController = navController,
@@ -98,7 +111,7 @@ fun BottomNavBar(
     val backStackEntry = navController.currentBackStackEntryAsState()
     BottomNavigation(
         modifier = modifier,
-        backgroundColor = Color.DarkGray,
+        backgroundColor = MaterialTheme.colors.background,
         elevation = 5.dp
     ) {
         items.forEach { item ->
@@ -152,9 +165,19 @@ fun BottomNavigation(
             HomeScreen(navController = navHostController)
         }
         composable(
+            route = Screens.SEARCH_SCREEN
+        ){
+            SearchScreen(navController = navHostController)
+        }
+        composable(
             route = Screens.ANALYTICS_SCREEN
         ){
             AnalyticsScreen(navController = navController)
+        }
+        composable(
+            route = Screens.SETTINGS_SCREEN
+        ){
+            SettingsScreen(navController = navController)
         }
 
 

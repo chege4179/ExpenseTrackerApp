@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -60,6 +61,7 @@ import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
+import com.peterchege.expensetrackerapp.presentation.theme.BlueColor
 
 enum class MultiFloatingState {
     EXPANDED,
@@ -123,8 +125,14 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
+                backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
-                    Text(text = "My Expense Tracker App")
+                    Text(
+                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        text = "My Expense Tracker App",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp
+                    )
                 }
             )
         },
@@ -157,7 +165,9 @@ fun HomeScreen(
                         elevation = 3.dp
                     ) {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = MaterialTheme.colors.onBackground),
                         ) {
                             Column(
                                 modifier = Modifier.fillMaxSize(),
@@ -168,12 +178,14 @@ fun HomeScreen(
                                 Text(
                                     text = "Total spending",
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 20.sp
+                                    fontSize = 20.sp,
+                                    style = TextStyle(color = MaterialTheme.colors.primary)
                                 )
                                 Text(
                                     text = "KES ${transactions.sumOf { it.transactionAmount }} /=",
                                     fontSize = 17.sp,
                                     fontWeight = FontWeight.Medium,
+                                    style = TextStyle(color = MaterialTheme.colors.primary)
                                 )
                                 MenuSample(
                                     menuWidth = 170,
@@ -254,6 +266,7 @@ fun MultiFloatingButton(
             }
         }
         FloatingActionButton(
+            backgroundColor = MaterialTheme.colors.background,
             onClick = {
                 onMultiFabStateChange(
                     if (transition.currentState == MultiFloatingState.EXPANDED) {
@@ -268,6 +281,7 @@ fun MultiFloatingButton(
             Icon(
                 imageVector = Icons.Default.Add,
                 modifier = Modifier.rotate(rotate),
+                tint = MaterialTheme.colors.primary,
                 contentDescription = null
             )
         }
@@ -286,7 +300,9 @@ fun MinFab(
     showLabel: Boolean = true,
 ) {
 
-    Row() {
+    Row(
+        modifier = Modifier.background(MaterialTheme.colors.background)
+    ) {
         if (showLabel) {
             Text(
                 text = item.label,
@@ -300,7 +316,7 @@ fun MinFab(
                         ).value
                     )
                     .shadow(textShadow)
-                    .background(MaterialTheme.colors.surface)
+                    .background(MaterialTheme.colors.primary)
                     .padding(start = 6.dp, end = 6.dp, top = 4.dp)
 
             )
@@ -310,7 +326,7 @@ fun MinFab(
         Spacer(modifier = Modifier.size(16.dp))
         Box(
             modifier = Modifier
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colors.onBackground)
                 .clip(CircleShape)
                 .width(32.dp)
                 .height(32.dp),
@@ -323,6 +339,7 @@ fun MinFab(
                     imageVector = item.icon,
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colors.primary,
                 )
             }
         }

@@ -16,16 +16,13 @@
 package com.peterchege.expensetrackerapp.presentation.screens.analytics_screen
 
 import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
@@ -33,6 +30,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.*
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -43,9 +44,13 @@ import com.github.tehras.charts.bar.renderer.label.SimpleValueDrawer
 import com.github.tehras.charts.bar.renderer.xaxis.SimpleXAxisDrawer
 import com.github.tehras.charts.bar.renderer.yaxis.SimpleYAxisDrawer
 import com.github.tehras.charts.piechart.animation.simpleChartAnimation
-
-import com.himanshoe.charty.bar.model.BarData
+import com.peterchege.expensetrackerapp.core.util.FilterConstants
+import com.peterchege.expensetrackerapp.core.util.getActualDayOfWeek
 import com.peterchege.expensetrackerapp.domain.toExternalModel
+
+import com.peterchege.expensetrackerapp.presentation.components.FilterCard
+import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
+import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -54,89 +59,168 @@ fun AnalyticsScreen(
     navController: NavController,
     viewModel: AnalyticsScreenViewModel = hiltViewModel()
 ) {
-    val scrollState = rememberScrollState()
-    val DaysOfTheWeek = listOf<String>("Sun","Mon","Tue","Wed","Thur","Fri","Sat")
-    val test = viewModel.graphData.value.map { data -> data.collectAsStateWithLifecycle(
-        initialValue = emptyList()) }
+
+    val transactionsState = viewModel.graphData.value
+        .map { data -> data.collectAsStateWithLifecycle(initialValue = emptyList()) }
         .map { state -> state.value.map { it.toExternalModel() } }
 
-
-    val transactions = viewModel.graphData.value
-        .map { data ->  data.collectAsStateWithLifecycle(initialValue = emptyList()) }
-        .map { state -> state.value.map { it.toExternalModel() } }
-        .map { graph ->  BarChartData.Bar(
-            value = graph.map { it.transactionAmount.toFloat() }.sum(),
-            label = DaysOfTheWeek[test.indexOf(graph)],
-            color = MaterialTheme.colors.primary
-        )
+    val transactions = transactionsState.map { a ->
+        val total = a.map { it.transactionAmount.toFloat() }.sum()
+        if (a.isNotEmpty()) {
+            BarChartData.Bar(
+                value = total,
+                label = if (transactionsState.size == 7) {
+                    getActualDayOfWeek(a[0].transactionCreatedOn).substring(0, 3)
+                } else {
+                    (transactionsState.indexOf(a) + 1).toString()
+                },
+                color = MaterialTheme.colors.primary
+            )
+        } else {
+            BarChartData.Bar(
+                value = total,
+                label = "",
+                color = MaterialTheme.colors.primary
+            )
         }
-    LaunchedEffect(key1 = transactions){
+
+    }
+
+    LaunchedEffect(key1 = transactions) {
         viewModel.onChangeBarDataList(data = transactions)
 
 
     }
-    val dummyData = listOf(
-        BarData(xValue="Sun", yValue=1000.0f),
-        BarData(xValue="Mon", yValue=550.0f),
-        BarData(xValue="Tue", yValue=3600.0f),
-        BarData(xValue="Wed", yValue=0.0f),
-        BarData(xValue="Wed", yValue=0.0f),
-        BarData(xValue="Wed", yValue=0.0f),
-        BarData(xValue="Wed", yValue=0.0f)
-    )
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
+            backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
-                    Text(text = "Analytics")
+                    Text(
+                        text = "Analytics",
+                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp
+                    )
                 }
             )
         },
     ) {
-        Column (
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp)
-            ,
+                .padding(10.dp),
             horizontalAlignment = Alignment.Start,
 
-        ){
-            Column(
-                modifier = Modifier.fillMaxWidth().height(80.dp),
-
             ) {
-                Text(
-                    text = "KES ${transactions.map{ it.value }.sum() }"
-                )
-                Text(
-                    text = "Total spent this week",
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp),
 
-                )
+                    ) {
+                    Text(
+                        text = "KES ${transactions.map { it.value }.sum()} /=",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 21.sp,
+                        style = TextStyle(color = MaterialTheme.colors.primary)
+                    )
+                    when (viewModel.activeFilterConstant.value) {
+                        FilterConstants.THIS_WEEK ->
+                            Text(
+                                text = "Total spent this week",
+                                style = TextStyle(color = GreyColor),
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp
+                            )
+                        FilterConstants.LAST_7_DAYS ->
+                            Text(
+                                text = "Total spent in the last 7 days",
+                                style = TextStyle(color = GreyColor),
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp
+                            )
+                        FilterConstants.THIS_MONTH ->
+                            Text(
+                                text = "Total spent this month",
+                                style = TextStyle(color = GreyColor),
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp
+                            )
+                    }
 
+
+                }
             }
-            BarChart(
-                barChartData = BarChartData(bars = viewModel.barDataList.value),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.45f)
-                    .padding(
-                        bottom = 10.dp
+            item {
+                BarChart(
+                    barChartData = BarChartData(bars = viewModel.barDataList.value),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .padding(10.dp),
+                    animation = simpleChartAnimation(),
+                    barDrawer = SimpleBarDrawer(),
+                    xAxisDrawer = SimpleXAxisDrawer(
+                        axisLineThickness = 1.dp,
+                        axisLineColor = MaterialTheme.colors.primary
                     ),
-                animation = simpleChartAnimation(),
-                barDrawer = SimpleBarDrawer(),
-                xAxisDrawer = SimpleXAxisDrawer(
-                    axisLineThickness = 2.dp
-                ),
-                yAxisDrawer = SimpleYAxisDrawer(
-                    axisLineThickness = 2.dp
-                ),
-                labelDrawer = SimpleValueDrawer(),
+                    yAxisDrawer = SimpleYAxisDrawer(
+                        axisLineThickness = 1.dp,
+                        axisLineColor = MaterialTheme.colors.primary
 
-            )
+                        ),
+                    labelDrawer = SimpleValueDrawer(
+                        drawLocation = SimpleValueDrawer.DrawLocation.XAxis,
+                        labelTextColor = MaterialTheme.colors.primary
+                    )
+                )
+            }
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    FilterCard(
+                        filterName = FilterConstants.THIS_WEEK,
+                        isActive = viewModel.activeFilterConstant.value == FilterConstants.THIS_WEEK,
+                        onClick = {
+                            viewModel.onChangeActiveFilterConstant(filter = it)
+                        }
+                    )
+                    FilterCard(
+                        filterName = FilterConstants.LAST_7_DAYS,
+                        isActive = viewModel.activeFilterConstant.value == FilterConstants.LAST_7_DAYS,
+                        onClick = {
+                            viewModel.onChangeActiveFilterConstant(filter = it)
+                        }
+                    )
+                    FilterCard(
+                        filterName = FilterConstants.THIS_MONTH,
+                        isActive = viewModel.activeFilterConstant.value == FilterConstants.THIS_MONTH,
+                        onClick = {
+                            viewModel.onChangeActiveFilterConstant(filter = it)
+                        }
+                    )
+                }
+            }
+
+            items(items = transactionsState.flatten().reversed()){ transaction ->
+                TransactionCard(transaction = transaction,
+                    onTransactionNavigate = {
+
+                    })
+            }
+
+
         }
     }
 
 }
+

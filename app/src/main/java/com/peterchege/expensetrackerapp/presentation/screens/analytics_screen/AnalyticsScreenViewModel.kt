@@ -20,10 +20,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.tehras.charts.bar.BarChartData
-import com.himanshoe.charty.bar.model.BarData
+
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
-import com.peterchege.expensetrackerapp.core.util.generateFormatDate
-import com.peterchege.expensetrackerapp.core.util.getWeekDates
+import com.peterchege.expensetrackerapp.core.util.*
 import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.use_case.GetTransactionsForACertainDayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,6 +45,11 @@ class AnalyticsScreenViewModel @Inject constructor(
 ) : ViewModel(){
     val todayDate = generateFormatDate(LocalDate.now())
     val weekDates = getWeekDates(dateString = todayDate)
+    val sevendaysBefore = generate7daysPriorDate(todayDate)
+    val sevenDaysBeforeDates = datesBetween(sevendaysBefore,todayDate)
+    val monthDates = getMonthDates(dateString = todayDate)
+
+
 
     val _graphData = mutableStateOf<List<Flow<List<TransactionEntity>>>>(emptyList())
     val graphData : State<List<Flow<List<TransactionEntity>>>> = _graphData
@@ -53,19 +57,38 @@ class AnalyticsScreenViewModel @Inject constructor(
     val _barDataList = mutableStateOf<List<BarChartData.Bar>>(emptyList())
     val barDataList:State<List<BarChartData.Bar>> = _barDataList
 
+    val _activeFilterConstant = mutableStateOf(FilterConstants.THIS_WEEK)
+    val activeFilterConstant:State<String> = _activeFilterConstant
+
 
     fun onChangeBarDataList(data:List<BarChartData.Bar>){
         _barDataList.value = data
     }
 
+    fun onChangeActiveFilterConstant(filter:String){
+        _activeFilterConstant.value = filter
+        if (filter == FilterConstants.LAST_7_DAYS){
+            getGraphData(dates = sevenDaysBeforeDates)
+
+        }else if (filter == FilterConstants.THIS_MONTH){
+            getGraphData(dates = monthDates)
+        }else if (filter == FilterConstants.THIS_WEEK){
+            getGraphData(dates = weekDates)
+        }
+    }
+
 
 
     init {
+        getGraphData(dates = weekDates)
+    }
+
+    private fun getGraphData(dates:List<String>){
         viewModelScope.launch {
-            val res = weekDates.map {
+            val data = dates.map {
                 getTransactionsForACertainDayUseCase(date = it)
             }
-            _graphData.value = res
+            _graphData.value = data
         }
     }
 

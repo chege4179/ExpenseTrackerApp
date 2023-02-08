@@ -15,7 +15,17 @@
  */
 package com.peterchege.expensetrackerapp.core.util
 
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+
 object Constants {
 
     const val DATABASE_NAME="expensetracker.db"
+
+    const val USER_PREFERENCES = "USER_PREFERENCES"
+
+    val THEME_OPTIONS = stringPreferencesKey(name = "theme_option")
+
+    const val LIGHT_MODE = "LIGHT_MODE"
+    const val DARK_MODE = "DARK_MODE"
 }

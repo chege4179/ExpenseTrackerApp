@@ -15,6 +15,9 @@
  */
 package com.peterchege.expensetrackerapp.core.util
 
+import android.content.Context
+import android.content.pm.PackageManager
+import timber.log.Timber
 import java.time.*
 import java.util.*
 
@@ -39,4 +42,15 @@ fun generateAvatarURL(name:String):String{
     val color = randomColorCode()
     return "https://ui-avatars.com/api/?background=${color}&color=fff&name=${splitname}&bold=true&fontsize=0.6&rounded=true"
 
+}
+
+fun getAppVersionName(context: Context): String {
+    var versionName = ""
+    try {
+        val info = context.packageManager?.getPackageInfo(context.packageName, 0)
+        versionName = info?.versionName ?: ""
+    } catch (e: PackageManager.NameNotFoundException) {
+        Timber.e(e.message)
+    }
+    return versionName
 }

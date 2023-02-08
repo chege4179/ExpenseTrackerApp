@@ -27,7 +27,7 @@ interface TransactionRepository {
 
     fun getAllTransactions(): Flow<List<TransactionEntity>>
 
-    fun getTransactionById(transactionId:String):TransactionEntity?
+    suspend fun getTransactionById(transactionId:String):TransactionEntity?
 
     fun getTransactionsForACertainDay(date:String):Flow<List<TransactionEntity>>
 
