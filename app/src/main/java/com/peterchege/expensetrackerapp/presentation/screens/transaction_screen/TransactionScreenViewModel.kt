@@ -41,9 +41,7 @@ class TransactionScreenViewModel @Inject constructor(
                 val info = getSingleTransactionUseCase(transactionId = it)
                 _transactionInfo.value = info
             }
-
         }
-
     }
 
 }

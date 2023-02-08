@@ -200,10 +200,11 @@ fun HomeScreen(
                         }
                     }
                 }
-                items(items = transactions) {
+                items(items = transactions) { transaction ->
                     TransactionCard(
-                        transaction = it,
+                        transaction = transaction,
                         onTransactionNavigate = {
+                            navController.navigate(Screens.TRANSACTIONS_SCREEN + "/$it")
 
                         }
                     )

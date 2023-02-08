@@ -16,6 +16,7 @@
 package com.peterchege.expensetrackerapp.presentation.components
 
 import android.content.res.Resources
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.R
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.peterchege.expensetrackerapp.core.util.Constants
 
@@ -37,11 +39,11 @@ fun ThemesDialog(
     onSelectTheme: (String) -> Unit
 ) {
     AlertDialog(
-//        containerColor = MaterialTheme.colorScheme.background,
         onDismissRequest = { onDismiss() },
         title = {
             Text(
                 text = "Themes",
+                style = TextStyle(color = MaterialTheme.colors.primary),
 
             )
         },
@@ -64,7 +66,6 @@ fun ThemesDialog(
         confirmButton = {
             Text(
                 text = "OK",
-                style = MaterialTheme.typography.h4,
                 color = MaterialTheme.colors.primary,
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
@@ -93,19 +94,21 @@ fun ThemeItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(MaterialTheme.colors.onBackground)
                 .padding(12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null
+                contentDescription = null,
+                tint = MaterialTheme.colors.primary
             )
             Text(
                 modifier = Modifier
                     .padding(12.dp),
                 text = themeName,
-                style = MaterialTheme.typography.h5
+                style = TextStyle(color = MaterialTheme.colors.primary),
             )
         }
     }

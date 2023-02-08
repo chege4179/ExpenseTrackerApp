@@ -25,6 +25,7 @@ import com.peterchege.expensetrackerapp.presentation.screens.add_expense_categor
 import com.peterchege.expensetrackerapp.presentation.screens.add_expense_screen.AddExpenseScreen
 import com.peterchege.expensetrackerapp.presentation.screens.add_transaction_category_screen.AddTransactionCategoryScreen
 import com.peterchege.expensetrackerapp.presentation.screens.add_transaction_screen.AddTransactionScreen
+import com.peterchege.expensetrackerapp.presentation.screens.transaction_screen.TransactionScreen
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -51,6 +52,9 @@ fun AppNavigation(
 
         composable(route = Screens.ADD_TRANSACTION_CATEGORY_SCREEN ){
             AddTransactionCategoryScreen(navController = navHostController)
+        }
+        composable(route = Screens.TRANSACTIONS_SCREEN +"/{id}"){
+            TransactionScreen(navController = navHostController)
         }
 
     }

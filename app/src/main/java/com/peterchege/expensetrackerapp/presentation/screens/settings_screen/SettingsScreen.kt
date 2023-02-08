@@ -56,7 +56,7 @@ fun SettingsScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                backgroundColor = Color.White,
+                backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
                     Text(
                         style = TextStyle(color = MaterialTheme.colors.primary),

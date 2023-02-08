@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -54,8 +55,12 @@ fun AddTransactionCategoryScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
+                backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
-                    Text(text ="Create Transaction Category")
+                    Text(
+                        text ="Create Transaction Category",
+                        style = TextStyle(color = MaterialTheme.colors.primary)
+                    )
                 }
             )
         }
@@ -77,7 +82,10 @@ fun AddTransactionCategoryScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
-                        Text(text = "Transaction Category Name")
+                        Text(
+                            text = "Transaction Category Name",
+                            style = TextStyle(color = MaterialTheme.colors.primary)
+                        )
                     }
                 )
                 Button(
@@ -88,7 +96,10 @@ fun AddTransactionCategoryScreen(
 
                     }
                 ){
-                    Text(text = "Save")
+                    Text(
+                        text = "Save",
+                        style = TextStyle(color = MaterialTheme.colors.primary)
+                    )
 
                 }
 

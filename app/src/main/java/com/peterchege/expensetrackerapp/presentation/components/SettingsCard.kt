@@ -15,6 +15,7 @@
  */
 package com.peterchege.expensetrackerapp.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
@@ -45,13 +46,11 @@ fun SettingsCard(
                 onClick(title)
             },
         shape = MaterialTheme.shapes.large,
-//        colors = CardDefaults.cardColors(
-//            containerColor = MaterialTheme.colorScheme.surfaceVariant
-//        )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colors.onBackground)
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
