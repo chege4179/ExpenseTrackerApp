@@ -20,24 +20,31 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
+import com.peterchege.expensetrackerapp.core.util.Screens
+import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
+import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -46,6 +53,7 @@ fun SearchScreen(
     navController: NavController,
     viewModel: SearchScreenViewModel = hiltViewModel()
 ) {
+    val scaffoldState = rememberScaffoldState()
     val transactionCategories = viewModel.transactionCategories
         .collectAsStateWithLifecycle(initialValue = emptyList())
         .value
@@ -53,7 +61,24 @@ fun SearchScreen(
     val startDateDialogState = rememberMaterialDialogState()
     val endDateDialogState = rememberMaterialDialogState()
 
+    val transactions = viewModel.transactions.value
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is UiEvent.ShowSnackbar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.uiText
+                    )
+                }
+                is UiEvent.Navigate -> {
+                    navController.navigate(route = event.route)
+                }
+            }
+        }
+    }
     Scaffold(
+        scaffoldState = scaffoldState,
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
@@ -61,7 +86,7 @@ fun SearchScreen(
                 .fillMaxSize()
                 .background(color = MaterialTheme.colors.background)
                 .padding(10.dp)
-        ){
+        ) {
             item {
                 Row(
                     modifier = Modifier
@@ -69,7 +94,7 @@ fun SearchScreen(
                         .height(100.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start
-                ){
+                ) {
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
@@ -135,7 +160,7 @@ fun SearchScreen(
                         MenuSample(
                             menuWidth = 120,
                             selectedIndex = viewModel.selectedIndex.value,
-                            menuItems = transactionCategories.map { transactionCategory -> transactionCategory.transactionCategoryName  },
+                            menuItems = transactionCategories.map { transactionCategory -> transactionCategory.transactionCategoryName },
                             onChangeSelectedIndex = {
                                 viewModel.onChangeSelectedTransactionCategoryIndex(index = it)
                                 val selectedTransactionCategory = transactionCategories[it]
@@ -153,12 +178,13 @@ fun SearchScreen(
                     ) {
                         IconButton(
                             onClick = {
+                                viewModel.searchTransactions()
 
                             },
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Search,
-                                contentDescription =null ,
+                                contentDescription = null,
                                 tint = MaterialTheme.colors.primary
                             )
 
@@ -168,9 +194,45 @@ fun SearchScreen(
 
                 }
             }
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (transactions.isEmpty()) {
+                        Text(
+                            text = "No transactions found ",
+                            style = TextStyle(color = MaterialTheme.colors.primary),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                    if (transactions.isNotEmpty()) {
+                        Text(
+                            text = "A total of ${transactions.size} transactions have been made " +
+                                    "between ${viewModel.transactionStartDate.value.toString()}" +
+                                    " and ${viewModel.transactionEndDate.value.toString()}",
+                            style = TextStyle(color = MaterialTheme.colors.primary),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
 
 
+                }
 
+            }
+            items(items = transactions) { transaction ->
+                TransactionCard(
+                    transaction = transaction,
+                    onTransactionNavigate = {
+                        navController.navigate(Screens.TRANSACTIONS_SCREEN + "/$it")
+
+                    }
+                )
+            }
 
 
         }
@@ -216,7 +278,7 @@ fun SearchScreen(
             }
 
         }
-        
+
     }
-    
+
 }

@@ -46,4 +46,7 @@ interface TransactionEntityDao {
     @Query("SELECT * FROM Transactions WHERE transactionCreatedOn IN (:dates)")
     fun getTransactionsBetweenTwoDates(dates:List<String>):Flow<List<TransactionEntity>>
 
+    @Query("SELECT * FROM Transactions WHERE transactionCreatedOn IN (:dates) AND transactionCategoryId = :categoryId")
+    fun searchTransactions(dates:List<String>,categoryId:String):Flow<List<TransactionEntity>>
+
 }

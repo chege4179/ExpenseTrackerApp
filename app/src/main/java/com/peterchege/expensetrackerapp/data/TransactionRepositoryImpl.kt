@@ -49,4 +49,11 @@ class TransactionRepositoryImpl @Inject constructor(
         return db.transactionEntityDao.getTransactionsBetweenTwoDates(dates = dates)
     }
 
+    override fun searchTransactions(
+        dates: List<String>,
+        categoryId: String
+    ): Flow<List<TransactionEntity>> {
+        return db.transactionEntityDao.searchTransactions(dates = dates, categoryId = categoryId)
+    }
+
 }

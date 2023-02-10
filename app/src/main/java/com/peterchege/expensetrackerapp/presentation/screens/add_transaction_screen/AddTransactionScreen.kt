@@ -25,8 +25,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -81,7 +83,9 @@ fun AddTransactionScreen(
                 title = {
                     Text(
                         text = "Create Transaction",
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp
                     )
                 }
             )
@@ -109,7 +113,10 @@ fun AddTransactionScreen(
                             text = "Transaction Name",
                             style = TextStyle(color = MaterialTheme.colors.primary)
                         )
-                    }
+                    },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.primary
+                    )
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 TextField(
@@ -127,6 +134,9 @@ fun AddTransactionScreen(
                             style = TextStyle(color = MaterialTheme.colors.primary)
                         )
                     },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.primary
+                    )
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 MenuSample(

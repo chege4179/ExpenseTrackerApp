@@ -23,8 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -65,20 +68,25 @@ fun AddExpenseScreen(
     }
     Scaffold(
         scaffoldState = scaffoldState,
-        modifier= Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
+                backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
-                    Text(text ="Create Expense ")
-
+                    Text(
+                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        text = "Create Expense Screen",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp
+                    )
                 }
             )
         }
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
-        ){
-            if (viewModel.isLoading.value){
+        ) {
+            if (viewModel.isLoading.value) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
             Column(
@@ -96,8 +104,10 @@ fun AddExpenseScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
-                        Text(text = "Expense Name")
-                    }
+                        Text(
+                            text = "Expense Name")
+                    },
+
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 TextField(
@@ -110,8 +120,16 @@ fun AddExpenseScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
-                        Text(text = "Expense Amount")
+                        Text(
+                            text = "Expense Amount",
+                            style = TextStyle(
+                                color = MaterialTheme.colors.primary
+                            )
+                        )
                     },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.primary
+                    )
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 MenuSample(
@@ -127,21 +145,21 @@ fun AddExpenseScreen(
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 Button(
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
                     onClick = {
                         viewModel.addExpense()
                     }
-                ){
+                ) {
                     Text(text = "Save")
 
                 }
-
-
 
 
             }
         }
 
     }
-    
+
 }

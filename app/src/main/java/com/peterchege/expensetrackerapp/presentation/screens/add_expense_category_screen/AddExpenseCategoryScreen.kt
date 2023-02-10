@@ -22,7 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.Mode
@@ -55,8 +58,14 @@ fun AddExpenseCategoryScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
+                backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
-                    Text(text ="Create Expense Category")
+                    Text(
+                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        text = "Create Expense Category",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp
+                    )
                 }
             )
         }
@@ -80,7 +89,10 @@ fun AddExpenseCategoryScreen(
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
                         Text(text = "Expense Category Name")
-                    }
+                    },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.primary
+                    )
                 )
                 Button(
                     modifier = Modifier.fillMaxWidth(),
