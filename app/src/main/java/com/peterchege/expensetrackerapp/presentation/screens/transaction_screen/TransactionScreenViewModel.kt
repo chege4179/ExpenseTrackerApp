@@ -20,8 +20,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.peterchege.expensetrackerapp.domain.models.TransactionInfo
 import com.peterchege.expensetrackerapp.domain.use_case.GetSingleTransactionUseCase
-import com.peterchege.expensetrackerapp.domain.use_case.TransactionInfo
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -16,87 +16,32 @@
 package com.peterchege.expensetrackerapp.presentation.screens.analytics_screen
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarDefaults.backgroundColor
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.github.tehras.charts.bar.BarChart
-import com.github.tehras.charts.bar.BarChartData
-import com.github.tehras.charts.bar.renderer.bar.SimpleBarDrawer
-import com.github.tehras.charts.bar.renderer.label.SimpleValueDrawer
-import com.github.tehras.charts.bar.renderer.xaxis.SimpleXAxisDrawer
-import com.github.tehras.charts.bar.renderer.yaxis.SimpleYAxisDrawer
-import com.github.tehras.charts.piechart.animation.simpleChartAnimation
-import com.peterchege.expensetrackerapp.core.util.FilterConstants
-import com.peterchege.expensetrackerapp.core.util.getActualDayOfWeek
-import com.peterchege.expensetrackerapp.domain.toExternalModel
+import com.google.accompanist.pager.*
+import com.peterchege.expensetrackerapp.presentation.screens.analytics_screen.expenses_analytics_screen.ExpensesAnalyticsScreen
+import kotlinx.coroutines.launch
 
-import com.peterchege.expensetrackerapp.presentation.components.FilterCard
-import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
-import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
-
-
+@OptIn(ExperimentalPagerApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AnalyticsScreen(
-    navController: NavController,
-    viewModel: AnalyticsScreenViewModel = hiltViewModel()
+    navController:NavController
 ) {
-
-    val transactionsState = viewModel.graphData.value
-        .map { data -> data.collectAsStateWithLifecycle(initialValue = emptyList()) }
-        .map { state -> state.value.map { it.toExternalModel() } }
-
-    val transactions = transactionsState.map { a ->
-        val total = a.map { it.transactionAmount.toFloat() }.sum()
-        if (a.isNotEmpty()) {
-            BarChartData.Bar(
-                value = total,
-                label = if (transactionsState.size == 7) {
-                    getActualDayOfWeek(a[0].transactionCreatedOn).substring(0, 3)
-                } else {
-                    (transactionsState.indexOf(a) + 1).toString()
-                },
-                color = MaterialTheme.colors.primary
-            )
-        } else {
-            BarChartData.Bar(
-                value = total,
-                label = "",
-                color = MaterialTheme.colors.primary
-            )
-        }
-
-    }
-
-    LaunchedEffect(key1 = transactions) {
-        viewModel.onChangeBarDataList(data = transactions)
-
-
-    }
-
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-            backgroundColor = MaterialTheme.colors.onBackground,
+                backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
                     Text(
                         text = "Analytics",
@@ -107,120 +52,68 @@ fun AnalyticsScreen(
                 }
             )
         },
-    ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp),
-            horizontalAlignment = Alignment.Start,
-
-            ) {
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp),
-
-                    ) {
-                    Text(
-                        text = "KES ${transactions.map { it.value }.sum()} /=",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 21.sp,
-                        style = TextStyle(color = MaterialTheme.colors.primary)
-                    )
-                    when (viewModel.activeFilterConstant.value) {
-                        FilterConstants.THIS_WEEK ->
-                            Text(
-                                text = "Total spent this week",
-                                style = TextStyle(color = GreyColor),
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 16.sp
-                            )
-                        FilterConstants.LAST_7_DAYS ->
-                            Text(
-                                text = "Total spent in the last 7 days",
-                                style = TextStyle(color = GreyColor),
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 16.sp
-                            )
-                        FilterConstants.THIS_MONTH ->
-                            Text(
-                                text = "Total spent this month",
-                                style = TextStyle(color = GreyColor),
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 16.sp
-                            )
-                    }
-
-
-                }
-            }
-            item {
-                BarChart(
-                    barChartData = BarChartData(bars = viewModel.barDataList.value),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp)
-                        .padding(10.dp),
-                    animation = simpleChartAnimation(),
-                    barDrawer = SimpleBarDrawer(),
-                    xAxisDrawer = SimpleXAxisDrawer(
-                        axisLineThickness = 1.dp,
-                        axisLineColor = MaterialTheme.colors.primary
-                    ),
-                    yAxisDrawer = SimpleYAxisDrawer(
-                        axisLineThickness = 1.dp,
-                        axisLineColor = MaterialTheme.colors.primary
-
-                        ),
-                    labelDrawer = SimpleValueDrawer(
-                        drawLocation = SimpleValueDrawer.DrawLocation.XAxis,
-                        labelTextColor = MaterialTheme.colors.primary
-                    )
-                )
-            }
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    FilterCard(
-                        filterName = FilterConstants.THIS_WEEK,
-                        isActive = viewModel.activeFilterConstant.value == FilterConstants.THIS_WEEK,
-                        onClick = {
-                            viewModel.onChangeActiveFilterConstant(filter = it)
-                        }
-                    )
-                    FilterCard(
-                        filterName = FilterConstants.LAST_7_DAYS,
-                        isActive = viewModel.activeFilterConstant.value == FilterConstants.LAST_7_DAYS,
-                        onClick = {
-                            viewModel.onChangeActiveFilterConstant(filter = it)
-                        }
-                    )
-                    FilterCard(
-                        filterName = FilterConstants.THIS_MONTH,
-                        isActive = viewModel.activeFilterConstant.value == FilterConstants.THIS_MONTH,
-                        onClick = {
-                            viewModel.onChangeActiveFilterConstant(filter = it)
-                        }
-                    )
-                }
-            }
-
-            items(items = transactionsState.flatten().reversed()){ transaction ->
-                TransactionCard(transaction = transaction,
-                    onTransactionNavigate = {
-
-                    })
-            }
-
-
+    ){
+        val pagerState = rememberPagerState()
+        Column(
+            modifier = Modifier.background(color = MaterialTheme.colors.background)
+        ) {
+            Tabs(pagerState = pagerState)
+            TabsContent(pagerState = pagerState,navController = navController)
         }
     }
-
 }
 
+@ExperimentalPagerApi
+@Composable
+fun Tabs(pagerState: PagerState) {
+    val list = listOf("Transactions","Expenses")
+    val scope = rememberCoroutineScope()
+
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        backgroundColor = MaterialTheme.colors.background,
+        contentColor = MaterialTheme.colors.onBackground,
+        divider = {
+            TabRowDefaults.Divider(
+                thickness = 3.dp,
+                color = MaterialTheme.colors.onBackground
+            )
+        },
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
+                height = 2.dp,
+                color = MaterialTheme.colors.primary
+
+            )
+        }
+    ) {
+        list.forEachIndexed { index, _->
+            Tab(
+                text = {
+                    Text(
+                        text = list[index],
+                        style = TextStyle(color = MaterialTheme.colors.primary)
+                    )
+                },
+                selected = pagerState.currentPage == index,
+                onClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
+                }
+            )
+        }
+    }
+}
+
+@ExperimentalPagerApi
+@Composable
+fun TabsContent(pagerState: PagerState, navController: NavController) {
+    HorizontalPager(state = pagerState ,count = 2) { page ->
+        when(page) {
+            0 -> TransactionsAnalyticsScreen(navController = navController)
+            1 -> ExpensesAnalyticsScreen(navController = navController)
+        }
+    }
+}

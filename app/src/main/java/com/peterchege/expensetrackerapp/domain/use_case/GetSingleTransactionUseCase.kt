@@ -18,21 +18,19 @@ package com.peterchege.expensetrackerapp.domain.use_case
 
 import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
+import com.peterchege.expensetrackerapp.domain.models.TransactionInfo
 import com.peterchege.expensetrackerapp.domain.repository.TransactionCategoryRepository
 import com.peterchege.expensetrackerapp.domain.repository.TransactionRepository
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import javax.inject.Inject
 
-data class TransactionInfo(
-    val transaction: Transaction?,
-    val category:TransactionCategory?,
-)
+
 class GetSingleTransactionUseCase @Inject constructor(
     private val transactionRepository: TransactionRepository,
     private val transactionCategoryRepository: TransactionCategoryRepository
 ){
 
-    operator suspend fun invoke(transactionId:String):TransactionInfo?{
+    suspend operator fun invoke(transactionId:String): TransactionInfo?{
         val transaction = transactionRepository.getTransactionById(transactionId = transactionId)
         val transactionCategory = transaction?.let {
             transactionCategoryRepository.getTransactionCategoryById(

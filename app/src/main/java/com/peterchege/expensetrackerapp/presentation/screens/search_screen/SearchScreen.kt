@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -79,7 +80,20 @@ fun SearchScreen(
     }
     Scaffold(
         scaffoldState = scaffoldState,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                backgroundColor = MaterialTheme.colors.onBackground,
+                title = {
+                    Text(
+                        text = "Search",
+                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp
+                    )
+                }
+            )
+        },
     ) {
         LazyColumn(
             modifier = Modifier

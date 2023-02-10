@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.domain.repository
+package com.peterchege.expensetrackerapp.domain.models
 
 import com.peterchege.expensetrackerapp.core.room.entities.ExpenseEntity
-import com.peterchege.expensetrackerapp.domain.models.Expense
 import kotlinx.coroutines.flow.Flow
 
-interface ExpenseRepository {
+data class ExpenseCategoryInfoEntity(
+    val expenseCategory:ExpenseCategory,
+    val expenses: Flow<List<ExpenseEntity>>
+)
 
-    suspend fun createExpense(expense: Expense)
-
-    fun getAllExpenses(): Flow<List<ExpenseEntity>>
-
-    suspend fun deleteExpenseById(expenseId:String)
-
-    suspend fun updateExpense(
-        expenseName:String,
-        expenseAmount:Int,
-        expenseUpdatedAt:String,
-        expenseUpdatedOn:String,
-    )
-
-    fun getExpensesByCategory(categoryId:String): Flow<List<ExpenseEntity>>
-
-}
+data class ExpenseCategoryInfo(
+    val expenseCategory:ExpenseCategory,
+    val expenses: Flow<List<Expense>>
+)

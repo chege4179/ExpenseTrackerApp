@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.domain.repository
+package com.peterchege.expensetrackerapp.domain.use_case
 
 import com.peterchege.expensetrackerapp.core.room.entities.ExpenseEntity
-import com.peterchege.expensetrackerapp.domain.models.Expense
+import com.peterchege.expensetrackerapp.domain.repository.ExpenseRepository
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-interface ExpenseRepository {
+class GetExpensesByCategoryUseCase @Inject constructor(
+    private val repository: ExpenseRepository
+) {
 
-    suspend fun createExpense(expense: Expense)
+    operator fun invoke(expenseCategoryId:String): Flow<List<ExpenseEntity>> {
+        return repository.getExpensesByCategory(categoryId = expenseCategoryId)
+    }
 
-    fun getAllExpenses(): Flow<List<ExpenseEntity>>
 
-    suspend fun deleteExpenseById(expenseId:String)
-
-    suspend fun updateExpense(
-        expenseName:String,
-        expenseAmount:Int,
-        expenseUpdatedAt:String,
-        expenseUpdatedOn:String,
-    )
-
-    fun getExpensesByCategory(categoryId:String): Flow<List<ExpenseEntity>>
 
 }

@@ -35,6 +35,9 @@ interface ExpenseEntityDao {
     @Query("DELETE FROM Expenses WHERE expenseId = :id")
     suspend fun deleteExpenseById(id: String)
 
+    @Query("SELECT * FROM Expenses WHERE expenseCategoryId = :id")
+    fun getExpensesByCategory(id: String): Flow<List<ExpenseEntity>>
+
     @Query("DELETE FROM Expenses")
     suspend fun deleteAllExpenseCategories()
 

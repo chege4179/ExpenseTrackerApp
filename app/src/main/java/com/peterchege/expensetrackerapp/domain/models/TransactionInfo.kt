@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.core.util
+package com.peterchege.expensetrackerapp.domain.models
 
-object Mode {
-
-    const val ADD_MODE = "ADD_MODE"
-    const val EDIT_MODE = "EDIT_MODE"
-}
+data class TransactionInfo(
+    val transaction: Transaction?,
+    val category:TransactionCategory?,
+)

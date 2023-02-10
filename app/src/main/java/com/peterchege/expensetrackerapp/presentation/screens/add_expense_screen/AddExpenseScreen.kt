@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.peterchege.expensetrackerapp.core.util.Mode
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
@@ -75,7 +74,7 @@ fun AddExpenseScreen(
                 title = {
                     Text(
                         style = TextStyle(color = MaterialTheme.colors.primary),
-                        text = "Create Expense Screen",
+                        text = "Create Expense ",
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
                     )

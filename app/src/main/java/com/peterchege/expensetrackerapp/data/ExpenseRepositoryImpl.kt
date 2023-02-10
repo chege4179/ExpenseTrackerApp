@@ -37,6 +37,9 @@ class ExpenseRepositoryImpl @Inject constructor(
     override suspend fun deleteExpenseById(expenseId: String) {
         return db.expenseEntityDao.deleteExpenseById(id = expenseId)
     }
+    override fun getExpensesByCategory(categoryId: String): Flow<List<ExpenseEntity>> {
+        return db.expenseEntityDao.getExpensesByCategory(id = categoryId)
+    }
 
     override suspend fun updateExpense(
         expenseName: String,
@@ -46,4 +49,6 @@ class ExpenseRepositoryImpl @Inject constructor(
     ) {
         TODO("Not yet implemented")
     }
+
+
 }
