@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+distribution_key.json
