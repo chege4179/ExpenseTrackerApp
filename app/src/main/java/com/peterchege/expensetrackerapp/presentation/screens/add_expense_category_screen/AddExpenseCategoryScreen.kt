@@ -21,7 +21,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,12 +33,15 @@ import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddExpenseCategoryScreen(
     navController: NavController,
     viewModel: AddExpenseCategoryScreenViewModel = hiltViewModel()
 ) {
+    val keyBoard = LocalSoftwareKeyboardController.current
+
     val scaffoldState = rememberScaffoldState()
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -77,7 +82,7 @@ fun AddExpenseCategoryScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(10.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
+                verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextField(
@@ -87,20 +92,32 @@ fun AddExpenseCategoryScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
-                        Text(text = "Expense Category Name")
+                        Text(
+                            text = "Expense Category Name",
+                            style = TextStyle(color = MaterialTheme.colors.primary),
+                        )
                     },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.primary
                     )
                 )
+                Spacer(modifier = Modifier.size(16.dp))
                 Button(
                     modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.onBackground
+                    ),
                     onClick = {
+                        keyBoard?.hide()
                         viewModel.addExpenseCategory()
 
                     }
                 ){
-                    Text(text = "Save")
+                    Text(
+                        text = "Save",
+                        style = TextStyle(color = MaterialTheme.colors.primary),
+
+                    )
 
                 }
 

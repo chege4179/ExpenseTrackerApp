@@ -24,6 +24,7 @@ import com.github.tehras.charts.bar.BarChartData
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
 import com.peterchege.expensetrackerapp.core.util.*
 import com.peterchege.expensetrackerapp.domain.models.Transaction
+import com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetTransactionsForACertainDayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +39,7 @@ data class GraphItem(
 @HiltViewModel
 class AnalyticsScreenViewModel @Inject constructor(
     private val getTransactionsForACertainDayUseCase: GetTransactionsForACertainDayUseCase,
+    private val getFilteredTransactionsUseCase: GetFilteredTransactionsUseCase,
 
 
 ) : ViewModel(){
@@ -67,14 +69,21 @@ class AnalyticsScreenViewModel @Inject constructor(
         _activeFilterConstant.value = filter
         if (filter == FilterConstants.LAST_7_DAYS){
             getGraphData(dates = sevenDaysBeforeDates)
-
         }else if (filter == FilterConstants.THIS_MONTH){
             getGraphData(dates = monthDates)
         }else if (filter == FilterConstants.THIS_WEEK){
             getGraphData(dates = weekDates)
+        }else if (filter == FilterConstants.ALL){
+            getAllTransactions()
         }
     }
 
+    private fun getAllTransactions(){
+        viewModelScope.launch {
+            val data = getFilteredTransactionsUseCase(filter = FilterConstants.ALL)
+            _graphData.value = listOf(data)
+        }
+    }
 
 
     init {

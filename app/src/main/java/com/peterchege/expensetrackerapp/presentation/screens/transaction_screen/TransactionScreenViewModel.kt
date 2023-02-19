@@ -21,6 +21,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.peterchege.expensetrackerapp.domain.models.TransactionInfo
+import com.peterchege.expensetrackerapp.domain.use_case.DeleteTransactionUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetSingleTransactionUseCase
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +32,7 @@ import javax.inject.Inject
 class TransactionScreenViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getSingleTransactionUseCase: GetSingleTransactionUseCase,
+    private val deleteTransactionUseCase:DeleteTransactionUseCase,
 
 ) : ViewModel(){
     val _transactionInfo = mutableStateOf<TransactionInfo?>(null)
@@ -43,6 +45,16 @@ class TransactionScreenViewModel @Inject constructor(
                 _transactionInfo.value = info
             }
         }
+    }
+
+    fun deleteTransaction(){
+        viewModelScope.launch {
+            _transactionInfo.value?.transaction?.let{
+                deleteTransactionUseCase(transactionId = it.transactionId)
+
+            }
+        }
+
     }
 
 }

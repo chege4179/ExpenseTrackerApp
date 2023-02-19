@@ -21,7 +21,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,12 +31,14 @@ import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddTransactionCategoryScreen(
     navController: NavController,
     viewModel:AddTransactionCategoryScreenViewModel = hiltViewModel()
 ) {
+    val keyBoard = LocalSoftwareKeyboardController.current
     val scaffoldState = rememberScaffoldState()
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -90,8 +94,11 @@ fun AddTransactionCategoryScreen(
                 )
                 Button(
                     modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.onBackground
+                    ),
                     onClick = {
-
+                        keyBoard?.hide()
                         viewModel.addTransactionCategory()
 
                     }

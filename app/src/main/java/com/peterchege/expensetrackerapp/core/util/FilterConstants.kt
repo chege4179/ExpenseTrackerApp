@@ -23,7 +23,6 @@ object FilterConstants {
     const val THIS_MONTH = "This month"
     const val ALL = "All"
 
-
     val FilterList = listOf(
         TODAY,
         YESTERDAY,

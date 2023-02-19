@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import com.github.tehras.charts.bar.BarChart
 import com.github.tehras.charts.bar.BarChartData
 import com.github.tehras.charts.bar.renderer.bar.SimpleBarDrawer
@@ -51,6 +52,7 @@ import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
 
 
+@OptIn(ExperimentalCoilApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TransactionsAnalyticsScreen(
@@ -136,6 +138,14 @@ fun TransactionsAnalyticsScreen(
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 16.sp
                             )
+
+                        FilterConstants.ALL ->
+                            Text(
+                                text = "Total spendings",
+                                style = TextStyle(color = GreyColor),
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp
+                            )
                     }
 
 
@@ -190,6 +200,13 @@ fun TransactionsAnalyticsScreen(
                     FilterCard(
                         filterName = FilterConstants.THIS_MONTH,
                         isActive = viewModel.activeFilterConstant.value == FilterConstants.THIS_MONTH,
+                        onClick = {
+                            viewModel.onChangeActiveFilterConstant(filter = it)
+                        }
+                    )
+                    FilterCard(
+                        filterName = FilterConstants.ALL,
+                        isActive = viewModel.activeFilterConstant.value == FilterConstants.ALL,
                         onClick = {
                             viewModel.onChangeActiveFilterConstant(filter = it)
                         }

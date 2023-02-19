@@ -23,7 +23,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,12 +45,14 @@ import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 import java.time.LocalTime
 
+@OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddTransactionScreen(
     navController: NavController,
     viewModel: AddTransactionScreenViewModel = hiltViewModel()
 ) {
+    val keyBoard = LocalSoftwareKeyboardController.current
     val scaffoldState = rememberScaffoldState()
 
     val transactionCategories = viewModel.transactionCategories
@@ -215,6 +219,7 @@ fun AddTransactionScreen(
                         backgroundColor = MaterialTheme.colors.onBackground
                     ),
                     onClick = {
+                        keyBoard?.hide()
                         viewModel.addTransaction()
                     }
                 ) {

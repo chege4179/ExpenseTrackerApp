@@ -56,4 +56,8 @@ class TransactionRepositoryImpl @Inject constructor(
         return db.transactionEntityDao.searchTransactions(dates = dates, categoryId = categoryId)
     }
 
+    override suspend fun deleteTransactionById(transactionId: String) {
+        return db.transactionEntityDao.deleteTransactionById(id = transactionId)
+    }
+
 }

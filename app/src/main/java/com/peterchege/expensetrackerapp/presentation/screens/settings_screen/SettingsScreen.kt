@@ -38,11 +38,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.core.util.getAppVersionName
-import com.peterchege.expensetrackerapp.presentation.components.SettingsCard
-import com.peterchege.expensetrackerapp.presentation.components.ThemesDialog
-import com.peterchege.expensetrackerapp.presentation.theme.BlueColor
+import com.peterchege.expensetrackerapp.presentation.components.SettingsRow
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -51,6 +51,7 @@ fun SettingsScreen(
     viewModel:SettingsScreenViewModel = hiltViewModel()
 
 ) {
+    val theme = viewModel.theme.collectAsStateWithLifecycle(initialValue = Constants.DARK_MODE)
     val context = LocalContext.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -76,14 +77,18 @@ fun SettingsScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 item {
-                    SettingsCard(
-                        title = "Change Your Theme",
-                        icon = Icons.Outlined.DarkMode,
-                        onClick = {
-                            viewModel.setShowThemesDialogState(
-                                !viewModel.shouldShowThemesDialog.value
-                            )
-                        },
+                    SettingsRow(
+                        title = "Dark Theme",
+                        checked = theme.value == Constants.DARK_MODE,
+                        onCheckedChange = {
+                            if (it){
+                                viewModel.updateTheme(themeValue = Constants.DARK_MODE)
+
+                            }else{
+                                viewModel.updateTheme(themeValue = Constants.LIGHT_MODE)
+                            }
+
+                        }
                     )
                 }
             }
@@ -110,17 +115,6 @@ fun SettingsScreen(
                 )
             }
         }
-
-        if (viewModel.shouldShowThemesDialog.value) {
-            ThemesDialog(
-                onDismiss = {
-                    viewModel.setShowThemesDialogState(!viewModel.shouldShowThemesDialog.value)
-                },
-                onSelectTheme = viewModel::updateTheme
-            )
-        }
-
-
     }
 
 }

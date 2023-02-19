@@ -16,17 +16,17 @@
 package com.peterchege.expensetrackerapp.presentation.screens.transaction_screen
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -40,6 +40,7 @@ fun TransactionScreen(
     navController: NavController,
     viewModel:TransactionScreenViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -95,6 +96,24 @@ fun TransactionScreen(
                         style = TextStyle(color = MaterialTheme.colors.primary)
 
                     )
+                }
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.onBackground
+                    ),
+                    onClick = {
+                        viewModel.deleteTransaction()
+                        Toast.makeText(context, "Transaction deleted",Toast.LENGTH_SHORT).show()
+
+                    }
+                ){
+                    Text(
+                        text = "Delete Transaction",
+                        style = TextStyle(color = MaterialTheme.colors.primary),
+
+                        )
+
                 }
             }
 

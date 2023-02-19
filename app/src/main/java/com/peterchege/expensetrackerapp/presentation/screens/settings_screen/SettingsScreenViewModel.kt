@@ -31,18 +31,12 @@ class SettingsScreenViewModel @Inject constructor(
 
 ) : ViewModel(){
 
-    private val _shouldShowThemesDialog = mutableStateOf(false)
-    val shouldShowThemesDialog: State<Boolean> = _shouldShowThemesDialog
-
-
-    fun setShowThemesDialogState(value: Boolean) {
-        _shouldShowThemesDialog.value = value
-    }
+    val theme = userPreferencesRepository.getTheme()
 
     fun updateTheme(themeValue: String) {
         viewModelScope.launch {
             userPreferencesRepository.setTheme(themeValue = themeValue)
-            setShowThemesDialogState(false)
+
         }
     }
 }

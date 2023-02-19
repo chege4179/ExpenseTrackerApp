@@ -18,62 +18,58 @@ package com.peterchege.expensetrackerapp.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
-fun SettingsCard(
-    onClick: (String) -> Unit,
+fun SettingsRow(
     title: String,
-    icon: ImageVector
+    checked :Boolean,
+    onCheckedChange:(Boolean) -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .clickable {
-                onClick(title)
-            },
+            .padding(horizontal = 0.dp)
+            .clip(shape = RoundedCornerShape(13.dp))
+            ,
         shape = MaterialTheme.shapes.large,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.onBackground)
-                .padding(16.dp),
+                .background(color = MaterialTheme.colors.onBackground)
+                .padding(10.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null
-                )
-                Text(
-                    text = title,
-                    style = TextStyle(color = MaterialTheme.colors.primary)
-
-                )
-            }
-
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = null
+            Text(
+                text = title,
+                style = TextStyle(color = MaterialTheme.colors.primary),
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
             )
+            Switch(
+                checked = checked,
+                onCheckedChange = {
+                    onCheckedChange(it)
+                },
+
+
+            )
+
         }
     }
 }
