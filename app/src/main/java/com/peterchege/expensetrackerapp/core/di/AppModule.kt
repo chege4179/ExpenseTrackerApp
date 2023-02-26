@@ -52,15 +52,16 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideExpenseCategoryRepository(database:ExpenseTrackerAppDatabase):
+    fun provideExpenseCategoryRepository(database: ExpenseTrackerAppDatabase):
             ExpenseCategoryRepository {
         return ExpenseCategoryRepositoryImpl(
             db = database
         )
     }
+
     @Provides
     @Singleton
-    fun provideExpenseRepository(database:ExpenseTrackerAppDatabase):
+    fun provideExpenseRepository(database: ExpenseTrackerAppDatabase):
             ExpenseRepository {
         return ExpenseRepositoryImpl(
             db = database
@@ -69,7 +70,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTransactionCategoryRepository(database:ExpenseTrackerAppDatabase):
+    fun provideTransactionCategoryRepository(database: ExpenseTrackerAppDatabase):
             TransactionCategoryRepository {
         return TransactionCategoryRepositoryImpl(
             db = database
@@ -78,7 +79,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTransactionRepository(database:ExpenseTrackerAppDatabase):
+    fun provideTransactionRepository(database: ExpenseTrackerAppDatabase):
             TransactionRepository {
         return TransactionRepositoryImpl(
             db = database
@@ -89,16 +90,18 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDatastorePreferences(@ApplicationContext context: Context):
-            DataStore<Preferences> =
-        PreferenceDataStoreFactory.create(
+            DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(
             produceFile = {
-                context.preferencesDataStoreFile(Constants.USER_PREFERENCES)
+                context.preferencesDataStoreFile(name = Constants.USER_PREFERENCES)
             }
         )
+    }
+
     @Provides
     @Singleton
-    fun provideUserPreferences(dataStore: DataStore<Preferences>):UserPreferences {
-        return UserPreferences(dataStore)
+    fun provideUserPreferences(dataStore: DataStore<Preferences>): UserPreferences {
+        return UserPreferences(dataStore = dataStore)
     }
 
     @Provides
@@ -109,7 +112,6 @@ object AppModule {
             preferences = userPreferences
         )
     }
-
 
 
 }

@@ -31,16 +31,16 @@ class CreateExpenseCategoryUseCase @Inject constructor(
 
     suspend operator fun invoke(expenseCategory: ExpenseCategory): Flow<Resource<Response>> = flow {
         try {
-            emit(Resource.Loading())
+            emit(value = Resource.Loading())
             val existingExpenseCategory = repository.getExpenseCategoryByName(name = expenseCategory.expenseCategoryName)
             if (existingExpenseCategory == null){
                 repository.saveExpenseCategory(expenseCategory = expenseCategory)
-                emit(Resource.Success(Response(msg = "Expense Category Added")))
+                emit(value = Resource.Success(Response(msg = "Expense Category Added")))
             }else{
-                emit(Resource.Error(message = "An expense category with a similar name already exists"))
+                emit(value = Resource.Error(message = "An expense category with a similar name already exists"))
             }
         }catch (e:IOException){
-            emit(Resource.Error(message = e.localizedMessage?: "An unexpected error occurred"))
+            emit(value = Resource.Error(message = e.localizedMessage?: "An unexpected error occurred"))
         }
     }
 }
