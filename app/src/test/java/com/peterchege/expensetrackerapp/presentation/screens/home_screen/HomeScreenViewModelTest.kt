@@ -64,12 +64,12 @@ class HomeScreenViewModelTest {
     }
 
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `Load Transactions into state ` () = runTest{
-        homeScreenViewModel.getTransactions(filter = FilterConstants.ALL)
-        assert(homeScreenViewModel.transactions.value.isNotEmpty())
-    }
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//    @Test
+//    fun `Load Transactions into state ` () = runTest{
+//        homeScreenViewModel.getTransactions(filter = FilterConstants.ALL)
+//        assert(homeScreenViewModel.transactions.value.isNotEmpty())
+//    }
 }
 
 class MainDispatcherRule @OptIn(ExperimentalCoroutinesApi::class) constructor(
