@@ -143,6 +143,20 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 item {
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.onBackground
+                        ),
+                        onClick = {
+                            throw RuntimeException("Test crash")
+
+                        }
+                    ){
+                        Text(text = "test crash")
+                    }
+                }
+                item {
                     Card(
                         modifier = Modifier
                             .padding(10.dp)

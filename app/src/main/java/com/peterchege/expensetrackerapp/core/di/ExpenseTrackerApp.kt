@@ -16,7 +16,10 @@
 package com.peterchege.expensetrackerapp.core.di
 
 import android.app.Application
+import com.peterchege.expensetrackerapp.BuildConfig
+import com.peterchege.expensetrackerapp.core.crashlytics.CrashlyticsTree
 import dagger.hilt.android.HiltAndroidApp
+import org.jetbrains.annotations.NotNull
 import timber.log.Timber
 
 @HiltAndroidApp
@@ -24,10 +27,19 @@ class ExpenseTrackerApp :Application(){
 
     override fun onCreate() {
         super.onCreate()
-        setupTimber()
+        initTimber()
     }
 }
 
-private fun setupTimber() {
-    Timber.plant(Timber.DebugTree())
+private fun initTimber() = when {
+    BuildConfig.DEBUG -> {
+        Timber.plant(object : Timber.DebugTree() {
+            override fun createStackElementTag(@NotNull element: StackTraceElement): String {
+                return super.createStackElementTag(element) + ":" + element.lineNumber
+            }
+        })
+    }
+    else -> {
+        Timber.plant(CrashlyticsTree())
+    }
 }

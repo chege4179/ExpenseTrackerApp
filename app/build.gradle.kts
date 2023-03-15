@@ -19,6 +19,8 @@ plugins {
     id ("kotlin-android")
     id ("kotlin-kapt")
     id ("dagger.hilt.android.plugin")
+    id ("com.google.gms.google-services")
+    id ("com.google.firebase.crashlytics")
 }
 
 android {
@@ -132,6 +134,10 @@ dependencies {
 
     //charts
     implementation ("com.github.tehras:charts:0.2.4-alpha")
+
+
+    implementation ("com.google.firebase:firebase-crashlytics-ktx:18.3.5")
+    implementation ("com.google.firebase:firebase-analytics-ktx:21.2.0")
 
     // date picker
     implementation ("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
