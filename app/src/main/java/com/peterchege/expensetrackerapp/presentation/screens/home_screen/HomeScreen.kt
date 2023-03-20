@@ -26,9 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,7 +58,7 @@ data class MinFabItem(
     val icon: ImageVector,
     val label: String,
     val onClick: () -> Unit,
-    val testTag:String,
+    val testTag: String,
 )
 
 @OptIn(ExperimentalCoilApi::class)
@@ -71,7 +68,7 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(key1 = viewModel.selectedIndex.value){
+    LaunchedEffect(key1 = viewModel.selectedIndex.value) {
         viewModel.getTransactions(filter = FilterConstants.FilterList[viewModel.selectedIndex.value])
 
     }
@@ -159,7 +156,7 @@ fun HomeScreen(
                             throw RuntimeException("Test crash")
 
                         }
-                    ){
+                    ) {
                         Text(text = "test crash")
                     }
                 }
@@ -309,7 +306,7 @@ fun MinFab(
     fabScale: Float,
     textShadow: Dp,
     showLabel: Boolean = true,
-    testTag:String,
+    testTag: String,
 ) {
 
     Row(
@@ -347,8 +344,8 @@ fun MinFab(
             IconButton(
                 modifier = Modifier.testTag(tag = testTag),
                 onClick = {
-                onMinFabItemClick(item)
-            }) {
+                    onMinFabItemClick(item)
+                }) {
                 Icon(
                     imageVector = item.icon,
                     contentDescription = null,
