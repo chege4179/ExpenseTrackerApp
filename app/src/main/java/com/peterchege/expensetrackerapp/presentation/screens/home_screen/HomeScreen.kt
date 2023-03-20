@@ -37,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -47,6 +48,7 @@ import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.Screens
+import com.peterchege.expensetrackerapp.core.util.TestTags
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 
@@ -59,6 +61,7 @@ data class MinFabItem(
     val icon: ImageVector,
     val label: String,
     val onClick: () -> Unit,
+    val testTag:String,
 )
 
 @OptIn(ExperimentalCoilApi::class)
@@ -84,28 +87,32 @@ fun HomeScreen(
             onClick = {
                 navController.navigate(Screens.ADD_EXPENSE_SCREEN)
 
-            }
+            },
+            testTag = ""
         ),
         MinFabItem(
             icon = Icons.Default.Add,
             label = "Create Transaction",
             onClick = {
                 navController.navigate(Screens.ADD_TRANSACTION_SCREEN)
-            }
+            },
+            testTag = TestTags.CREATE_TRANSACTION_ACTION_BUTTON
         ),
         MinFabItem(
             icon = Icons.Default.Add,
             label = "Create Expense Category",
             onClick = {
                 navController.navigate(Screens.ADD_EXPENSE_CATEGORY_SCREEN)
-            }
+            },
+            testTag = ""
         ),
         MinFabItem(
             icon = Icons.Default.Add,
             label = "Create Transaction Category",
             onClick = {
                 navController.navigate(Screens.ADD_TRANSACTION_CATEGORY_SCREEN)
-            }
+            },
+            testTag = ""
         ),
     )
     Scaffold(
@@ -260,7 +267,8 @@ fun MultiFloatingButton(
                     },
                     alpha = alpha.value,
                     textShadow = textshadow.value,
-                    fabScale = fabScale.value
+                    fabScale = fabScale.value,
+                    testTag = it.testTag
 
 
                 )
@@ -268,6 +276,7 @@ fun MultiFloatingButton(
             }
         }
         FloatingActionButton(
+            modifier = Modifier.testTag(TestTags.FLOATING_ACTION_BUTTON),
             backgroundColor = MaterialTheme.colors.background,
             onClick = {
                 onMultiFabStateChange(
@@ -300,6 +309,7 @@ fun MinFab(
     fabScale: Float,
     textShadow: Dp,
     showLabel: Boolean = true,
+    testTag:String,
 ) {
 
     Row(
@@ -334,7 +344,9 @@ fun MinFab(
                 .height(32.dp),
 
             ) {
-            IconButton(onClick = {
+            IconButton(
+                modifier = Modifier.testTag(tag = testTag),
+                onClick = {
                 onMinFabItemClick(item)
             }) {
                 Icon(
@@ -345,44 +357,6 @@ fun MinFab(
                 )
             }
         }
-//        Canvas(
-//            modifier = Modifier
-//                .size(32.dp)
-//                .clickable(
-//                    interactionSource = MutableInteractionSource(),
-//                    indication = rememberRipple(
-//                        bounded = false,
-//                        radius = 20.dp,
-//                        color = MaterialTheme.colors.onSurface
-//                    ),
-//                    onClick = {
-//                        onMinFabItemClick.invoke(item)
-//                    }
-//                ),
-//        ) {
-//            drawCircle(
-//                color = shadow,
-//                radius = fabScale,
-//                center = Offset(
-//                    x = center.x + 2f,
-//                    y = center.y + 2f,
-//                )
-//
-//            )
-//            drawCircle(
-//                color = shadow,
-//                radius = fabScale,
-//
-//                )
-//            drawImage(
-//                image = item.icon,
-//                topLeft = Offset(
-//                    x = center.x - (item.icon.width / 2),
-//                    y = center.y - (item.icon.width / 2),
-//                ),
-//                alpha = alpha
-//            )
-//        }
     }
 
 

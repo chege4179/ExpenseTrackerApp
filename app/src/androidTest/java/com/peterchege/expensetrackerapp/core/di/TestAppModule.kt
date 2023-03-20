@@ -1,0 +1,99 @@
+package com.peterchege.expensetrackerapp.core.di
+
+import android.app.Application
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.room.Room
+import com.peterchege.expensetrackerapp.core.datastore.preferences.UserPreferences
+import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
+import com.peterchege.expensetrackerapp.core.util.Constants
+import com.peterchege.expensetrackerapp.data.*
+import com.peterchege.expensetrackerapp.domain.repository.*
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object TestAppModule {
+
+    @Provides
+    @Singleton
+    fun provideExpenseTrackerDatabase(app: Application): ExpenseTrackerAppDatabase {
+        return Room.inMemoryDatabaseBuilder(
+            app,
+            ExpenseTrackerAppDatabase::class.java,
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideExpenseCategoryRepository(database: ExpenseTrackerAppDatabase):
+            ExpenseCategoryRepository {
+        return ExpenseCategoryRepositoryImpl(
+            db = database
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideExpenseRepository(database: ExpenseTrackerAppDatabase):
+            ExpenseRepository {
+        return ExpenseRepositoryImpl(
+            db = database
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideTransactionCategoryRepository(database: ExpenseTrackerAppDatabase):
+            TransactionCategoryRepository {
+        return TransactionCategoryRepositoryImpl(
+            db = database
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideTransactionRepository(database: ExpenseTrackerAppDatabase):
+            TransactionRepository {
+        return TransactionRepositoryImpl(
+            db = database
+        )
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideDatastorePreferences(@ApplicationContext context: Context):
+            DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(
+            produceFile = {
+                context.preferencesDataStoreFile(name = Constants.USER_PREFERENCES)
+            }
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserPreferences(dataStore: DataStore<Preferences>): UserPreferences {
+        return UserPreferences(dataStore = dataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserPreferencesRepository(userPreferences: UserPreferences):
+            UserPreferencesRepository {
+        return UserPreferenceRepositoryImpl(
+            preferences = userPreferences
+        )
+    }
+
+
+}

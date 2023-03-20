@@ -34,7 +34,7 @@ android {
         versionCode= 1
         versionName= "1.0"
 
-        testInstrumentationRunner ="androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner ="com.peterchege.expensetrackerapp.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary =true
         }
@@ -63,6 +63,7 @@ android {
     packagingOptions {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            exclude("META-INF/**")
         }
     }
 }
@@ -146,4 +147,17 @@ dependencies {
     testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     androidTestImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     androidTestImplementation ("app.cash.turbine:turbine:0.7.0")
+
+
+    // Instrumentation tests
+    androidTestImplementation ("com.google.dagger:hilt-android-testing:2.45")
+    kaptAndroidTest ("com.google.dagger:hilt-android-compiler:2.45")
+    androidTestImplementation ("junit:junit:4.13.2")
+    androidTestImplementation ("androidx.arch.core:core-testing:2.2.0")
+    androidTestImplementation ("com.google.truth:truth:1.1.3")
+    androidTestImplementation ("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation ("androidx.test:core-ktx:1.5.0")
+    androidTestImplementation( "com.squareup.okhttp3:mockwebserver:4.9.3")
+    androidTestImplementation( "io.mockk:mockk-android:1.13.4")
+    androidTestImplementation ("androidx.test:runner:1.5.2")
 }

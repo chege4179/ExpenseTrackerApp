@@ -1,0 +1,95 @@
+package com.peterchege.expensetrackerapp.presentation.screens.home_screen
+
+import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.peterchege.expensetrackerapp.core.di.AppModule
+import com.peterchege.expensetrackerapp.core.util.Screens
+import com.peterchege.expensetrackerapp.core.util.TestTags
+import com.peterchege.expensetrackerapp.presentation.MainActivity
+import com.peterchege.expensetrackerapp.presentation.navigation.BottomNavigationWrapper
+import com.peterchege.expensetrackerapp.presentation.screens.add_expense_category_screen.AddExpenseCategoryScreen
+import com.peterchege.expensetrackerapp.presentation.screens.add_expense_screen.AddExpenseScreen
+import com.peterchege.expensetrackerapp.presentation.screens.add_transaction_category_screen.AddTransactionCategoryScreen
+import com.peterchege.expensetrackerapp.presentation.screens.add_transaction_screen.AddTransactionScreen
+import com.peterchege.expensetrackerapp.presentation.screens.transaction_screen.TransactionScreen
+import com.peterchege.expensetrackerapp.presentation.theme.ExpenseTrackerAppTheme
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
+import org.junit.Assert.*
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+
+
+@HiltAndroidTest
+@UninstallModules(AppModule::class)
+class HomeScreenTest {
+
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+
+    @get:Rule(order = 1)
+    val composeRule = createAndroidComposeRule<MainActivity>()
+
+
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @ExperimentalAnimationApi
+    @Before
+    fun setUp() {
+        hiltRule.inject()
+        composeRule.activity.setContent {
+            val navHostController = rememberNavController()
+            ExpenseTrackerAppTheme {
+                NavHost(
+                    navController = navHostController,
+                    startDestination = Screens.BOTTOM_TAB_NAVIGATION
+                ) {
+                    composable(route = Screens.BOTTOM_TAB_NAVIGATION){
+                        BottomNavigationWrapper(navHostController = navHostController)
+                    }
+                    composable(route = Screens.ADD_EXPENSE_SCREEN ){
+                        AddExpenseScreen(navController = navHostController)
+                    }
+                    composable(route = Screens.ADD_TRANSACTION_SCREEN  ){
+                        AddTransactionScreen(navController = navHostController)
+                    }
+                    composable(route = Screens.ADD_EXPENSE_CATEGORY_SCREEN ){
+                        AddExpenseCategoryScreen(navController = navHostController)
+                    }
+
+                    composable(route = Screens.ADD_TRANSACTION_CATEGORY_SCREEN ){
+                        AddTransactionCategoryScreen(navController = navHostController)
+                    }
+                    composable(route = Screens.TRANSACTIONS_SCREEN +"/{id}"){
+                        TransactionScreen(navController = navHostController)
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun assertThatMinFabButtonsAreNotDisplayedInitially() {
+        composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_ACTION_BUTTON).assertDoesNotExist()
+        composeRule.onNodeWithTag(TestTags.FLOATING_ACTION_BUTTON).assertExists()
+        composeRule.onNodeWithTag(TestTags.FLOATING_ACTION_BUTTON).performClick()
+        composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_ACTION_BUTTON).assertExists()
+
+    }
+
+
+}
