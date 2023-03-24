@@ -15,12 +15,22 @@
  */
 package com.peterchege.expensetrackerapp.presentation.screens.home_screen
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.peterchege.expensetrackerapp.MainDispatcherRule
+import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
+import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.repository.TransactionRepository
+import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCase
 import com.peterchege.expensetrackerapp.repository.FakeTransactionRepository
+import io.mockk.*
+import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.*
 import org.junit.Assert.*
 
@@ -31,57 +41,43 @@ import org.junit.Test
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
-class HomeScreenViewModelTest {
 
-    private lateinit var homeScreenViewModel:HomeScreenViewModel;
-    private lateinit var repository: TransactionRepository
-    private lateinit var getFilteredTransactionsUseCase: GetFilteredTransactionsUseCase
+class HomeScreenViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
+    @get:Rule
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @MockK(relaxed = true)
+    val mockUseCase = mockk<GetFilteredTransactionsUseCase>()
+
+    val transactions :List<TransactionEntity> = mockk()
+
+    private lateinit var homeScreenViewModel: HomeScreenViewModel
+
     @Before
-    fun setUp() {
-        repository = FakeTransactionRepository()
-        getFilteredTransactionsUseCase = GetFilteredTransactionsUseCase(repository = repository)
-        homeScreenViewModel = HomeScreenViewModel(getFilteredTransactionsUseCase =getFilteredTransactionsUseCase)
+    fun setUp(){
+        MockKAnnotations.init(this)
+        every { mockUseCase.invoke(any()) } returns  flowOf(transactions)
+        homeScreenViewModel = HomeScreenViewModel(getFilteredTransactionsUseCase = mockUseCase)
+        every { homeScreenViewModel.getTransactions(any()) } just Runs
 
     }
 
-    @After
-    fun tearDown() {
-    }
+
+
 
     @Test
-    fun `Assert the default starting index is 0`(){
-        assert(homeScreenViewModel.selectedIndex.value == 0)
+    fun`should call use case with correct filter when index is changed`() = runTest {
+        val index = 1
+        every { mockUseCase(filter = FilterConstants.FilterList[index]) } returns flowOf(emptyList())
 
+        homeScreenViewModel.onChangeSelectedIndex(index)
+
+        verify { mockUseCase(filter = FilterConstants.FilterList[index]) }
     }
-    @Test
-    fun `Assert initial transactions are empty `(){
-        assert(homeScreenViewModel.transactions.value.isEmpty())
 
-    }
-
-
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    @Test
-//    fun `Load Transactions into state ` () = runTest{
-//        homeScreenViewModel.getTransactions(filter = FilterConstants.ALL)
-//        assert(homeScreenViewModel.transactions.value.isNotEmpty())
-//    }
 }
 
-class MainDispatcherRule @OptIn(ExperimentalCoroutinesApi::class) constructor(
-    val testDispatcher: TestDispatcher = UnconfinedTestDispatcher(),
-) : TestWatcher() {
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun starting(description: Description) {
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun finished(description: Description) {
-        Dispatchers.resetMain()
-    }
-}

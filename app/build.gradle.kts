@@ -149,7 +149,7 @@ dependencies {
     androidTestImplementation ("app.cash.turbine:turbine:0.7.0")
     testImplementation("io.mockk:mockk:1.13.4")
 
-
+    testImplementation ("androidx.arch.core:core-testing:2.1.0")
     // Instrumentation tests
     androidTestImplementation ("com.google.dagger:hilt-android-testing:2.45")
     kaptAndroidTest ("com.google.dagger:hilt-android-compiler:2.45")

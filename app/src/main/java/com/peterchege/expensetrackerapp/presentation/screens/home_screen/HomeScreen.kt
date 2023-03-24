@@ -41,11 +41,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.core.util.TestTags
+import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 
@@ -72,7 +74,11 @@ fun HomeScreen(
         viewModel.getTransactions(filter = FilterConstants.FilterList[viewModel.selectedIndex.value])
 
     }
-    val transactions = viewModel.transactions.value
+    val transactions = viewModel.transactions
+        .value
+        .collectAsStateWithLifecycle(initialValue = emptyList())
+        .value
+        .map { it.toExternalModel() }
 
     var multiFloatingState by remember {
         mutableStateOf(MultiFloatingState.COLLAPSED)
