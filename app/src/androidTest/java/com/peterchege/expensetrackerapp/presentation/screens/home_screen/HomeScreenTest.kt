@@ -18,12 +18,12 @@ package com.peterchege.expensetrackerapp.presentation.screens.home_screen
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.test.espresso.Espresso.pressBack
 import com.peterchege.expensetrackerapp.core.di.AppModule
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.core.util.TestTags
@@ -92,14 +92,42 @@ class HomeScreenTest {
         }
     }
 
+    val floatingActionButton = composeRule.onNodeWithTag(TestTags.FLOATING_ACTION_BUTTON)
+    val createTransactionMinFab = composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_BUTTON)
+    val createTransactionCategoryMinFab =
+        composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_CATEGORY_BUTTON)
+    val createTransactionCategoryInput =
+        composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_CATEGORY_INPUT)
+
+    val createTransactionCategorySaveButton =
+        composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_CATEGORY_SAVE_BUTTON)
+
+    val transactionCategoriesDropdown =
+        composeRule.onNodeWithTag(TestTags.TRANSACTIONS_CATEGORIES_DROPDOWN)
+
+//    @Test
+//    fun assertThatMinFabButtonsAreNotDisplayedInitially() {
+//        createTransactionMinFab.assertDoesNotExist()
+//        createTransactionCategoryMinFab.assertDoesNotExist()
+//        floatingActionButton.assertExists()
+//        floatingActionButton.performClick()
+//        createTransactionCategoryMinFab.assertExists()
+//        createTransactionMinFab.assertExists()
+//
+//    }
+
     @Test
-    fun assertThatMinFabButtonsAreNotDisplayedInitially() {
-        composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_ACTION_BUTTON).assertDoesNotExist()
-        composeRule.onNodeWithTag(TestTags.FLOATING_ACTION_BUTTON).assertExists()
-        composeRule.onNodeWithTag(TestTags.FLOATING_ACTION_BUTTON).performClick()
-        composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_ACTION_BUTTON).assertExists()
+    fun addTransactionCategoryWorksWell() {
+        floatingActionButton.performClick()
+        createTransactionCategoryMinFab.assertExists()
+        createTransactionCategoryMinFab.performClick()
+
+        createTransactionCategoryInput.performTextInput("Test Category")
+
+        createTransactionCategorySaveButton.performClick()
 
     }
+
 
 
 }

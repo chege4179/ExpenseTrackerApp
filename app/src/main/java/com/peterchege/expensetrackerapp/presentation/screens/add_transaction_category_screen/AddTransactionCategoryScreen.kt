@@ -24,10 +24,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.peterchege.expensetrackerapp.core.util.TestTags
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
@@ -84,7 +86,11 @@ fun AddTransactionCategoryScreen(
                     onValueChange = {
                         viewModel.onChangeTransactionCategoryName(text = it)
                     },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(tag = TestTags.CREATE_TRANSACTION_CATEGORY_INPUT)
+
+                    ,
                     placeholder = {
                         Text(
                             text = "Transaction Category Name",
@@ -93,7 +99,10 @@ fun AddTransactionCategoryScreen(
                     }
                 )
                 Button(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(tag = TestTags.CREATE_TRANSACTION_CATEGORY_SAVE_BUTTON)
+                    ,
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = MaterialTheme.colors.onBackground
                     ),

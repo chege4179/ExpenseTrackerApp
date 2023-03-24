@@ -61,7 +61,7 @@ class AddTransactionCategoryScreenViewModel @Inject constructor(
     fun addTransactionCategory() {
         viewModelScope.launch {
             if (_transactionCategoryName.value.isBlank()) {
-                _eventFlow.emit(UiEvent.ShowSnackbar(uiText = "Expense Category Name cannot be black"))
+                _eventFlow.emit(UiEvent.ShowSnackbar(uiText = "Transaction Category Name cannot be black"))
             } else {
                 val transactionCategory = TransactionCategory(
                     transactionCategoryName = _transactionCategoryName.value,

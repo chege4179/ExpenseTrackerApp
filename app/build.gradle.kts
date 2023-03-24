@@ -147,6 +147,7 @@ dependencies {
     testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     androidTestImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     androidTestImplementation ("app.cash.turbine:turbine:0.7.0")
+    testImplementation("io.mockk:mockk:1.13.4")
 
 
     // Instrumentation tests

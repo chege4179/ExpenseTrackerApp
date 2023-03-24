@@ -93,7 +93,7 @@ fun HomeScreen(
             onClick = {
                 navController.navigate(Screens.ADD_TRANSACTION_SCREEN)
             },
-            testTag = TestTags.CREATE_TRANSACTION_ACTION_BUTTON
+            testTag = TestTags.CREATE_TRANSACTION_BUTTON
         ),
         MinFabItem(
             icon = Icons.Default.Add,
@@ -109,7 +109,7 @@ fun HomeScreen(
             onClick = {
                 navController.navigate(Screens.ADD_TRANSACTION_CATEGORY_SCREEN)
             },
-            testTag = ""
+            testTag = TestTags.CREATE_TRANSACTION_CATEGORY_BUTTON
         ),
     )
     Scaffold(

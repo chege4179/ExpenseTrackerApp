@@ -30,11 +30,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.peterchege.expensetrackerapp.core.util.TestTags
 
 
 @Composable
@@ -86,6 +88,7 @@ fun ComposeMenu(
             .wrapContentSize(Alignment.TopStart)
             .padding(top = 10.dp)
             .border(width = 0.8.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.5f))
+            .testTag(tag = TestTags.TRANSACTIONS_CATEGORIES_DROPDOWN)
             .clickable(
                 onClick = {
                     updateMenuExpandStatus()
