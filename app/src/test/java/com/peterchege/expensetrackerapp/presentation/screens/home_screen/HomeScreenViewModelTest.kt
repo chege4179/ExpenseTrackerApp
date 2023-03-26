@@ -42,6 +42,7 @@ import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class HomeScreenViewModelTest {
 
     @get:Rule
@@ -68,7 +69,6 @@ class HomeScreenViewModelTest {
 
 
 
-
     @Test
     fun`should call use case with correct filter when index is changed`() = runTest {
         val index = 1
@@ -77,6 +77,14 @@ class HomeScreenViewModelTest {
         homeScreenViewModel.onChangeSelectedIndex(index)
 
         verify { mockUseCase(filter = FilterConstants.FilterList[index]) }
+    }
+
+    @Test
+    fun`When any of the min fabs button is clicked the enum state should update accordingly`() = runTest {
+        homeScreenViewModel.onChangeActiveBottomSheet(BottomSheets.ADD_TRANSACTION_CATEGORY)
+
+        assert(homeScreenViewModel._activeBottomSheet.value == BottomSheets.ADD_TRANSACTION_CATEGORY)
+
     }
 
 }

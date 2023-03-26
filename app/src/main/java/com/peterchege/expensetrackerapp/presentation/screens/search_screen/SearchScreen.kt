@@ -75,6 +75,7 @@ fun SearchScreen(
                 is UiEvent.Navigate -> {
                     navController.navigate(route = event.route)
                 }
+                else -> {}
             }
         }
     }

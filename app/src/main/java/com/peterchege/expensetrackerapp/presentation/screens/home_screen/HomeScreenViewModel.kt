@@ -21,13 +21,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
+import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+enum class BottomSheets  {
+    ADD_TRANSACTION,
+    ADD_TRANSACTION_CATEGORY,
+    ADD_EXPENSE,
+    ADD_EXPENSE_CATEGORY,
+}
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val getFilteredTransactionsUseCase: GetFilteredTransactionsUseCase
@@ -40,6 +49,12 @@ class HomeScreenViewModel @Inject constructor(
         mutableStateOf<Flow<List<TransactionEntity>>>(flow { emptyList<TransactionEntity>() })
     val transactions: State<Flow<List<TransactionEntity>>> = _transactions
 
+    val _activeBottomSheet = mutableStateOf<BottomSheets?>(null)
+    val activeBottomSheet: State<BottomSheets?> = _activeBottomSheet
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
 
     init {
         getTransactions(filter = FilterConstants.FilterList[_selectedIndex.value])
@@ -49,6 +64,12 @@ class HomeScreenViewModel @Inject constructor(
     fun onChangeSelectedIndex(index: Int) {
         _selectedIndex.value = index
         getTransactions(filter = FilterConstants.FilterList[index])
+    }
+    fun onChangeActiveBottomSheet(bottomSheet: BottomSheets){
+        _activeBottomSheet.value = bottomSheet
+        viewModelScope.launch {
+            _eventFlow.emit(UiEvent.OpenBottomSheet(bottomSheet = bottomSheet))
+        }
     }
 
 
@@ -61,3 +82,4 @@ class HomeScreenViewModel @Inject constructor(
 
 
 }
+

@@ -47,9 +47,15 @@ import coil.annotation.ExperimentalCoilApi
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.core.util.TestTags
+import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.domain.toExternalModel
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpenseBottomSheet
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpenseCategoryBottomSheet
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionBottomSheet
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionCategoryBottomSheet
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
+import kotlinx.coroutines.flow.collectLatest
 
 enum class MultiFloatingState {
     EXPANDED,
@@ -63,13 +69,36 @@ data class MinFabItem(
     val testTag: String,
 )
 
-@OptIn(ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class, ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     navController: NavController,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
+    val modalSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded },
+        skipHalfExpanded = true
+    )
+    val scaffoldState = rememberScaffoldState()
+    LaunchedEffect(key1 = true){
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is UiEvent.ShowSnackbar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.uiText
+                    )
+                }
+                is UiEvent.Navigate -> {
+                    navController.navigate(route = event.route)
+                }
+                is UiEvent.OpenBottomSheet -> {
+                    modalSheetState.show()
+                }
+            }
+        }
+    }
     LaunchedEffect(key1 = viewModel.selectedIndex.value) {
         viewModel.getTransactions(filter = FilterConstants.FilterList[viewModel.selectedIndex.value])
 
@@ -88,7 +117,7 @@ fun HomeScreen(
             icon = Icons.Default.Add,
             label = "Create Expense",
             onClick = {
-                navController.navigate(Screens.ADD_EXPENSE_SCREEN)
+                viewModel.onChangeActiveBottomSheet(bottomSheet = BottomSheets.ADD_EXPENSE)
 
             },
             testTag = ""
@@ -97,7 +126,7 @@ fun HomeScreen(
             icon = Icons.Default.Add,
             label = "Create Transaction",
             onClick = {
-                navController.navigate(Screens.ADD_TRANSACTION_SCREEN)
+                viewModel.onChangeActiveBottomSheet(bottomSheet = BottomSheets.ADD_TRANSACTION)
             },
             testTag = TestTags.CREATE_TRANSACTION_BUTTON
         ),
@@ -105,7 +134,7 @@ fun HomeScreen(
             icon = Icons.Default.Add,
             label = "Create Expense Category",
             onClick = {
-                navController.navigate(Screens.ADD_EXPENSE_CATEGORY_SCREEN)
+                viewModel.onChangeActiveBottomSheet(bottomSheet = BottomSheets.ADD_EXPENSE_CATEGORY)
             },
             testTag = ""
         ),
@@ -113,119 +142,132 @@ fun HomeScreen(
             icon = Icons.Default.Add,
             label = "Create Transaction Category",
             onClick = {
-                navController.navigate(Screens.ADD_TRANSACTION_CATEGORY_SCREEN)
+                viewModel.onChangeActiveBottomSheet(bottomSheet = BottomSheets.ADD_TRANSACTION_CATEGORY)
             },
             testTag = TestTags.CREATE_TRANSACTION_CATEGORY_BUTTON
         ),
     )
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                backgroundColor = MaterialTheme.colors.onBackground,
-                title = {
-                    Text(
-                        style = TextStyle(color = MaterialTheme.colors.primary),
-                        text = "My Expense Tracker App",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 22.sp
-                    )
+
+    ModalBottomSheetLayout(
+        sheetState = modalSheetState,
+        sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+        sheetBackgroundColor = MaterialTheme.colors.onBackground,
+
+        sheetContent = {
+            when(viewModel.activeBottomSheet.value){
+                BottomSheets.ADD_EXPENSE -> {
+                    AddExpenseBottomSheet(navController = navController)
                 }
-            )
-        },
-        floatingActionButton = {
-            MultiFloatingButton(
-                multiFloatingState = multiFloatingState,
-                items = items,
-                onMultiFabStateChange = {
-                    multiFloatingState = it
-                },
-            )
+                BottomSheets.ADD_EXPENSE_CATEGORY -> {
+                    AddExpenseCategoryBottomSheet(navController = navController)
+                }
+                BottomSheets.ADD_TRANSACTION -> {
+                    AddTransactionBottomSheet(navController = navController)
+                }
+                BottomSheets.ADD_TRANSACTION_CATEGORY -> {
+                    AddTransactionCategoryBottomSheet(navController = navController)
+                }
+                else -> {}
+            }
 
         }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                item {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colors.onBackground
-                        ),
-                        onClick = {
-                            throw RuntimeException("Test crash")
-
-                        }
-                    ) {
-                        Text(text = "test crash")
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                TopAppBar(
+                    backgroundColor = MaterialTheme.colors.onBackground,
+                    title = {
+                        Text(
+                            style = TextStyle(color = MaterialTheme.colors.primary),
+                            text = "My Expense Tracker App",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 22.sp
+                        )
                     }
-                }
-                item {
-                    Card(
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .fillMaxWidth()
-                            .height(150.dp),
-                        shape = RoundedCornerShape(5),
-                        elevation = 3.dp
-                    ) {
-                        Box(
+                )
+            },
+            floatingActionButton = {
+                MultiFloatingButton(
+                    multiFloatingState = multiFloatingState,
+                    items = items,
+                    onMultiFabStateChange = {
+                        multiFloatingState = it
+                    },
+                )
+
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp)
+            ) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    item {
+                        Card(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = MaterialTheme.colors.onBackground),
+                                .padding(10.dp)
+                                .fillMaxWidth()
+                                .height(150.dp),
+                            shape = RoundedCornerShape(5),
+                            elevation = 3.dp
                         ) {
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center,
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(color = MaterialTheme.colors.onBackground),
+                            ) {
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center,
 
-                                ) {
-                                Text(
-                                    text = "Total spending",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 20.sp,
-                                    style = TextStyle(color = MaterialTheme.colors.primary)
-                                )
-                                Text(
-                                    text = "KES ${transactions.sumOf { it.transactionAmount }} /=",
-                                    fontSize = 17.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    style = TextStyle(color = MaterialTheme.colors.primary)
-                                )
-                                MenuSample(
-                                    menuWidth = 170,
-                                    selectedIndex = viewModel.selectedIndex.value,
-                                    menuItems = FilterConstants.FilterList,
-                                    onChangeSelectedIndex = {
-                                        viewModel.onChangeSelectedIndex(index = it)
+                                    ) {
+                                    Text(
+                                        text = "Total spending",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 20.sp,
+                                        style = TextStyle(color = MaterialTheme.colors.primary)
+                                    )
+                                    Text(
+                                        text = "KES ${transactions.sumOf { it.transactionAmount }} /=",
+                                        fontSize = 17.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        style = TextStyle(color = MaterialTheme.colors.primary)
+                                    )
+                                    MenuSample(
+                                        menuWidth = 170,
+                                        selectedIndex = viewModel.selectedIndex.value,
+                                        menuItems = FilterConstants.FilterList,
+                                        onChangeSelectedIndex = {
+                                            viewModel.onChangeSelectedIndex(index = it)
 
-                                    }
-                                )
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
-                }
-                items(items = transactions) { transaction ->
-                    TransactionCard(
-                        transaction = transaction,
-                        onTransactionNavigate = {
-                            navController.navigate(Screens.TRANSACTIONS_SCREEN + "/$it")
+                    items(items = transactions) { transaction ->
+                        TransactionCard(
+                            transaction = transaction,
+                            onTransactionNavigate = {
+                                navController.navigate(Screens.TRANSACTIONS_SCREEN + "/$it")
 
-                        }
-                    )
+                            }
+                        )
+                    }
+
                 }
+
 
             }
-
-
         }
     }
+
 
 }
 

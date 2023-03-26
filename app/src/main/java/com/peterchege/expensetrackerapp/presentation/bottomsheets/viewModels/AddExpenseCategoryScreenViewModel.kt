@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.presentation.screens.add_expense_category_screen
+package com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 

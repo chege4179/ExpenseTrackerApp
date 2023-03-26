@@ -23,16 +23,10 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.test.espresso.Espresso.pressBack
 import com.peterchege.expensetrackerapp.core.di.AppModule
 import com.peterchege.expensetrackerapp.core.util.Screens
-import com.peterchege.expensetrackerapp.core.util.TestTags
 import com.peterchege.expensetrackerapp.presentation.MainActivity
 import com.peterchege.expensetrackerapp.presentation.navigation.BottomNavigationWrapper
-import com.peterchege.expensetrackerapp.presentation.screens.add_expense_category_screen.AddExpenseCategoryScreen
-import com.peterchege.expensetrackerapp.presentation.screens.add_expense_screen.AddExpenseScreen
-import com.peterchege.expensetrackerapp.presentation.screens.add_transaction_category_screen.AddTransactionCategoryScreen
-import com.peterchege.expensetrackerapp.presentation.screens.add_transaction_screen.AddTransactionScreen
 import com.peterchege.expensetrackerapp.presentation.screens.transaction_screen.TransactionScreen
 import com.peterchege.expensetrackerapp.presentation.theme.ExpenseTrackerAppTheme
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -41,7 +35,6 @@ import dagger.hilt.android.testing.UninstallModules
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 
 
 @HiltAndroidTest
@@ -71,19 +64,6 @@ class HomeScreenTest {
                     composable(route = Screens.BOTTOM_TAB_NAVIGATION) {
                         BottomNavigationWrapper(navHostController = navHostController)
                     }
-                    composable(route = Screens.ADD_EXPENSE_SCREEN) {
-                        AddExpenseScreen(navController = navHostController)
-                    }
-                    composable(route = Screens.ADD_TRANSACTION_SCREEN) {
-                        AddTransactionScreen(navController = navHostController)
-                    }
-                    composable(route = Screens.ADD_EXPENSE_CATEGORY_SCREEN) {
-                        AddExpenseCategoryScreen(navController = navHostController)
-                    }
-
-                    composable(route = Screens.ADD_TRANSACTION_CATEGORY_SCREEN) {
-                        AddTransactionCategoryScreen(navController = navHostController)
-                    }
                     composable(route = Screens.TRANSACTIONS_SCREEN + "/{id}") {
                         TransactionScreen(navController = navHostController)
                     }
@@ -91,43 +71,4 @@ class HomeScreenTest {
             }
         }
     }
-
-    val floatingActionButton = composeRule.onNodeWithTag(TestTags.FLOATING_ACTION_BUTTON)
-    val createTransactionMinFab = composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_BUTTON)
-    val createTransactionCategoryMinFab =
-        composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_CATEGORY_BUTTON)
-    val createTransactionCategoryInput =
-        composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_CATEGORY_INPUT)
-
-    val createTransactionCategorySaveButton =
-        composeRule.onNodeWithTag(TestTags.CREATE_TRANSACTION_CATEGORY_SAVE_BUTTON)
-
-    val transactionCategoriesDropdown =
-        composeRule.onNodeWithTag(TestTags.TRANSACTIONS_CATEGORIES_DROPDOWN)
-
-//    @Test
-//    fun assertThatMinFabButtonsAreNotDisplayedInitially() {
-//        createTransactionMinFab.assertDoesNotExist()
-//        createTransactionCategoryMinFab.assertDoesNotExist()
-//        floatingActionButton.assertExists()
-//        floatingActionButton.performClick()
-//        createTransactionCategoryMinFab.assertExists()
-//        createTransactionMinFab.assertExists()
-//
-//    }
-
-    @Test
-    fun addTransactionCategoryWorksWell() {
-        floatingActionButton.performClick()
-        createTransactionCategoryMinFab.assertExists()
-        createTransactionCategoryMinFab.performClick()
-
-        createTransactionCategoryInput.performTextInput("Test Category")
-
-        createTransactionCategorySaveButton.performClick()
-
-    }
-
-
-
 }

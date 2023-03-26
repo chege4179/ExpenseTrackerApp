@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.presentation.screens.add_expense_category_screen
+package com.peterchege.expensetrackerapp.presentation.bottomsheets.view
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -26,17 +27,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddExpenseCategoryScreenViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AddExpenseCategoryScreen(
+fun AddExpenseCategoryBottomSheet(
     navController: NavController,
     viewModel: AddExpenseCategoryScreenViewModel = hiltViewModel()
 ) {
@@ -54,81 +57,77 @@ fun AddExpenseCategoryScreen(
                 is UiEvent.Navigate -> {
                     navController.navigate(route = event.route)
                 }
+                else -> {}
             }
         }
     }
-    Scaffold(
-        scaffoldState = scaffoldState,
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                backgroundColor = MaterialTheme.colors.onBackground,
-                title = {
-                    Text(
-                        style = TextStyle(color = MaterialTheme.colors.primary),
-                        text = "Create Expense Category",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 22.sp
-                    )
-                }
-            )
-        }
-    ) {
-        Box(
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(250.dp)
+    ){
+        Column(
             modifier = Modifier
+                .background(color = MaterialTheme.colors.background)
                 .fillMaxSize()
-        ){
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
+                .padding(10.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth().height(70.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-                TextField(
-                    value = viewModel.expenseCategoryName.value,
-                    onValueChange = {
-                        viewModel.onChangeExpenseName(text = it)
-                    },
+                Text(
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = {
-                        Text(
-                            text = "Expense Category Name",
-                            style = TextStyle(color = MaterialTheme.colors.primary),
-                        )
-                    },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.primary
-                    )
+                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    text = "Create Expense Category",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.size(16.dp))
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.onBackground
-                    ),
-                    onClick = {
-                        keyBoard?.hide()
-                        viewModel.addExpenseCategory()
-
-                    }
-                ){
+            }
+            TextField(
+                value = viewModel.expenseCategoryName.value,
+                onValueChange = {
+                    viewModel.onChangeExpenseName(text = it)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
                     Text(
-                        text = "Save",
+                        text = "Expense Category Name",
                         style = TextStyle(color = MaterialTheme.colors.primary),
-
                     )
+                },
+                textStyle = TextStyle(
+                    color = MaterialTheme.colors.primary
+                )
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.onBackground
+                ),
+                onClick = {
+                    keyBoard?.hide()
+                    viewModel.addExpenseCategory()
 
                 }
+            ){
+                Text(
+                    text = "Save",
+                    style = TextStyle(color = MaterialTheme.colors.primary),
 
+                    )
 
             }
-            if (viewModel.isLoading.value){
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
+
+
         }
-
-
-
+        if (viewModel.isLoading.value){
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
     }
 }

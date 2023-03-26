@@ -1,0 +1,202 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "9475ab1c93d46e5aaf381cf1ec4754fe",
+    "entities": [
+      {
+        "tableName": "ExpenseCategory",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`expenseCategoryId` TEXT NOT NULL, `expenseCategoryName` TEXT NOT NULL, `expenseCategoryCreatedAt` TEXT NOT NULL, PRIMARY KEY(`expenseCategoryId`))",
+        "fields": [
+          {
+            "fieldPath": "expenseCategoryId",
+            "columnName": "expenseCategoryId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expenseCategoryName",
+            "columnName": "expenseCategoryName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expenseCategoryCreatedAt",
+            "columnName": "expenseCategoryCreatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "expenseCategoryId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "TransactionCategory",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transactionCategoryId` TEXT NOT NULL, `transactionCategoryName` TEXT NOT NULL, `transactionCategoryCreatedAt` TEXT NOT NULL, PRIMARY KEY(`transactionCategoryId`))",
+        "fields": [
+          {
+            "fieldPath": "transactionCategoryId",
+            "columnName": "transactionCategoryId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionCategoryName",
+            "columnName": "transactionCategoryName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionCategoryCreatedAt",
+            "columnName": "transactionCategoryCreatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "transactionCategoryId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Expenses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`expenseId` TEXT NOT NULL, `expenseName` TEXT NOT NULL, `expenseAmount` INTEGER NOT NULL, `expenseCategoryId` TEXT NOT NULL, `expenseCreatedAt` TEXT NOT NULL, `expenseCreatedOn` TEXT NOT NULL, `expenseUpdatedAt` TEXT NOT NULL, `expenseUpdatedOn` TEXT NOT NULL, PRIMARY KEY(`expenseId`))",
+        "fields": [
+          {
+            "fieldPath": "expenseId",
+            "columnName": "expenseId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expenseName",
+            "columnName": "expenseName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expenseAmount",
+            "columnName": "expenseAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expenseCategoryId",
+            "columnName": "expenseCategoryId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expenseCreatedAt",
+            "columnName": "expenseCreatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expenseCreatedOn",
+            "columnName": "expenseCreatedOn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expenseUpdatedAt",
+            "columnName": "expenseUpdatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expenseUpdatedOn",
+            "columnName": "expenseUpdatedOn",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "expenseId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Transactions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transactionId` TEXT NOT NULL, `transactionName` TEXT NOT NULL, `transactionAmount` INTEGER NOT NULL, `transactionCategoryId` TEXT NOT NULL, `transactionCreatedAt` TEXT NOT NULL, `transactionCreatedOn` TEXT NOT NULL, `transactionUpdatedAt` TEXT NOT NULL, `transactionUpdatedOn` TEXT NOT NULL, PRIMARY KEY(`transactionId`))",
+        "fields": [
+          {
+            "fieldPath": "transactionId",
+            "columnName": "transactionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionName",
+            "columnName": "transactionName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionAmount",
+            "columnName": "transactionAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionCategoryId",
+            "columnName": "transactionCategoryId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionCreatedAt",
+            "columnName": "transactionCreatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionCreatedOn",
+            "columnName": "transactionCreatedOn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionUpdatedAt",
+            "columnName": "transactionUpdatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionUpdatedOn",
+            "columnName": "transactionUpdatedOn",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "transactionId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9475ab1c93d46e5aaf381cf1ec4754fe')"
+    ]
+  }
+}

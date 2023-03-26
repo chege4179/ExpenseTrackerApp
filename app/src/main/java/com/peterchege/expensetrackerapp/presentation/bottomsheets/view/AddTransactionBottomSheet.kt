@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.presentation.screens.add_transaction_screen
+package com.peterchege.expensetrackerapp.presentation.bottomsheets.view
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +38,7 @@ import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddTransactionScreenViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
@@ -48,7 +50,7 @@ import java.time.LocalTime
 @OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AddTransactionScreen(
+fun AddTransactionBottomSheet(
     navController: NavController,
     viewModel: AddTransactionScreenViewModel = hiltViewModel()
 ) {
@@ -75,54 +77,63 @@ fun AddTransactionScreen(
                 is UiEvent.Navigate -> {
                     navController.navigate(route = event.route)
                 }
+                else -> {}
             }
         }
     }
-    Scaffold(
-        scaffoldState = scaffoldState,
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                backgroundColor = MaterialTheme.colors.onBackground,
-                title = {
-                    Text(
-                        text = "Create Transaction",
-                        style = TextStyle(color = MaterialTheme.colors.primary),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 22.sp
-                    )
-                }
-            )
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(500.dp)
     ) {
-        Box(
+        Column(
             modifier = Modifier
+                .background(color = MaterialTheme.colors.background)
                 .fillMaxSize()
+                .padding(10.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
+            Row(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    .height(70.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-                TextField(
-                    value = viewModel.transactionName.value,
-                    onValueChange = {
-                        viewModel.onChangeTransactionName(text = it)
-                    },
+                Text(
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = {
-                        Text(
-                            text = "Transaction Name",
-                            style = TextStyle(color = MaterialTheme.colors.primary)
-                        )
-                    },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.primary
-                    )
+                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    text = "Create Transaction",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.size(16.dp))
+            }
+            TextField(
+                value = viewModel.transactionName.value,
+                onValueChange = {
+                    viewModel.onChangeTransactionName(text = it)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(
+                        text = "Transaction Name",
+                        style = TextStyle(color = MaterialTheme.colors.primary)
+                    )
+                },
+                textStyle = TextStyle(
+                    color = MaterialTheme.colors.primary
+                )
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ) {
                 TextField(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
@@ -131,7 +142,7 @@ fun AddTransactionScreen(
                     onValueChange = {
                         viewModel.onChangeTransactionAmount(text = it)
                     },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(0.5f),
                     placeholder = {
                         Text(
                             text = "Transaction Amount",
@@ -153,13 +164,22 @@ fun AddTransactionScreen(
                         viewModel.onChangeSelectedTransactionCategory(category = selectedTransactionCategory)
                     }
                 )
-                Spacer(modifier = Modifier.size(16.dp))
-                Row(
+            }
+            Spacer(modifier = Modifier.size(16.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ) {
+
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(0.5f)
                         .height(100.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     Text(
                         text = viewModel.transactionDate.value.toString(),
@@ -182,13 +202,13 @@ fun AddTransactionScreen(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.size(16.dp))
-                Row(
+                Spacer(modifier = Modifier.width(16.dp))
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     Text(
                         text = viewModel.transactionTime.value.toString(),
@@ -211,71 +231,72 @@ fun AddTransactionScreen(
                         )
                     }
                 }
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.onBackground
-                    ),
-                    onClick = {
-                        keyBoard?.hide()
-                        viewModel.addTransaction()
-                    }
-                ) {
-                    Text(
-                        text = "Save Transaction",
-                        style = TextStyle(color = MaterialTheme.colors.primary)
-                    )
-
-                }
             }
-            if (viewModel.isLoading.value) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-
-            MaterialDialog(
-                dialogState = dateDialogState,
-                buttons = {
-                    positiveButton(text = "Pick") {
-                        dateDialogState.hide()
-
-                    }
-                    negativeButton(text = "Cancel") {
-
-                    }
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.onBackground
+                ),
+                onClick = {
+                    keyBoard?.hide()
+                    viewModel.addTransaction()
                 }
             ) {
-                datepicker(
-                    initialDate = LocalDate.now(),
-                    title = "Pick a date",
-                ) {
-                    viewModel.onChangeTransactionDate(date = it)
-
-                }
+                Text(
+                    text = "Save Transaction",
+                    fontWeight = FontWeight.Bold,
+                    style = TextStyle(color = MaterialTheme.colors.primary)
+                )
 
             }
-            MaterialDialog(
-                dialogState = timeDialogState,
-                buttons = {
-                    positiveButton(text = "Pick") {
-                        timeDialogState.hide()
+        }
+        if (viewModel.isLoading.value) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
 
-                    }
-                    negativeButton(text = "Cancel") {
+        MaterialDialog(
+            dialogState = dateDialogState,
+            buttons = {
+                positiveButton(text = "Pick") {
+                    dateDialogState.hide()
 
-                    }
                 }
+                negativeButton(text = "Cancel") {
+
+                }
+            }
+        ) {
+            datepicker(
+                initialDate = LocalDate.now(),
+                title = "Pick a date",
             ) {
-                timepicker(
-                    initialTime = LocalTime.now(),
-                    title = "Pick a time",
-                ) {
-                    viewModel.onChangeTransactionTime(time = it)
-
-                }
+                viewModel.onChangeTransactionDate(date = it)
 
             }
+
+        }
+        MaterialDialog(
+            dialogState = timeDialogState,
+            buttons = {
+                positiveButton(text = "Pick") {
+                    timeDialogState.hide()
+
+                }
+                negativeButton(text = "Cancel") {
+
+                }
+            }
+        ) {
+            timepicker(
+                initialTime = LocalTime.now(),
+                title = "Pick a time",
+            ) {
+                viewModel.onChangeTransactionTime(time = it)
+
+            }
+
         }
     }
 }

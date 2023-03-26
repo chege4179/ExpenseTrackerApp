@@ -15,11 +15,15 @@
  */
 package com.peterchege.expensetrackerapp.core.util
 
+import com.peterchege.expensetrackerapp.presentation.screens.home_screen.BottomSheets
+
 abstract class Event
 
 sealed class UiEvent: Event() {
     data class ShowSnackbar(val uiText: String) : UiEvent()
     data class Navigate(val route: String) : UiEvent()
+
+    data class OpenBottomSheet(val bottomSheet: BottomSheets) : UiEvent()
 
 
 }

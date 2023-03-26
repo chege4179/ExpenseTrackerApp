@@ -25,7 +25,7 @@ val Teal200 = Color(0xFF03DAC5)
 val GreyColor = Color(0xFF7D7D89)
 
 
-val WhiteColorVariant = Color(0xFFEBEDF1)
+val WhiteColorVariant = Color(0xFFF3F2F9)
 val BlueColor = Color(0xFF0B1121)
 val BlueColorVariant = Color(0xFF151E36)
 val BlackColorVariant = Color(0xFF010511)
