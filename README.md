@@ -5,11 +5,9 @@ and visualizes the data in a bar and pie chart.The app is completely offline and
 a room database so no need for internet connection
 
 ## Screenshots of the app
-<img src="screenshots/screenshot1.png" width="250"/> <img src="screenshots/screenshot2.png" width="250"/> 
+<img src="screenshots/screenshot1.png" width="250"/> <img src="screenshots/screenshot2.png" width="250"/> <img src="screenshots/screenshot3.png" width="250"/>
 
-<img src="screenshots/screenshot3.png" width="250"/><img src="screenshots/screenshot4.png" width="250"/> 
-
-<img src="screenshots/screenshot5.png" width="250"/><img src="screenshots/screenshot6.png" width="250"/>
+<img src="screenshots/screenshot4.png" width="250"/><img src="screenshots/screenshot5.png" width="250"/><img src="screenshots/screenshot6.png" width="250"/>
 
 # Tech Stack.
 This project uses many of the popular libraries, plugins and tools of the android ecosystem.
@@ -32,4 +30,4 @@ This project uses many of the popular libraries, plugins and tools of the androi
 - [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) - Library Support for coroutines,provides runBlocking coroutine builder used in tests.
 
 ## Extras
-- [GitHub Actions](https://github.com/chege4179/ExpenseTrackerApp/actions) - GitHub actions is used in this project to check for syntax correctness using linting, execute the unit tests, generate a new package and deploying the apk using [Firebase App Distribution](https://firebase.google.com/docs/app-distribution) when pushing changes to the dev branch or when making a pull request to the main branch.
+- [GitHub Actions](https://github.com/chege4179/ExpenseTrackerApp/actions) - GitHub actions is used in this project to  deploy the apk using [Firebase App Distribution](https://firebase.google.com/docs/app-distribution) when pushing changes to the dev branch or when making a pull request to the main branch.
