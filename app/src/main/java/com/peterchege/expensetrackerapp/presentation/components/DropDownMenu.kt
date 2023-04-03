@@ -51,7 +51,9 @@ fun MenuSample(
         modifier = Modifier
             .width(menuWidth.dp)
             .height(95.dp)
-            .padding(10.dp),
+            .padding(10.dp)
+            .testTag(TestTags.GENERAL_DROPDOWN)
+        ,
         contentAlignment = Alignment.CenterStart
     ) {
         ComposeMenu(
