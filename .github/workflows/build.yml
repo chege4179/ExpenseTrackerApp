@@ -21,6 +21,9 @@ jobs:
       - name: Build App with Gradle
         run: ./gradlew build
 
+      - name: Build Android Test APK
+        run: ./gradlew assembleAndroidTest
+
       - name: Run Android tests on Firebase Test Lab
         uses: asadmansr/Firebase-Test-Lab-Action@v1.0
         with:
