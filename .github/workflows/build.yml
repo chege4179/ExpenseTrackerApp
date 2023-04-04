@@ -18,6 +18,16 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Run unit Tests
+        run: ./gradlew test
+
+      - name: Run tests on Firebase Test Lab
+        uses: asadmansr/Firebase-Test-Lab-Action@v1.0
+        with:
+          arg-spec: 'android-device.yml:android-pixel-4'
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_TEST_LAB_SERVICE_ACCOUNT }}
+
       - name: Upload a Build Artifact (APK)
         uses: actions/upload-artifact@v2.2.4
         with:
