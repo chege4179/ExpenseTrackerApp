@@ -21,12 +21,14 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
              ${{ runner.os }}-gradle-    
-
-      - name: Run Unit Tests with Gradle
-        run: ./gradlew test
-
       - name: Build App with Gradle
         run: ./gradlew build
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Run Unit Tests with Gradle
+        run: ./gradlew test
 
       - name: Build Android Test APK
         run: ./gradlew assembleAndroidTest
@@ -37,7 +39,10 @@ jobs:
           arg-spec: 'android-device.yml:android-pixel-4'
         env:
           SERVICE_ACCOUNT: ${{ secrets.FIREBASE_TEST_LAB_SERVICE_ACCOUNT }}
-
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
       - name: Upload a Build Artifact (APK)
         uses: actions/upload-artifact@v2.2.4
         with:
