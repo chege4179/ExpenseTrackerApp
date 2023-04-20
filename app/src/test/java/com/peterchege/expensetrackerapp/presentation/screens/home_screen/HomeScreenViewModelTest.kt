@@ -64,6 +64,7 @@ class HomeScreenViewModelTest {
     fun setUp(){
         MockKAnnotations.init(this)
         every { mockUseCase.invoke(any()) } returns  flowOf(transactions)
+        every { mockUseCase2.invoke() } returns flowOf(emptyList())
         homeScreenViewModel = HomeScreenViewModel(
             getFilteredTransactionsUseCase = mockUseCase,
             getAllIncomeUseCase = mockUseCase2,
