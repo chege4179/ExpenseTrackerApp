@@ -22,6 +22,7 @@ import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.repository.TransactionRepository
 import com.peterchege.expensetrackerapp.domain.toExternalModel
+import com.peterchege.expensetrackerapp.domain.use_case.GetAllIncomeUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCase
 import com.peterchege.expensetrackerapp.repository.FakeTransactionRepository
 import io.mockk.*
@@ -53,6 +54,7 @@ class HomeScreenViewModelTest {
 
     @MockK(relaxed = true)
     val mockUseCase = mockk<GetFilteredTransactionsUseCase>()
+    val mockUseCase2 = mockk<GetAllIncomeUseCase>()
 
     val transactions :List<TransactionEntity> = mockk()
 
@@ -62,7 +64,10 @@ class HomeScreenViewModelTest {
     fun setUp(){
         MockKAnnotations.init(this)
         every { mockUseCase.invoke(any()) } returns  flowOf(transactions)
-        homeScreenViewModel = HomeScreenViewModel(getFilteredTransactionsUseCase = mockUseCase)
+        homeScreenViewModel = HomeScreenViewModel(
+            getFilteredTransactionsUseCase = mockUseCase,
+            getAllIncomeUseCase = mockUseCase2,
+        )
         every { homeScreenViewModel.getTransactions(any()) } just Runs
 
     }
