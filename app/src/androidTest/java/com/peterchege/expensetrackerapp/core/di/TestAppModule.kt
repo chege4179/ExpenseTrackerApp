@@ -109,6 +109,14 @@ object TestAppModule {
             preferences = userPreferences
         )
     }
+    @Provides
+    @Singleton
+    fun provideIncomeRepository(database: ExpenseTrackerAppDatabase):
+            IncomeRepository {
+        return IncomeRepositoryImpl(
+            db = database
+        )
+    }
 
 
 }
