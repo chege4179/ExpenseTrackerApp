@@ -15,19 +15,15 @@
  */
 package com.peterchege.expensetrackerapp.core.di
 
-import android.app.Application
 import android.content.Context
-import android.provider.SyncStateContract
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import androidx.room.Room
 import com.peterchege.expensetrackerapp.core.datastore.preferences.UserPreferences
-import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.core.util.Constants
-import com.peterchege.expensetrackerapp.data.*
-import com.peterchege.expensetrackerapp.domain.repository.*
+import com.peterchege.expensetrackerapp.data.UserPreferenceRepositoryImpl
+import com.peterchege.expensetrackerapp.domain.repository.UserPreferencesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,57 +31,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
-
-    @Provides
-    @Singleton
-    fun provideExpenseTrackerDatabase(app: Application): ExpenseTrackerAppDatabase {
-        return Room.databaseBuilder(
-            app,
-            ExpenseTrackerAppDatabase::class.java,
-            Constants.DATABASE_NAME
-        ).build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideExpenseCategoryRepository(database: ExpenseTrackerAppDatabase):
-            ExpenseCategoryRepository {
-        return ExpenseCategoryRepositoryImpl(
-            db = database
-        )
-    }
-
-    @Provides
-    @Singleton
-    fun provideExpenseRepository(database: ExpenseTrackerAppDatabase):
-            ExpenseRepository {
-        return ExpenseRepositoryImpl(
-            db = database
-        )
-    }
-
-    @Provides
-    @Singleton
-    fun provideTransactionCategoryRepository(database: ExpenseTrackerAppDatabase):
-            TransactionCategoryRepository {
-        return TransactionCategoryRepositoryImpl(
-            db = database
-        )
-    }
-
-    @Provides
-    @Singleton
-    fun provideTransactionRepository(database: ExpenseTrackerAppDatabase):
-            TransactionRepository {
-        return TransactionRepositoryImpl(
-            db = database
-        )
-    }
-
+object DatastoreModule {
 
     @Provides
     @Singleton
@@ -112,6 +60,4 @@ object AppModule {
             preferences = userPreferences
         )
     }
-
-
 }

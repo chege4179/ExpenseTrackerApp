@@ -21,10 +21,12 @@ import androidx.room.TypeConverters
 
 import com.peterchege.expensetrackerapp.core.room.dao.ExpenseCategoryEntityDao
 import com.peterchege.expensetrackerapp.core.room.dao.ExpenseEntityDao
+import com.peterchege.expensetrackerapp.core.room.dao.IncomeEntityDao
 import com.peterchege.expensetrackerapp.core.room.dao.TransactionCategoryEntityDao
 import com.peterchege.expensetrackerapp.core.room.dao.TransactionEntityDao
 import com.peterchege.expensetrackerapp.core.room.entities.ExpenseCategoryEntity
 import com.peterchege.expensetrackerapp.core.room.entities.ExpenseEntity
+import com.peterchege.expensetrackerapp.core.room.entities.IncomeEntity
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionCategoryEntity
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
 import com.peterchege.expensetrackerapp.core.room.type_converters.DateConverter
@@ -36,8 +38,10 @@ import com.peterchege.expensetrackerapp.core.room.type_converters.DateConverter
         TransactionCategoryEntity::class,
         ExpenseEntity::class,
         TransactionEntity::class,
+        IncomeEntity::class
     ],
-    version = 1
+    version = 1,
+    exportSchema = true
 )
 abstract class ExpenseTrackerAppDatabase : RoomDatabase() {
 
@@ -49,5 +53,7 @@ abstract class ExpenseTrackerAppDatabase : RoomDatabase() {
     abstract val expenseEntityDao:ExpenseEntityDao
 
     abstract val transactionEntityDao:TransactionEntityDao
+
+    abstract val incomeEntityDao:IncomeEntityDao
 
 }

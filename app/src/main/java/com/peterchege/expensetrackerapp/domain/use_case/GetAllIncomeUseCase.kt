@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.presentation.theme
+package com.peterchege.expensetrackerapp.domain.use_case
 
-import androidx.compose.ui.graphics.Color
+import com.peterchege.expensetrackerapp.domain.models.Income
+import com.peterchege.expensetrackerapp.domain.repository.IncomeRepository
+import com.peterchege.expensetrackerapp.domain.toExternalModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
+class GetAllIncomeUseCase @Inject constructor(
+    private val repository: IncomeRepository
+) {
 
-
-val GreyColor = Color(0xFF7D7D89)
-
-
-val WhiteColorVariant = Color(color = 0xFFF3F2F9)
-val BlueColor = Color(color = 0xFF0B1121)
-val BlueColorVariant = Color(color = 0xFF151E36)
-val BlackColorVariant = Color(color = 0xFF010511)
-
-
-val LightBlueColor = Color(color = 0xFF345AFA)
-
+    operator fun invoke(): Flow<List<Income>> {
+        return repository.getAllIncome().map { it.map { it.toExternalModel() } }
+    }
+}

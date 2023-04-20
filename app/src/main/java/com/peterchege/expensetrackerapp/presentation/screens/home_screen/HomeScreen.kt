@@ -51,10 +51,12 @@ import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpenseBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpenseCategoryBottomSheet
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddIncomeBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionCategoryBottomSheet
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
+import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
 import kotlinx.coroutines.flow.collectLatest
 
 enum class MultiFloatingState {
@@ -109,6 +111,8 @@ fun HomeScreen(
         .value
         .map { it.toExternalModel() }
 
+    val income = viewModel.income.collectAsStateWithLifecycle().value
+
     var multiFloatingState by remember {
         mutableStateOf(MultiFloatingState.COLLAPSED)
     }
@@ -146,6 +150,14 @@ fun HomeScreen(
             },
             testTag = TestTags.CREATE_TRANSACTION_CATEGORY_BUTTON
         ),
+        MinFabItem(
+            icon = Icons.Default.Add,
+            label = "Add Income",
+            onClick = {
+                viewModel.onChangeActiveBottomSheet(bottomSheet = BottomSheets.ADD_INCOME)
+            },
+            testTag = ""
+        ),
     )
 
     ModalBottomSheetLayout(
@@ -166,6 +178,9 @@ fun HomeScreen(
                 }
                 BottomSheets.ADD_TRANSACTION_CATEGORY -> {
                     AddTransactionCategoryBottomSheet(navController = navController)
+                }
+                BottomSheets.ADD_INCOME -> {
+                    AddIncomeBottomSheet(navController = navController)
                 }
                 else -> {}
             }
@@ -206,6 +221,29 @@ fun HomeScreen(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                 ) {
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .height(100.dp),
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Your Income ",
+                                style = TextStyle(color = GreyColor),
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp
+                            )
+                            Text(
+                                text = "KES ${income.sumOf { it.incomeAmount }} /=",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 30.sp,
+                                style = TextStyle(color = MaterialTheme.colors.primary)
+                            )
+
+                        }
+                    }
                     item {
                         Card(
                             modifier = Modifier

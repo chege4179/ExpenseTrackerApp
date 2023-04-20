@@ -22,7 +22,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.pager.*
 import com.peterchege.expensetrackerapp.presentation.screens.analytics_screen.expenses_analytics_screen.ExpensesAnalyticsScreen
+import com.peterchege.expensetrackerapp.presentation.screens.analytics_screen.transactions_analytics_screen.TransactionsAnalyticsScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)

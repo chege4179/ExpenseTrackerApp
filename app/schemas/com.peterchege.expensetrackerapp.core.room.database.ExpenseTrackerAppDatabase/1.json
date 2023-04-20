@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9475ab1c93d46e5aaf381cf1ec4754fe",
+    "identityHash": "2986b5443978e22d9d626b1526efb139",
     "entities": [
       {
         "tableName": "ExpenseCategory",
@@ -191,12 +191,50 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "Income",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`incomeId` TEXT NOT NULL, `incomeName` TEXT NOT NULL, `incomeAmount` INTEGER NOT NULL, `incomeCreatedAt` TEXT NOT NULL, PRIMARY KEY(`incomeId`))",
+        "fields": [
+          {
+            "fieldPath": "incomeId",
+            "columnName": "incomeId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "incomeName",
+            "columnName": "incomeName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "incomeAmount",
+            "columnName": "incomeAmount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "incomeCreatedAt",
+            "columnName": "incomeCreatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "incomeId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9475ab1c93d46e5aaf381cf1ec4754fe')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2986b5443978e22d9d626b1526efb139')"
     ]
   }
 }

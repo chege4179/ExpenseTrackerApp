@@ -23,7 +23,6 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.peterchege.expensetrackerapp.core.di.AppModule
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.presentation.MainActivity
 import com.peterchege.expensetrackerapp.presentation.navigation.BottomNavigationWrapper

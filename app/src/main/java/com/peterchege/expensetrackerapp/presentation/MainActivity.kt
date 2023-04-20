@@ -18,23 +18,22 @@ package com.peterchege.expensetrackerapp.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.presentation.navigation.AppNavigation
 import com.peterchege.expensetrackerapp.presentation.theme.ExpenseTrackerAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -47,6 +46,29 @@ class MainActivity : ComponentActivity() {
                     initialValue = Constants.DARK_MODE,
                     context = Dispatchers.Main.immediate
                 )
+            val systemUiController = rememberSystemUiController()
+            val useDarkIcons = !isSystemInDarkTheme()
+
+            val currentColor =  if (theme.value == Constants.DARK_MODE)
+                MaterialTheme.colors.background
+            else
+                MaterialTheme.colors.surface
+            LaunchedEffect(
+                key1 = systemUiController,
+                key2 = theme.value,
+                key3 = useDarkIcons
+            ) {
+                println("Theme changed : ${theme.value}")
+
+                systemUiController.setStatusBarColor(
+                    color = currentColor,
+                    darkIcons = useDarkIcons
+                )
+                systemUiController.setNavigationBarColor(
+                    color = currentColor,
+                    darkIcons = useDarkIcons
+                )
+            }
             ExpenseTrackerAppTheme(
                 darkTheme = theme.value == Constants.DARK_MODE
             ) {

@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.presentation.theme
+package com.peterchege.expensetrackerapp.core.room.entities
 
-import androidx.compose.ui.graphics.Color
-
-
-
-val GreyColor = Color(0xFF7D7D89)
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 
-val WhiteColorVariant = Color(color = 0xFFF3F2F9)
-val BlueColor = Color(color = 0xFF0B1121)
-val BlueColorVariant = Color(color = 0xFF151E36)
-val BlackColorVariant = Color(color = 0xFF010511)
-
-
-val LightBlueColor = Color(color = 0xFF345AFA)
-
+@Entity(tableName = "Income")
+data class IncomeEntity(
+    @PrimaryKey
+    val incomeId:String,
+    val incomeName:String,
+    val incomeAmount:Int,
+    val incomeCreatedAt:String,
+)

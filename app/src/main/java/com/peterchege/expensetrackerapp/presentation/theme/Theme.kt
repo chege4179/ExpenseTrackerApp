@@ -28,13 +28,13 @@ private val DarkColorPalette = darkColors(
     primaryVariant = WhiteColorVariant,
 
     background = BlueColor,
-    onBackground = BlueColorVariant
+    onBackground = BlueColorVariant,
 
 
+    surface = LightBlueColor,
 
 
-
-)
+    )
 
 private val LightColorPalette = lightColors(
     //text
@@ -44,12 +44,12 @@ private val LightColorPalette = lightColors(
 
     //background
     background = Color.White,
-    onBackground = WhiteColorVariant
+    onBackground = WhiteColorVariant,
+
+    surface = LightBlueColor,
 
 
-
-
-)
+    )
 
 @Composable
 fun ExpenseTrackerAppTheme(

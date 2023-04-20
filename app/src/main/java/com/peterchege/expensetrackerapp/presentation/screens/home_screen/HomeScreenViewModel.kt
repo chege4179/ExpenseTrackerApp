@@ -22,12 +22,15 @@ import androidx.lifecycle.viewModelScope
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.domain.use_case.GetAllIncomeUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,10 +39,12 @@ enum class BottomSheets  {
     ADD_TRANSACTION_CATEGORY,
     ADD_EXPENSE,
     ADD_EXPENSE_CATEGORY,
+    ADD_INCOME,
 }
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    private val getFilteredTransactionsUseCase: GetFilteredTransactionsUseCase
+    private val getFilteredTransactionsUseCase: GetFilteredTransactionsUseCase,
+    private val getAllIncomeUseCase: GetAllIncomeUseCase,
 ) : ViewModel() {
 
     val _selectedIndex = mutableStateOf(0)
@@ -54,6 +59,14 @@ class HomeScreenViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    val income = getAllIncomeUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = emptyList()
+        )
+
 
 
     init {

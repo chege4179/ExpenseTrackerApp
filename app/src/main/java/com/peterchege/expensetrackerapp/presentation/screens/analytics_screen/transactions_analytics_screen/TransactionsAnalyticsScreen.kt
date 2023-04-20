@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.presentation.screens.analytics_screen
+package com.peterchege.expensetrackerapp.presentation.screens.analytics_screen.transactions_analytics_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
@@ -22,7 +22,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -49,6 +48,7 @@ import com.peterchege.expensetrackerapp.domain.toExternalModel
 
 import com.peterchege.expensetrackerapp.presentation.components.FilterCard
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
+import com.peterchege.expensetrackerapp.presentation.screens.analytics_screen.AnalyticsScreenViewModel
 import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
 
 

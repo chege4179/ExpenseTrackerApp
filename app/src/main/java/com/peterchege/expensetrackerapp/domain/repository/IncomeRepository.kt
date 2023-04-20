@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.presentation.theme
+package com.peterchege.expensetrackerapp.domain.repository
 
-import androidx.compose.ui.graphics.Color
+import com.peterchege.expensetrackerapp.core.room.entities.IncomeEntity
+import kotlinx.coroutines.flow.Flow
 
+interface IncomeRepository {
 
+    suspend fun insertIncome(incomeEntity: IncomeEntity)
 
-val GreyColor = Color(0xFF7D7D89)
+    fun getAllIncome(): Flow<List<IncomeEntity>>
 
+    fun getIncomeById(id:String): Flow<IncomeEntity?>
 
-val WhiteColorVariant = Color(color = 0xFFF3F2F9)
-val BlueColor = Color(color = 0xFF0B1121)
-val BlueColorVariant = Color(color = 0xFF151E36)
-val BlackColorVariant = Color(color = 0xFF010511)
+    suspend fun deleteIncomeById(id:String)
 
+    suspend fun deleteAllIncome()
 
-val LightBlueColor = Color(color = 0xFF345AFA)
-
+}
