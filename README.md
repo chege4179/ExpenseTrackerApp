@@ -5,7 +5,7 @@ and visualizes the data in a bar and pie chart.The app is completely offline and
 a room database so no need for internet connection
 
 ## Screenshots of the app
-<img src="screenshots/screenshot1.png" width="250"/> <img src="screenshots/screenshot2.png" width="250"/> <img src="screenshots/screenshot3.png" width="250"/>
+<img src="screenshots/screenshot7.png" width="250"/> <img src="screenshots/screenshot2.png" width="250"/> <img src="screenshots/screenshot3.png" width="250"/>
 
 <img src="screenshots/screenshot4.png" width="250"/><img src="screenshots/screenshot5.png" width="250"/><img src="screenshots/screenshot6.png" width="250"/>
 

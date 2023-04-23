@@ -19,28 +19,17 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.peterchege.expensetrackerapp.MainDispatcherRule
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
-import com.peterchege.expensetrackerapp.domain.models.Transaction
-import com.peterchege.expensetrackerapp.domain.repository.TransactionRepository
-import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.domain.use_case.GetAllIncomeUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCase
-import com.peterchege.expensetrackerapp.repository.FakeTransactionRepository
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.*
 import org.junit.Assert.*
-
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestWatcher
-import org.junit.runner.Description
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -56,14 +45,14 @@ class HomeScreenViewModelTest {
     val mockUseCase = mockk<GetFilteredTransactionsUseCase>()
     val mockUseCase2 = mockk<GetAllIncomeUseCase>()
 
-    val transactions :List<TransactionEntity> = mockk()
+    val transactions: List<TransactionEntity> = mockk()
 
     private lateinit var homeScreenViewModel: HomeScreenViewModel
 
     @Before
-    fun setUp(){
+    fun setUp() {
         MockKAnnotations.init(this)
-        every { mockUseCase.invoke(any()) } returns  flowOf(transactions)
+        every { mockUseCase.invoke(any()) } returns flowOf(transactions)
         every { mockUseCase2.invoke() } returns flowOf(emptyList())
         homeScreenViewModel = HomeScreenViewModel(
             getFilteredTransactionsUseCase = mockUseCase,
@@ -74,9 +63,8 @@ class HomeScreenViewModelTest {
     }
 
 
-
     @Test
-    fun`should call use case with correct filter when index is changed`() = runTest {
+    fun `should call use case with correct filter when index is changed`() = runTest {
         val index = 1
         every { mockUseCase(filter = FilterConstants.FilterList[index]) } returns flowOf(emptyList())
 
@@ -86,12 +74,13 @@ class HomeScreenViewModelTest {
     }
 
     @Test
-    fun`When any of the min fabs button is clicked the enum state should update accordingly`() = runTest {
-        homeScreenViewModel.onChangeActiveBottomSheet(BottomSheets.ADD_TRANSACTION_CATEGORY)
+    fun `When any of the min fabs button is clicked the enum state should update accordingly`() =
+        runTest {
+            homeScreenViewModel.onChangeActiveBottomSheet(BottomSheets.ADD_TRANSACTION_CATEGORY)
 
-        assert(homeScreenViewModel._activeBottomSheet.value == BottomSheets.ADD_TRANSACTION_CATEGORY)
+            assert(homeScreenViewModel._activeBottomSheet.value == BottomSheets.ADD_TRANSACTION_CATEGORY)
 
-    }
+        }
 
 }
 
