@@ -51,6 +51,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.core.util.getNumericInitialValue
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddIncomeScreenViewModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
@@ -89,7 +90,7 @@ fun AddIncomeBottomSheet(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(500.dp)
+            .height(400.dp)
     ) {
         Column(
             modifier = Modifier
@@ -109,7 +110,7 @@ fun AddIncomeBottomSheet(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     style = TextStyle(color = MaterialTheme.colors.primary),
-                    text = "Create Transaction",
+                    text = "Add Income",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center
@@ -123,7 +124,7 @@ fun AddIncomeBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
-                        text = "Transaction Name",
+                        text = "Income Name",
                         style = TextStyle(color = MaterialTheme.colors.primary)
                     )
                 },
@@ -131,35 +132,27 @@ fun AddIncomeBottomSheet(
                     color = MaterialTheme.colors.primary
                 )
             )
-            Spacer(modifier = Modifier.size(16.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                TextField(
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    value = viewModel.incomeAmount.value.toString(),
-                    onValueChange = {
-                        viewModel.onChangeIncomeAmount(text = it)
-                    },
-                    modifier = Modifier.fillMaxWidth(0.5f),
-                    placeholder = {
-                        Text(
-                            text = "Transaction Amount",
-                            style = TextStyle(color = MaterialTheme.colors.primary)
-                        )
-                    },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.primary
+            Spacer(modifier = Modifier.height(10.dp))
+            TextField(
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
+                value = getNumericInitialValue(viewModel.incomeAmount.value),
+                onValueChange = {
+                    viewModel.onChangeIncomeAmount(text = it)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(
+                        text = "Income Amount",
+                        style = TextStyle(color = MaterialTheme.colors.primary)
                     )
+                },
+                textStyle = TextStyle(
+                    color = MaterialTheme.colors.primary
                 )
-            }
-            Spacer(modifier = Modifier.size(16.dp))
+            )
+            Spacer(modifier = Modifier.height(10.dp))
             Button(
                 modifier = Modifier
                     .fillMaxWidth()

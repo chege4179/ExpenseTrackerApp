@@ -18,6 +18,7 @@ package com.peterchege.expensetrackerapp.presentation.screens.home_screen
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,6 +27,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Payments
+import androidx.compose.material.icons.outlined.ReceiptLong
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +41,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,6 +59,7 @@ import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpens
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddIncomeBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionCategoryBottomSheet
+import com.peterchege.expensetrackerapp.presentation.components.HomeScreenActionsCard
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
@@ -64,12 +70,7 @@ enum class MultiFloatingState {
     COLLAPSED
 }
 
-data class MinFabItem(
-    val icon: ImageVector,
-    val label: String,
-    val onClick: () -> Unit,
-    val testTag: String,
-)
+
 
 @OptIn(ExperimentalCoilApi::class, ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -103,7 +104,6 @@ fun HomeScreen(
     }
     LaunchedEffect(key1 = viewModel.selectedIndex.value) {
         viewModel.getTransactions(filter = FilterConstants.FilterList[viewModel.selectedIndex.value])
-
     }
     val transactions = viewModel.transactions
         .value
@@ -113,52 +113,6 @@ fun HomeScreen(
 
     val income = viewModel.income.collectAsStateWithLifecycle().value
 
-    var multiFloatingState by remember {
-        mutableStateOf(MultiFloatingState.COLLAPSED)
-    }
-    val items = listOf(
-        MinFabItem(
-            icon = Icons.Default.Add,
-            label = "Create Expense",
-            onClick = {
-                viewModel.onChangeActiveBottomSheet(bottomSheet = BottomSheets.ADD_EXPENSE)
-
-            },
-            testTag = ""
-        ),
-        MinFabItem(
-            icon = Icons.Default.Add,
-            label = "Create Transaction",
-            onClick = {
-                viewModel.onChangeActiveBottomSheet(bottomSheet = BottomSheets.ADD_TRANSACTION)
-            },
-            testTag = TestTags.CREATE_TRANSACTION_BUTTON
-        ),
-        MinFabItem(
-            icon = Icons.Default.Add,
-            label = "Create Expense Category",
-            onClick = {
-                viewModel.onChangeActiveBottomSheet(bottomSheet = BottomSheets.ADD_EXPENSE_CATEGORY)
-            },
-            testTag = ""
-        ),
-        MinFabItem(
-            icon = Icons.Default.Add,
-            label = "Create Transaction Category",
-            onClick = {
-                viewModel.onChangeActiveBottomSheet(bottomSheet = BottomSheets.ADD_TRANSACTION_CATEGORY)
-            },
-            testTag = TestTags.CREATE_TRANSACTION_CATEGORY_BUTTON
-        ),
-        MinFabItem(
-            icon = Icons.Default.Add,
-            label = "Add Income",
-            onClick = {
-                viewModel.onChangeActiveBottomSheet(bottomSheet = BottomSheets.ADD_INCOME)
-            },
-            testTag = ""
-        ),
-    )
 
     ModalBottomSheetLayout(
         sheetState = modalSheetState,
@@ -202,16 +156,6 @@ fun HomeScreen(
                     }
                 )
             },
-            floatingActionButton = {
-                MultiFloatingButton(
-                    multiFloatingState = multiFloatingState,
-                    items = items,
-                    onMultiFabStateChange = {
-                        multiFloatingState = it
-                    },
-                )
-
-            }
         ) {
             Column(
                 modifier = Modifier
@@ -245,48 +189,84 @@ fun HomeScreen(
                         }
                     }
                     item {
-                        Card(
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .fillMaxWidth()
-                                .height(150.dp),
-                            shape = RoundedCornerShape(5),
-                            elevation = 3.dp
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(color = MaterialTheme.colors.onBackground),
-                            ) {
-                                Column(
-                                    modifier = Modifier.fillMaxSize(),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center,
-
-                                    ) {
-                                    Text(
-                                        text = "Total spending",
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 20.sp,
-                                        style = TextStyle(color = MaterialTheme.colors.primary)
-                                    )
-                                    Text(
-                                        text = "KES ${transactions.sumOf { it.transactionAmount }} /=",
-                                        fontSize = 17.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        style = TextStyle(color = MaterialTheme.colors.primary)
-                                    )
-                                    MenuSample(
-                                        menuWidth = 170,
-                                        selectedIndex = viewModel.selectedIndex.value,
-                                        menuItems = FilterConstants.FilterList,
-                                        onChangeSelectedIndex = {
-                                            viewModel.onChangeSelectedIndex(index = it)
-
-                                        }
-                                    )
+                            HomeScreenActionsCard(
+                                name ="Add Income",
+                                icon = Icons.Outlined.Payments,
+                                onClick = {
+                                    viewModel.onChangeActiveBottomSheet(
+                                        bottomSheet = BottomSheets.ADD_INCOME)
                                 }
+                            )
+                            HomeScreenActionsCard(
+                                name ="Add Transaction",
+                                icon = Icons.Outlined.ReceiptLong,
+                                onClick = {
+                                    viewModel.onChangeActiveBottomSheet(
+                                        bottomSheet = BottomSheets.ADD_TRANSACTION)
+                                }
+                            )
+                            HomeScreenActionsCard(
+                                name ="Add Expense",
+                                icon = Icons.Outlined.ShoppingCart,
+                                onClick = {
+                                    viewModel.onChangeActiveBottomSheet(
+                                        bottomSheet = BottomSheets.ADD_EXPENSE)
+                                }
+                            )
+                            HomeScreenActionsCard(
+                                name ="Add Transaction Category",
+                                icon = Icons.Default.Add,
+                                onClick = {
+                                    viewModel.onChangeActiveBottomSheet(
+                                        bottomSheet = BottomSheets.ADD_TRANSACTION_CATEGORY)
+                                }
+                            )
+                            HomeScreenActionsCard(
+                                name ="Add Expense Category",
+                                icon = Icons.Default.Add,
+                                onClick = {
+                                    viewModel.onChangeActiveBottomSheet(
+                                        bottomSheet = BottomSheets.ADD_EXPENSE_CATEGORY)
+                                }
+                            )
+
+                        }
+                    }
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp)
+                                .padding(end = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Text(
+                                text = "Transactions",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                style = TextStyle(
+                                    color = MaterialTheme.colors.primary,
+                                )
+                            )
+                            IconButton(onClick = {
+                                navController.navigate(Screens.ALL_TRANSACTIONS_SCREEN)
+                            }) {
+                                Text(
+                                    text = "See All",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    style = TextStyle(
+                                        color = MaterialTheme.colors.primary,
+                                    )
+                                )
                             }
+
                         }
                     }
                     items(items = transactions) { transaction ->
@@ -298,151 +278,14 @@ fun HomeScreen(
                             }
                         )
                     }
+                    item {
 
-                }
-
-
-            }
-        }
-    }
-
-
-}
-
-@Composable
-fun MultiFloatingButton(
-    multiFloatingState: MultiFloatingState,
-    onMultiFabStateChange: (MultiFloatingState) -> Unit,
-    items: List<MinFabItem>
-) {
-    val transition = updateTransition(
-        targetState = multiFloatingState,
-        label = "transition"
-    )
-    val rotate by transition.animateFloat(label = "rotate") {
-        if (it == MultiFloatingState.EXPANDED) 315f else 0f
-    }
-    val fabScale = transition.animateFloat(label = "fabscale") {
-        if (it == MultiFloatingState.EXPANDED) 36f else 0f
-    }
-    val alpha = transition.animateFloat(
-        label = "alpha",
-        transitionSpec = { tween(durationMillis = 50) }
-    ) {
-        if (it == MultiFloatingState.EXPANDED) 1f else 0f
-    }
-    val textshadow = transition.animateDp(
-        label = "text shaow",
-        transitionSpec = { tween(durationMillis = 50) }
-    ) {
-        if (it == MultiFloatingState.EXPANDED) 2.dp else 0.dp
-    }
-
-    Column(
-        horizontalAlignment = Alignment.End,
-    ) {
-        if (transition.currentState == MultiFloatingState.EXPANDED) {
-            items.forEach {
-                MinFab(
-                    item = it,
-                    onMinFabItemClick = {
-                        it.onClick()
-                    },
-                    alpha = alpha.value,
-                    textShadow = textshadow.value,
-                    fabScale = fabScale.value,
-                    testTag = it.testTag
-
-
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-            }
-        }
-        FloatingActionButton(
-            modifier = Modifier.testTag(TestTags.FLOATING_ACTION_BUTTON),
-            backgroundColor = MaterialTheme.colors.background,
-            onClick = {
-                onMultiFabStateChange(
-                    if (transition.currentState == MultiFloatingState.EXPANDED) {
-                        MultiFloatingState.COLLAPSED
-                    } else {
-                        MultiFloatingState.EXPANDED
                     }
-                )
-            }
-
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                modifier = Modifier.rotate(rotate),
-                tint = MaterialTheme.colors.primary,
-                contentDescription = null
-            )
-        }
-    }
-
-}
-
-
-@Composable
-fun MinFab(
-    item: MinFabItem,
-    onMinFabItemClick: (MinFabItem) -> Unit,
-    alpha: Float,
-    fabScale: Float,
-    textShadow: Dp,
-    showLabel: Boolean = true,
-    testTag: String,
-) {
-
-    Row(
-        modifier = Modifier.background(MaterialTheme.colors.background)
-    ) {
-        if (showLabel) {
-            Text(
-                text = item.label,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .alpha(
-                        animateFloatAsState(
-                            targetValue = alpha,
-                            animationSpec = tween(durationMillis = 30)
-                        ).value
-                    )
-                    .shadow(textShadow)
-                    .background(MaterialTheme.colors.primary)
-                    .padding(start = 6.dp, end = 6.dp, top = 4.dp)
-
-            )
-
-        }
-
-        Spacer(modifier = Modifier.size(16.dp))
-        Box(
-            modifier = Modifier
-                .background(MaterialTheme.colors.onBackground)
-                .clip(CircleShape)
-                .width(32.dp)
-                .height(32.dp),
-
-            ) {
-            IconButton(
-                modifier = Modifier.testTag(tag = testTag),
-                onClick = {
-                    onMinFabItemClick(item)
-                }) {
-                Icon(
-                    imageVector = item.icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colors.primary,
-                )
+                }
             }
         }
     }
-
-
 }
+
 
 

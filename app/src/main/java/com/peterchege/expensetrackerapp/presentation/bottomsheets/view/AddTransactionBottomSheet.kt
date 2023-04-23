@@ -36,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.core.util.getNumericInitialValue
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddTransactionScreenViewModel
@@ -138,7 +139,7 @@ fun AddTransactionBottomSheet(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
-                    value = viewModel.transactionAmount.value.toString(),
+                    value = getNumericInitialValue(viewModel.transactionAmount.value),
                     onValueChange = {
                         viewModel.onChangeTransactionAmount(text = it)
                     },

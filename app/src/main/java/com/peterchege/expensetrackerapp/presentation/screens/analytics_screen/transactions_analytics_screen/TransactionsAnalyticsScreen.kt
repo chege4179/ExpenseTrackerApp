@@ -22,14 +22,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.*
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,8 +43,7 @@ import com.github.tehras.charts.piechart.animation.simpleChartAnimation
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.getActualDayOfWeek
 import com.peterchege.expensetrackerapp.domain.toExternalModel
-
-import com.peterchege.expensetrackerapp.presentation.components.FilterCard
+import com.peterchege.expensetrackerapp.presentation.components.GraphFilterCard
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.peterchege.expensetrackerapp.presentation.screens.analytics_screen.AnalyticsScreenViewModel
 import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
@@ -95,7 +92,7 @@ fun TransactionsAnalyticsScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
 
-    ) {
+        ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -124,6 +121,7 @@ fun TransactionsAnalyticsScreen(
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 16.sp
                             )
+
                         FilterConstants.LAST_7_DAYS ->
                             Text(
                                 text = "Total spent in the last 7 days",
@@ -131,6 +129,7 @@ fun TransactionsAnalyticsScreen(
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 16.sp
                             )
+
                         FilterConstants.THIS_MONTH ->
                             Text(
                                 text = "Total spent this month",
@@ -168,7 +167,7 @@ fun TransactionsAnalyticsScreen(
                         axisLineThickness = 1.dp,
                         axisLineColor = MaterialTheme.colors.primary
 
-                        ),
+                    ),
                     labelDrawer = SimpleValueDrawer(
                         drawLocation = SimpleValueDrawer.DrawLocation.XAxis,
                         labelTextColor = MaterialTheme.colors.primary
@@ -183,28 +182,28 @@ fun TransactionsAnalyticsScreen(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    FilterCard(
+                    GraphFilterCard(
                         filterName = FilterConstants.THIS_WEEK,
                         isActive = viewModel.activeFilterConstant.value == FilterConstants.THIS_WEEK,
                         onClick = {
                             viewModel.onChangeActiveFilterConstant(filter = it)
                         }
                     )
-                    FilterCard(
+                    GraphFilterCard(
                         filterName = FilterConstants.LAST_7_DAYS,
                         isActive = viewModel.activeFilterConstant.value == FilterConstants.LAST_7_DAYS,
                         onClick = {
                             viewModel.onChangeActiveFilterConstant(filter = it)
                         }
                     )
-                    FilterCard(
+                    GraphFilterCard(
                         filterName = FilterConstants.THIS_MONTH,
                         isActive = viewModel.activeFilterConstant.value == FilterConstants.THIS_MONTH,
                         onClick = {
                             viewModel.onChangeActiveFilterConstant(filter = it)
                         }
                     )
-                    FilterCard(
+                    GraphFilterCard(
                         filterName = FilterConstants.ALL,
                         isActive = viewModel.activeFilterConstant.value == FilterConstants.ALL,
                         onClick = {
@@ -214,7 +213,7 @@ fun TransactionsAnalyticsScreen(
                 }
             }
 
-            items(items = transactionsState.flatten().reversed()){ transaction ->
+            items(items = transactionsState.flatten().reversed()) { transaction ->
                 TransactionCard(transaction = transaction,
                     onTransactionNavigate = {
 

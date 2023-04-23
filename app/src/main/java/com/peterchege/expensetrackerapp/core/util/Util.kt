@@ -54,3 +54,12 @@ fun getAppVersionName(context: Context): String {
     }
     return versionName
 }
+
+
+fun getNumericInitialValue(value:Int):String{
+    return if (value == 0){
+        ""
+    }else{
+        value.toString()
+    }
+}

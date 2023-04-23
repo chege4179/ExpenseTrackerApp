@@ -36,4 +36,6 @@ interface TransactionRepository {
     fun searchTransactions(dates:List<String>,categoryId:String): Flow<List<TransactionEntity>>
 
     suspend fun deleteTransactionById(transactionId:String)
+
+    fun getTransactionByCategory(categoryId: String): Flow<List<TransactionEntity>>
 }

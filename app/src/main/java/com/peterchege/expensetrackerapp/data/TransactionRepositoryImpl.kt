@@ -60,4 +60,8 @@ class TransactionRepositoryImpl @Inject constructor(
         return db.transactionEntityDao.deleteTransactionById(id = transactionId)
     }
 
+    override fun getTransactionByCategory(categoryId: String): Flow<List<TransactionEntity>> {
+        return db.transactionEntityDao.getTransactionsByCategory(categoryId = categoryId)
+    }
+
 }

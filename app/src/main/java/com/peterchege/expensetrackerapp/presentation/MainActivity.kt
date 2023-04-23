@@ -25,6 +25,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
@@ -46,31 +47,9 @@ class MainActivity : ComponentActivity() {
                     initialValue = Constants.DARK_MODE,
                     context = Dispatchers.Main.immediate
                 )
-            val systemUiController = rememberSystemUiController()
-            val useDarkIcons = !isSystemInDarkTheme()
-
-            val currentColor =  if (theme.value == Constants.DARK_MODE)
-                MaterialTheme.colors.background
-            else
-                MaterialTheme.colors.surface
-            LaunchedEffect(
-                key1 = systemUiController,
-                key2 = theme.value,
-                key3 = useDarkIcons
-            ) {
-                println("Theme changed : ${theme.value}")
-
-                systemUiController.setStatusBarColor(
-                    color = currentColor,
-                    darkIcons = useDarkIcons
-                )
-                systemUiController.setNavigationBarColor(
-                    color = currentColor,
-                    darkIcons = useDarkIcons
-                )
-            }
+            val isInDarkMode = theme.value == Constants.DARK_MODE
             ExpenseTrackerAppTheme(
-                darkTheme = theme.value == Constants.DARK_MODE
+                darkTheme = isInDarkMode
             ) {
                 // A surface container using the 'background' color from the theme
                 Surface(

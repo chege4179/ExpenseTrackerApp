@@ -36,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.core.util.getNumericInitialValue
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddExpenseScreenViewModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
@@ -76,7 +77,7 @@ fun AddExpenseBottomSheet(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(450.dp)
+            .height(370.dp)
     ) {
         if (viewModel.isLoading.value) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -90,7 +91,9 @@ fun AddExpenseBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().height(70.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -119,42 +122,64 @@ fun AddExpenseBottomSheet(
                 )
 
             )
-            Spacer(modifier = Modifier.size(16.dp))
-            TextField(
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number
-                ),
-                value = viewModel.expenseAmount.value.toString(),
-                onValueChange = {
-                    viewModel.onChangeExpenseAmount(text = it)
-                },
-
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = {
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly,
+
+                ) {
+                TextField(
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    value = getNumericInitialValue(viewModel.expenseAmount.value),
+                    onValueChange = {
+                        viewModel.onChangeExpenseAmount(text = it)
+                    },
+
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    placeholder = {
+                        Text(
+                            text = "Expense Amount",
+                            style = TextStyle(
+                                color = MaterialTheme.colors.primary
+                            )
+                        )
+                    },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.primary
+                    )
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                MenuSample(
+                    menuWidth = 300,
+                    selectedIndex = viewModel.selectedIndex.value,
+                    menuItems = expenseCategories.map { it.expenseCategoryName },
+                    onChangeSelectedIndex = {
+                        viewModel.onChangeSelectedIndex(index = it)
+                        val selectedExpenseCategory = expenseCategories[it]
+                        viewModel.onChangeSelectedExpenseCategory(category = selectedExpenseCategory)
+
+                    }
+                )
+            }
+            if (expenseCategories.isEmpty()){
+                Row(
+                    modifier = Modifier.fillMaxWidth().height(50.dp).padding(10.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     Text(
-                        text = "Expense Amount",
+                        text = "Enter an expense category to be add to an expense",
+                        modifier = Modifier.fillMaxWidth(),
+                        fontSize=14.sp,
+                        textAlign = TextAlign.Center,
                         style = TextStyle(
                             color = MaterialTheme.colors.primary
                         )
                     )
-                },
-                textStyle = TextStyle(
-                    color = MaterialTheme.colors.primary
-                )
-            )
-            Spacer(modifier = Modifier.size(16.dp))
-            MenuSample(
-                menuWidth = 300,
-                selectedIndex = viewModel.selectedIndex.value,
-                menuItems = expenseCategories.map { it.expenseCategoryName },
-                onChangeSelectedIndex = {
-                    viewModel.onChangeSelectedIndex(index = it)
-                    val selectedExpenseCategory = expenseCategories[it]
-                    viewModel.onChangeSelectedExpenseCategory(category = selectedExpenseCategory)
-
                 }
-            )
-            Spacer(modifier = Modifier.size(16.dp))
+            }
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
