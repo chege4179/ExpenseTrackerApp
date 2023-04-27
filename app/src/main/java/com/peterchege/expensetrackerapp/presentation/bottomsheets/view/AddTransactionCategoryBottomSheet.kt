@@ -32,23 +32,52 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.TestTags
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddTransactionCategoryFormState
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddTransactionCategoryScreenViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalComposeUiApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+
 @Composable
 fun AddTransactionCategoryBottomSheet(
     navController: NavController,
     viewModel: AddTransactionCategoryScreenViewModel = hiltViewModel()
+){
+
+    val formState = viewModel.formState.collectAsStateWithLifecycle()
+
+    AddTransactionCategoryBottomSheetContent(
+        eventFlow = viewModel.eventFlow,
+        navController = navController,
+        formState = formState.value,
+        onChangeTransactionCategoryName = { viewModel.onChangeTransactionCategoryName(it) },
+        addTransactionCategory = { viewModel.addTransactionCategory() }
+    )
+
+}
+
+
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun AddTransactionCategoryBottomSheetContent(
+    eventFlow: SharedFlow<UiEvent>,
+    navController: NavController,
+    formState:AddTransactionCategoryFormState,
+    onChangeTransactionCategoryName:(String) -> Unit,
+    addTransactionCategory:() -> Unit
 ) {
     val keyBoard = LocalSoftwareKeyboardController.current
     val scaffoldState = rememberScaffoldState()
     LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
+        eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
@@ -75,7 +104,9 @@ fun AddTransactionCategoryBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().height(70.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -89,9 +120,9 @@ fun AddTransactionCategoryBottomSheet(
                 )
             }
             TextField(
-                value = viewModel.transactionCategoryName.value,
+                value = formState.transactionCategoryName,
                 onValueChange = {
-                    viewModel.onChangeTransactionCategoryName(text = it)
+                    onChangeTransactionCategoryName(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -117,7 +148,7 @@ fun AddTransactionCategoryBottomSheet(
                 ),
                 onClick = {
                     keyBoard?.hide()
-                    viewModel.addTransactionCategory()
+                    addTransactionCategory()
 
                 }
             ){
@@ -130,7 +161,7 @@ fun AddTransactionCategoryBottomSheet(
 
 
         }
-        if (viewModel.isLoading.value){
+        if (formState.isLoading){
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }

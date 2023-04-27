@@ -53,6 +53,8 @@ import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.core.util.TestTags
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.domain.models.Income
+import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpenseBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpenseCategoryBottomSheet
@@ -63,6 +65,7 @@ import com.peterchege.expensetrackerapp.presentation.components.HomeScreenAction
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 
 enum class MultiFloatingState {
@@ -70,15 +73,47 @@ enum class MultiFloatingState {
     COLLAPSED
 }
 
-
-
-@OptIn(ExperimentalCoilApi::class, ExperimentalMaterialApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     navController: NavController,
     viewModel: HomeScreenViewModel = hiltViewModel()
-) {
+){
+    LaunchedEffect(key1 = viewModel.selectedIndex.value) {
+        viewModel.getTransactions(filter = FilterConstants.FilterList[viewModel.selectedIndex.value])
+    }
+    val transactions = viewModel.transactions
+        .value
+        .collectAsStateWithLifecycle(initialValue = emptyList())
+        .value
+        .map { it.toExternalModel() }
+
+    val income = viewModel.income.collectAsStateWithLifecycle()
+
+
+    HomeScreenContent(
+        eventFlow = viewModel.eventFlow,
+        navController = navController,
+        activeBottomSheet = viewModel.activeBottomSheet.value,
+        transactions = transactions,
+        onChangeActiveBottomSheet = { viewModel.onChangeActiveBottomSheet(it) },
+        income = income.value
+    )
+
+}
+
+@OptIn(ExperimentalCoilApi::class, ExperimentalMaterialApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun HomeScreenContent(
+    eventFlow: SharedFlow<UiEvent>,
+    navController:NavController,
+    activeBottomSheet:BottomSheets?,
+    transactions:List<Transaction>,
+    onChangeActiveBottomSheet:(BottomSheets) -> Unit,
+    income:List<Income>,
+
+
+    ) {
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded },
@@ -86,7 +121,7 @@ fun HomeScreen(
     )
     val scaffoldState = rememberScaffoldState()
     LaunchedEffect(key1 = true){
-        viewModel.eventFlow.collectLatest { event ->
+        eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
@@ -102,16 +137,7 @@ fun HomeScreen(
             }
         }
     }
-    LaunchedEffect(key1 = viewModel.selectedIndex.value) {
-        viewModel.getTransactions(filter = FilterConstants.FilterList[viewModel.selectedIndex.value])
-    }
-    val transactions = viewModel.transactions
-        .value
-        .collectAsStateWithLifecycle(initialValue = emptyList())
-        .value
-        .map { it.toExternalModel() }
 
-    val income = viewModel.income.collectAsStateWithLifecycle().value
 
 
     ModalBottomSheetLayout(
@@ -120,7 +146,7 @@ fun HomeScreen(
         sheetBackgroundColor = MaterialTheme.colors.onBackground,
 
         sheetContent = {
-            when(viewModel.activeBottomSheet.value){
+            when(activeBottomSheet){
                 BottomSheets.ADD_EXPENSE -> {
                     AddExpenseBottomSheet(navController = navController)
                 }
@@ -198,40 +224,40 @@ fun HomeScreen(
                                 name ="Add Income",
                                 icon = Icons.Outlined.Payments,
                                 onClick = {
-                                    viewModel.onChangeActiveBottomSheet(
-                                        bottomSheet = BottomSheets.ADD_INCOME)
+                                    onChangeActiveBottomSheet(
+                                        BottomSheets.ADD_INCOME)
                                 }
                             )
                             HomeScreenActionsCard(
                                 name ="Add Transaction",
                                 icon = Icons.Outlined.ReceiptLong,
                                 onClick = {
-                                    viewModel.onChangeActiveBottomSheet(
-                                        bottomSheet = BottomSheets.ADD_TRANSACTION)
+                                    onChangeActiveBottomSheet(
+                                        BottomSheets.ADD_TRANSACTION)
                                 }
                             )
                             HomeScreenActionsCard(
                                 name ="Add Expense",
                                 icon = Icons.Outlined.ShoppingCart,
                                 onClick = {
-                                    viewModel.onChangeActiveBottomSheet(
-                                        bottomSheet = BottomSheets.ADD_EXPENSE)
+                                    onChangeActiveBottomSheet(
+                                        BottomSheets.ADD_EXPENSE)
                                 }
                             )
                             HomeScreenActionsCard(
                                 name ="Add Transaction Category",
                                 icon = Icons.Default.Add,
                                 onClick = {
-                                    viewModel.onChangeActiveBottomSheet(
-                                        bottomSheet = BottomSheets.ADD_TRANSACTION_CATEGORY)
+                                    onChangeActiveBottomSheet(
+                                        BottomSheets.ADD_TRANSACTION_CATEGORY)
                                 }
                             )
                             HomeScreenActionsCard(
                                 name ="Add Expense Category",
                                 icon = Icons.Default.Add,
                                 onClick = {
-                                    viewModel.onChangeActiveBottomSheet(
-                                        bottomSheet = BottomSheets.ADD_EXPENSE_CATEGORY)
+                                    onChangeActiveBottomSheet(
+                                        BottomSheets.ADD_EXPENSE_CATEGORY)
                                 }
                             )
 

@@ -25,66 +25,80 @@ import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.use_case.CreateTransactionCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
+data class AddTransactionCategoryFormState(
+    val transactionCategoryName: String = "",
+    val isLoading: Boolean = false
+)
+
+
 @HiltViewModel
 class AddTransactionCategoryScreenViewModel @Inject constructor(
     private val createTransactionCategoryUseCase: CreateTransactionCategoryUseCase,
 
 
-) : ViewModel(){
-    val _transactionCategoryName = mutableStateOf("")
-    val transactionCategoryName: State<String> = _transactionCategoryName
+    ) : ViewModel() {
 
-
-    val _isLoading = mutableStateOf(false)
-    val isLoading: State<Boolean> =_isLoading
-
-
+    private val _formState = MutableStateFlow(AddTransactionCategoryFormState())
+    val formState = _formState.asStateFlow()
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     fun onChangeTransactionCategoryName(text: String) {
-        _transactionCategoryName.value = text
+        _formState.value = _formState.value.copy(transactionCategoryName = text)
 
     }
 
 
     fun addTransactionCategory() {
         viewModelScope.launch {
-            if (_transactionCategoryName.value.isBlank()) {
+            if (_formState.value.transactionCategoryName.isBlank()) {
                 _eventFlow.emit(UiEvent.ShowSnackbar(uiText = "Transaction Category Name cannot be black"))
             } else {
                 val transactionCategory = TransactionCategory(
-                    transactionCategoryName = _transactionCategoryName.value,
+                    transactionCategoryName = _formState.value.transactionCategoryName,
                     transactionCategoryId = UUID.randomUUID().toString(),
                     transactionCategoryCreatedAt = Date(),
                 )
                 createTransactionCategoryUseCase(transactionCategory = transactionCategory).onEach { result ->
                     when (result) {
                         is Resource.Loading -> {
-                            _isLoading.value = true
+                            _formState.value = _formState.value.copy(isLoading = true)
 
                         }
+
                         is Resource.Success -> {
-                            _isLoading.value = false
                             _eventFlow.emit(
                                 UiEvent.ShowSnackbar(
-                                uiText = result.data?.msg ?: "Transaction Category added successfully"))
-                            _transactionCategoryName.value = ""
+                                    uiText = result.data?.msg
+                                        ?: "Transaction Category added successfully"
+                                )
+                            )
+                            _formState.value = _formState.value.copy(
+                                isLoading = false,
+                                transactionCategoryName = ""
+                            )
                         }
-                        is Resource.Error ->{
-                            _isLoading.value = false
+
+                        is Resource.Error -> {
+
                             _eventFlow.emit(
                                 UiEvent.ShowSnackbar(
-                                uiText = result.message ?:"An error occurred"))
-
+                                    uiText = result.message ?: "An error occurred"
+                                )
+                            )
+                            _formState.value = _formState.value.copy(
+                                isLoading = false,
+                            )
                         }
                     }
                 }.launchIn(this)
@@ -94,7 +108,6 @@ class AddTransactionCategoryScreenViewModel @Inject constructor(
         }
 
     }
-
 
 
 }

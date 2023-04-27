@@ -31,32 +31,59 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddExpenseCategoryFormState
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddExpenseCategoryScreenViewModel
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalComposeUiApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddExpenseCategoryBottomSheet(
     navController: NavController,
     viewModel: AddExpenseCategoryScreenViewModel = hiltViewModel()
 ) {
-    val keyBoard = LocalSoftwareKeyboardController.current
+    val formState = viewModel.formState.collectAsStateWithLifecycle()
 
+    AddExpenseCategoryBottomSheetContent(
+        eventFlow = viewModel.eventFlow,
+        formState = formState.value,
+        onChangeExpenseCategoryName = {
+            viewModel.onChangeExpenseName(it)
+        },
+        addExpenseCategory = { viewModel.addExpenseCategory() },
+        navController = navController
+    )
+
+}
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun AddExpenseCategoryBottomSheetContent(
+    eventFlow: SharedFlow<UiEvent>,
+    formState: AddExpenseCategoryFormState,
+    onChangeExpenseCategoryName: (String) -> Unit,
+    addExpenseCategory: () -> Unit,
+    navController: NavController,
+) {
+    val keyBoard = LocalSoftwareKeyboardController.current
     val scaffoldState = rememberScaffoldState()
     LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
+        eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.uiText
                     )
                 }
+
                 is UiEvent.Navigate -> {
                     navController.navigate(route = event.route)
                 }
+
                 else -> {}
             }
         }
@@ -65,7 +92,7 @@ fun AddExpenseCategoryBottomSheet(
         modifier = Modifier
             .fillMaxWidth()
             .height(250.dp)
-    ){
+    ) {
         Column(
             modifier = Modifier
                 .background(color = MaterialTheme.colors.background)
@@ -75,7 +102,9 @@ fun AddExpenseCategoryBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().height(70.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -89,9 +118,9 @@ fun AddExpenseCategoryBottomSheet(
                 )
             }
             TextField(
-                value = viewModel.expenseCategoryName.value,
+                value = formState.expenseCategoryName,
                 onValueChange = {
-                    viewModel.onChangeExpenseName(text = it)
+                    onChangeExpenseCategoryName(it)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
@@ -112,10 +141,10 @@ fun AddExpenseCategoryBottomSheet(
                 ),
                 onClick = {
                     keyBoard?.hide()
-                    viewModel.addExpenseCategory()
+                    addExpenseCategory()
 
                 }
-            ){
+            ) {
                 Text(
                     text = "Save",
                     style = TextStyle(color = MaterialTheme.colors.primary),
@@ -123,10 +152,8 @@ fun AddExpenseCategoryBottomSheet(
                     )
 
             }
-
-
         }
-        if (viewModel.isLoading.value){
+        if (formState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }

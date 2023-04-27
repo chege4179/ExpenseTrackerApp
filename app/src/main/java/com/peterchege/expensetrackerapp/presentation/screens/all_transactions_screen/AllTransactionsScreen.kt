@@ -40,25 +40,50 @@ import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.Screens
+import com.peterchege.expensetrackerapp.domain.models.Transaction
+import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.peterchege.expensetrackerapp.presentation.components.TransactionFilterCard
 
-@OptIn(ExperimentalCoilApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AllTransactionsScreen(
     viewModel: AllTransactionsScreenViewModel = hiltViewModel(),
     navController: NavController
 ) {
-
-    val activeTransactionFilter = viewModel._activeTransactionCategoryFilterId.value
-    val transactionCategories = viewModel.transactionCategories.collectAsStateWithLifecycle()
+    val activeTransactionFilter = viewModel.activeTransactionCategoryFilterId.value
+    val transactionCategories = viewModel.transactionCategories
+        .collectAsStateWithLifecycle()
+        .value
+        .map { it.toExternalModel() }
     val transactions = viewModel.transactions.value
 
-    LaunchedEffect(key1 = activeTransactionFilter){
+    LaunchedEffect(key1 = activeTransactionFilter) {
         viewModel.getTransactions()
     }
+
+    AllTransactionsScreenContent(
+        activeTransactionFilter = activeTransactionFilter,
+        transactionCategories = transactionCategories,
+        transactions = transactions ,
+        onChangeActiveTransactionFilter = { viewModel.onChangeActiveTransactionFilter(it) },
+        navController = navController
+    )
+}
+
+
+@OptIn(ExperimentalCoilApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun AllTransactionsScreenContent(
+    activeTransactionFilter: String,
+    transactionCategories: List<TransactionCategory>,
+    transactions: List<Transaction>,
+    onChangeActiveTransactionFilter: (String) -> Unit,
+    navController: NavController,
+
+    ) {
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -89,18 +114,16 @@ fun AllTransactionsScreen(
                         filterName = FilterConstants.ALL,
                         isActive = activeTransactionFilter == FilterConstants.ALL,
                         onClick = {
-                            viewModel.onChangeActiveTransactionFilter(
-                                filter = FilterConstants.ALL)
+                            onChangeActiveTransactionFilter(FilterConstants.ALL)
                         }
                     )
                 }
-                items(items = transactionCategories.value) { category ->
+                items(items = transactionCategories) { category ->
                     TransactionFilterCard(
                         filterName = category.transactionCategoryName,
                         isActive = activeTransactionFilter == category.transactionCategoryId,
                         onClick = {
-                            viewModel.onChangeActiveTransactionFilter(
-                                filter = category.transactionCategoryId)
+                            onChangeActiveTransactionFilter(category.transactionCategoryId)
 
                         }
                     )
@@ -108,7 +131,7 @@ fun AllTransactionsScreen(
             }
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-            ){
+            ) {
 
                 items(items = transactions) { transaction ->
                     TransactionCard(

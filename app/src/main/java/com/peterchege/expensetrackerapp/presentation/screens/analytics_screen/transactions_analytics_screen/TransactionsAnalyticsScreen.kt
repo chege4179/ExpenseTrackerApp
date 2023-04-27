@@ -42,21 +42,17 @@ import com.github.tehras.charts.bar.renderer.yaxis.SimpleYAxisDrawer
 import com.github.tehras.charts.piechart.animation.simpleChartAnimation
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.getActualDayOfWeek
+import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.components.GraphFilterCard
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
-import com.peterchege.expensetrackerapp.presentation.screens.analytics_screen.AnalyticsScreenViewModel
 import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
 
-
-@OptIn(ExperimentalCoilApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TransactionsAnalyticsScreen(
     navController: NavController,
     viewModel: AnalyticsScreenViewModel = hiltViewModel()
-) {
-
+){
     val transactionsState = viewModel.graphData.value
         .map { data -> data.collectAsStateWithLifecycle(initialValue = emptyList()) }
         .map { state -> state.value.map { it.toExternalModel() } }
@@ -89,6 +85,35 @@ fun TransactionsAnalyticsScreen(
 
     }
 
+    TransactionsAnalyticsScreenContent(
+        transactionsState = transactionsState.flatten(),
+        transactions = transactionsState.flatten(),
+        activeFilterConstant = viewModel.activeFilterConstant.value,
+        bars = transactions,
+        onChangeActiveFilterConstant = { viewModel.onChangeActiveFilterConstant(it) }
+    )
+
+
+
+
+
+}
+
+@OptIn(ExperimentalCoilApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun TransactionsAnalyticsScreenContent(
+    transactionsState:List<Transaction>,
+    transactions:List<Transaction>,
+    activeFilterConstant:String,
+    bars:List<BarChartData.Bar>,
+    onChangeActiveFilterConstant:(String) -> Unit,
+
+
+) {
+
+
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
 
@@ -108,12 +133,12 @@ fun TransactionsAnalyticsScreen(
 
                     ) {
                     Text(
-                        text = "KES ${transactions.map { it.value }.sum()} /=",
+                        text = "KES ${transactions.sumOf { it.transactionAmount }} /=",
                         fontWeight = FontWeight.Bold,
                         fontSize = 21.sp,
                         style = TextStyle(color = MaterialTheme.colors.primary)
                     )
-                    when (viewModel.activeFilterConstant.value) {
+                    when (activeFilterConstant) {
                         FilterConstants.THIS_WEEK ->
                             Text(
                                 text = "Total spent this week",
@@ -140,7 +165,7 @@ fun TransactionsAnalyticsScreen(
 
                         FilterConstants.ALL ->
                             Text(
-                                text = "Total spendings",
+                                text = "Total spending",
                                 style = TextStyle(color = GreyColor),
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 16.sp
@@ -152,7 +177,7 @@ fun TransactionsAnalyticsScreen(
             }
             item {
                 BarChart(
-                    barChartData = BarChartData(bars = viewModel.barDataList.value),
+                    barChartData = BarChartData(bars = bars),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(300.dp)
@@ -184,42 +209,41 @@ fun TransactionsAnalyticsScreen(
                 ) {
                     GraphFilterCard(
                         filterName = FilterConstants.THIS_WEEK,
-                        isActive = viewModel.activeFilterConstant.value == FilterConstants.THIS_WEEK,
+                        isActive = activeFilterConstant == FilterConstants.THIS_WEEK,
                         onClick = {
-                            viewModel.onChangeActiveFilterConstant(filter = it)
+                            onChangeActiveFilterConstant(it)
                         }
                     )
                     GraphFilterCard(
                         filterName = FilterConstants.LAST_7_DAYS,
-                        isActive = viewModel.activeFilterConstant.value == FilterConstants.LAST_7_DAYS,
+                        isActive = activeFilterConstant == FilterConstants.LAST_7_DAYS,
                         onClick = {
-                            viewModel.onChangeActiveFilterConstant(filter = it)
+                            onChangeActiveFilterConstant(it)
                         }
                     )
                     GraphFilterCard(
                         filterName = FilterConstants.THIS_MONTH,
-                        isActive = viewModel.activeFilterConstant.value == FilterConstants.THIS_MONTH,
+                        isActive = activeFilterConstant == FilterConstants.THIS_MONTH,
                         onClick = {
-                            viewModel.onChangeActiveFilterConstant(filter = it)
+                            onChangeActiveFilterConstant(it)
                         }
                     )
                     GraphFilterCard(
                         filterName = FilterConstants.ALL,
-                        isActive = viewModel.activeFilterConstant.value == FilterConstants.ALL,
+                        isActive = activeFilterConstant == FilterConstants.ALL,
                         onClick = {
-                            viewModel.onChangeActiveFilterConstant(filter = it)
+                            onChangeActiveFilterConstant(it)
                         }
                     )
                 }
             }
 
-            items(items = transactionsState.flatten().reversed()) { transaction ->
+            items(items = transactionsState.reversed()) { transaction ->
                 TransactionCard(transaction = transaction,
                     onTransactionNavigate = {
 
                     })
             }
-
 
         }
     }

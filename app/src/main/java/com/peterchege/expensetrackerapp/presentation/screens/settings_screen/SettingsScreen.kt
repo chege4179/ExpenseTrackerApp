@@ -44,14 +44,29 @@ import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.core.util.getAppVersionName
 import com.peterchege.expensetrackerapp.presentation.components.SettingsRow
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SettingsScreen(
     navController: NavController,
     viewModel:SettingsScreenViewModel = hiltViewModel()
 
-) {
+){
     val theme = viewModel.theme.collectAsStateWithLifecycle(initialValue = Constants.DARK_MODE)
+    SettingsScreenContent(
+        theme = theme.value,
+        updateTheme = { viewModel.updateTheme(it) }
+    )
+}
+
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun SettingsScreenContent(
+
+    theme:String,
+    updateTheme:(String) -> Unit,
+
+) {
+
     val context = LocalContext.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -79,13 +94,13 @@ fun SettingsScreen(
                 item {
                     SettingsRow(
                         title = "Dark Theme",
-                        checked = theme.value == Constants.DARK_MODE,
+                        checked = theme == Constants.DARK_MODE,
                         onCheckedChange = {
                             if (it){
-                                viewModel.updateTheme(themeValue = Constants.DARK_MODE)
+                                updateTheme(Constants.DARK_MODE)
 
                             }else{
-                                viewModel.updateTheme(themeValue = Constants.LIGHT_MODE)
+                                updateTheme(Constants.LIGHT_MODE)
                             }
 
                         }

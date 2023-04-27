@@ -29,11 +29,21 @@ import com.peterchege.expensetrackerapp.domain.use_case.GetAllTransactionCategor
 import com.peterchege.expensetrackerapp.domain.use_case.SearchTransactionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
+
+data class SearchScreenState(
+    val startDate: LocalDate = LocalDate.now(),
+    val endDate: LocalDate = LocalDate.now(),
+    val transactionCategory: TransactionCategory? = null,
+    val transactions: List<Transaction> = emptyList(),
+
+    )
 
 
 @HiltViewModel
@@ -41,75 +51,50 @@ class SearchScreenViewModel @Inject constructor(
     private val getAllTransactionCategoriesUseCase: GetAllTransactionCategoriesUseCase,
     private val searchTransactionsUseCase: SearchTransactionsUseCase,
 
-    ) :ViewModel(){
+    ) : ViewModel() {
     val transactionCategories = getAllTransactionCategoriesUseCase()
 
-
-    val _selectedIndex = mutableStateOf(0)
-    val selectedIndex: State<Int> = _selectedIndex
-
-    val _selectedTransactionCategory = mutableStateOf<TransactionCategory?>(null)
-    val selectedTransactionCategory: State<TransactionCategory?> = _selectedTransactionCategory
-
-    val _transactions = mutableStateOf<List<Transaction>>(emptyList())
-    val transactions: State<List<Transaction>> = _transactions
-
-
-    val _transactionStartDate = mutableStateOf<LocalDate?>(null)
-    val transactionStartDate: State<LocalDate?> = _transactionStartDate
-
-    val _transactionEndDate = mutableStateOf<LocalDate?>(null)
-    val transactionEndDate: State<LocalDate?> = _transactionEndDate
+    private val _uiState = MutableStateFlow(SearchScreenState())
+    val uiState = _uiState.asStateFlow()
 
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     fun onChangeTransactionStartDate(date: LocalDate) {
-        _transactionStartDate.value = date
+        _uiState.value = _uiState.value.copy(startDate = date)
     }
 
     fun onChangeTransactionEndDate(date: LocalDate) {
-        _transactionEndDate.value = date
+        _uiState.value = _uiState.value.copy(endDate = date)
     }
 
-    fun onChangeSelectedTransactionCategoryIndex(index:Int){
-        _selectedIndex.value = index
+    fun onChangeTransactionCategory(category: TransactionCategory) {
+        _uiState.value = _uiState.value.copy(transactionCategory = category)
     }
 
-    fun onChangeSelectedTransactionCategory(category: TransactionCategory) {
-        _selectedTransactionCategory.value = category
 
-    }
-
-    fun searchTransactions(){
+    fun searchTransactions() {
         viewModelScope.launch {
-            if (_transactionEndDate.value == null){
-                _eventFlow.emit(UiEvent.ShowSnackbar(uiText = "Please select an end date"))
-                return@launch
-            }
-            if (_transactionStartDate.value == null){
-                _eventFlow.emit(UiEvent.ShowSnackbar(uiText = "Please select a start date"))
-                return@launch
-            }
-            if (_selectedTransactionCategory.value == null){
+
+            if (_uiState.value.transactionCategory == null) {
                 _eventFlow.emit(UiEvent.ShowSnackbar(uiText = "Please select a transaction category"))
                 return@launch
             }
             val datesInBetween = datesBetween(
-                startDate = generateFormatDate(_transactionStartDate.value!!) ,
-                endDate = generateFormatDate(_transactionEndDate.value!!)
+                startDate = generateFormatDate(_uiState.value.startDate),
+                endDate = generateFormatDate(_uiState.value.endDate)
             )
             searchTransactionsUseCase(
                 dates = datesInBetween,
-                categoryId = _selectedTransactionCategory.value!!.transactionCategoryId)
-                .collect{ transactions ->
-                    _transactions.value = transactions.map { it.toExternalModel() }
+                categoryId = _uiState.value.transactionCategory!!.transactionCategoryId
+            ).collect { transactions ->
+                    _uiState.value = _uiState.value.copy(transactions =
+                    transactions.map { it.toExternalModel() })
+
                 }
         }
     }
-
-
 
 
 }

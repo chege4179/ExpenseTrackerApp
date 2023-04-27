@@ -22,138 +22,134 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.peterchege.expensetrackerapp.core.util.Resource
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.core.util.generateFormatDate
 import com.peterchege.expensetrackerapp.core.util.isNumeric
+import com.peterchege.expensetrackerapp.core.util.localDateTimeToDate
 import com.peterchege.expensetrackerapp.domain.models.Expense
 import com.peterchege.expensetrackerapp.domain.models.ExpenseCategory
 import com.peterchege.expensetrackerapp.domain.use_case.CreateExpenseUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetAllExpenseCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.*
 import javax.inject.Inject
 
-
+data class AddExpenseFormState(
+    val expenseName: String = "",
+    val expenseAmount: Int = 0,
+    val selectedExpenseCategory: ExpenseCategory? = null,
+    val isLoading: Boolean = false,
+    )
 @HiltViewModel
 class AddExpenseScreenViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getAllExpenseCategoriesUseCase: GetAllExpenseCategoriesUseCase,
     private val createExpenseUseCase: CreateExpenseUseCase,
 
-):ViewModel(){
+    ) : ViewModel() {
 
+    val _formState = MutableStateFlow(AddExpenseFormState())
+    val formState = _formState.asStateFlow()
 
     val expenseCategories = getAllExpenseCategoriesUseCase()
-
-    val _expenseName = mutableStateOf("")
-    val expenseName: State<String> = _expenseName
-
-    val _expenseAmount = mutableStateOf(0)
-    val expenseAmount: State<Int> = _expenseAmount
-
-    val _selectedIndex = mutableStateOf(0)
-    val selectedIndex: State<Int> = _selectedIndex
-
-    val _isLoading = mutableStateOf(false)
-    val isLoading: State<Boolean> =_isLoading
-
-    val _selectedExpenseCategory = mutableStateOf<ExpenseCategory?>(null)
-    val selectedExpenseCategory: State<ExpenseCategory?> = _selectedExpenseCategory
-
-
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-
     fun onChangeExpenseName(text: String) {
-        _expenseName.value = text
-
-    }
-
-    fun onChangeSelectedIndex(index: Int) {
-        _selectedIndex.value = index
-
+        _formState.value = _formState.value.copy(expenseName = text)
     }
 
     fun onChangeExpenseAmount(text: String) {
-        if (text.isBlank()){
-            _expenseAmount.value = 0
+        if (text.isBlank()) {
+            _formState.value = _formState.value.copy(expenseAmount = 0)
+
             return
         }
-        if (isNumeric(text)){
-            _expenseAmount.value = text.toInt()
+        if (isNumeric(text)) {
+            _formState.value = _formState.value.copy(expenseAmount = text.toInt())
 
-        }else{
-            _expenseAmount.value = 0
+
+        } else {
+
+            _formState.value = _formState.value.copy(expenseAmount = 0)
         }
-
-
     }
 
-    fun onChangeSelectedExpenseCategory(category:ExpenseCategory) {
-        _selectedExpenseCategory.value = category
-
+    fun onChangeSelectedExpenseCategory(category: ExpenseCategory) {
+        _formState.value = _formState.value.copy(selectedExpenseCategory = category)
     }
 
-
-    fun addExpense(){
+    fun addExpense() {
         viewModelScope.launch {
-            if (_expenseAmount.value == 0 || _expenseName.value ==""){
-                _eventFlow.emit(UiEvent.ShowSnackbar(
-                    uiText = "Please enter a valid expense"
-                ))
+            if (_formState.value.expenseAmount == 0 || _formState.value.expenseName == "") {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar(
+                        uiText = "Please enter a valid expense"
+                    )
+                )
                 return@launch
             }
-            if (_selectedExpenseCategory.value == null){
-                _eventFlow.emit(UiEvent.ShowSnackbar(
-                    uiText = "Please select an expense category"
-                ))
+            if (_formState.value.selectedExpenseCategory == null) {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackbar(
+                        uiText = "Please select an expense category"
+                    )
+                )
                 return@launch
             }
             val newExpense = Expense(
                 expenseId = UUID.randomUUID().toString(),
-                expenseName = expenseName.value,
-                expenseAmount = expenseAmount.value,
-                expenseCategoryId = _selectedExpenseCategory.value!!.expenseCategoryId,
+                expenseName = _formState.value.expenseName,
+                expenseAmount = _formState.value.expenseAmount,
+                expenseCategoryId = _formState.value.selectedExpenseCategory!!.expenseCategoryId,
                 expenseCreatedAt = SimpleDateFormat("hh:mm:ss").format(Date()),
                 expenseUpdatedAt = SimpleDateFormat("hh:mm:ss").format(Date()),
-                expenseCreatedOn = SimpleDateFormat("dd/mm/yyyy").format(Date()),
-                expenseUpdatedOn = SimpleDateFormat("dd/mm/yyyy").format(Date())
-
+                expenseCreatedOn = generateFormatDate(date = LocalDate.now()),
+                expenseUpdatedOn = generateFormatDate(date = LocalDate.now())
             )
             createExpenseUseCase(expense = newExpense).onEach { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        _isLoading.value = true
+
+                        _formState.value = _formState.value.copy(isLoading = true)
 
                     }
+
                     is Resource.Success -> {
-                        _isLoading.value = false
-                        _eventFlow.emit(UiEvent.ShowSnackbar(
-                            uiText = result.data?.msg ?: "Expense  added successfully"))
-                        _expenseName.value = ""
-                        _expenseAmount.value = 0
-                        _selectedExpenseCategory.value = null
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                uiText = result.data?.msg ?: "Expense  added successfully"
+                            )
+                        )
+                        _formState.value = _formState.value.copy(
+                            expenseName = "",
+                            expenseAmount = 0,
+                            selectedExpenseCategory = null,
+                            isLoading = false,
+                        )
                     }
-                    is Resource.Error ->{
-                        _isLoading.value = false
-                        _eventFlow.emit(UiEvent.ShowSnackbar(
-                            uiText = result.message ?:"An error occurred"))
+
+                    is Resource.Error -> {
+                        _formState.value = _formState.value.copy(isLoading = false)
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackbar(
+                                uiText = result.message ?: "An error occurred"
+                            )
+                        )
 
                     }
                 }
             }.launchIn(this)
         }
-
-
-
-
     }
-
-
 }

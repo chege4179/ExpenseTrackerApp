@@ -45,44 +45,94 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.core.util.getNumericInitialValue
 import com.peterchege.expensetrackerapp.domain.toExternalModel
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddIncomeFormState
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddIncomeScreenViewModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 import java.time.LocalTime
 
-@OptIn(ExperimentalComposeUiApi::class)
+@Preview
+@Composable
+fun AddIncomeBottomSheetPreview(){
+    val navController = rememberNavController()
+    AddIncomeBottomSheetContent(
+        eventFlow = MutableSharedFlow(),
+        navController = navController,
+        formState = AddIncomeFormState(),
+        onChangeIncomeName = {  },
+        onChangeIncomeAmount = {  },
+        addIncome = {  }
+    )
+}
+
 @Composable
 fun AddIncomeBottomSheet(
-    navController:NavController,
-    viewModel:AddIncomeScreenViewModel = hiltViewModel(),
+    navController: NavController,
+    viewModel: AddIncomeScreenViewModel = hiltViewModel(),
+) {
+    val formState = viewModel.formState.collectAsStateWithLifecycle()
+
+    AddIncomeBottomSheetContent(
+        eventFlow = viewModel.eventFlow,
+        navController = navController,
+        formState = formState.value,
+        onChangeIncomeName = {
+            viewModel.onChangeIncomeName(text = it)
+        },
+        onChangeIncomeAmount = {
+            viewModel.onChangeIncomeAmount(text = it)
+        },
+        addIncome = {
+            viewModel.addIncome()
+        }
+    )
+}
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun AddIncomeBottomSheetContent(
+    eventFlow: SharedFlow<UiEvent>,
+    navController: NavController,
+    formState: AddIncomeFormState,
+    onChangeIncomeName: (String) -> Unit,
+    onChangeIncomeAmount: (String) -> Unit,
+    addIncome: () -> Unit
+
 ) {
     val keyBoard = LocalSoftwareKeyboardController.current
     val scaffoldState = rememberScaffoldState()
 
     LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
+        eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.uiText
                     )
                 }
+
                 is UiEvent.Navigate -> {
                     navController.navigate(route = event.route)
                 }
+
                 else -> {}
             }
         }
@@ -117,9 +167,10 @@ fun AddIncomeBottomSheet(
                 )
             }
             TextField(
-                value = viewModel.incomeName.value,
+                value = formState.incomeName,
                 onValueChange = {
-                    viewModel.onChangeIncomeName(text = it)
+
+                    onChangeIncomeName(it)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
@@ -137,9 +188,9 @@ fun AddIncomeBottomSheet(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number
                 ),
-                value = getNumericInitialValue(viewModel.incomeAmount.value),
+                value = getNumericInitialValue(formState.incomeAmount),
                 onValueChange = {
-                    viewModel.onChangeIncomeAmount(text = it)
+                    onChangeIncomeAmount(it)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
@@ -162,7 +213,7 @@ fun AddIncomeBottomSheet(
                 ),
                 onClick = {
                     keyBoard?.hide()
-                    viewModel.addIncome()
+                    addIncome()
                 }
             ) {
                 Text(
