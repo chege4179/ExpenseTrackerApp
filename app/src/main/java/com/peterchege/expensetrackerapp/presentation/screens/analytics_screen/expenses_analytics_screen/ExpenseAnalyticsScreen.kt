@@ -42,17 +42,16 @@ import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.screens.analytics_screen.Tabs
 import kotlinx.coroutines.flow.map
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+data class PieDataInfo(
+    val slice :PieChartData.Slice,
+    val expenseCategory:ExpenseCategory,
+)
 @Composable
 fun ExpensesAnalyticsScreen(
     navController: NavController,
     viewModel: ExpenseAnalyticsScreenViewModel = hiltViewModel()
+){
 
-) {
-    data class PieDataInfo(
-        val slice :PieChartData.Slice,
-        val expenseCategory:ExpenseCategory,
-    )
     val expensesCategoriesInfo = viewModel.expenseCategories.value
     val pieData = expensesCategoriesInfo.map { expenseCategoryInfoEntity ->
         val total = expenseCategoryInfoEntity.expenses
@@ -69,6 +68,22 @@ fun ExpensesAnalyticsScreen(
             expenseCategory = expenseCategoryInfoEntity.expenseCategory
         )
     }
+
+
+
+    ExpensesAnalyticsScreenContent(
+        pieData = pieData
+    )
+}
+
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun ExpensesAnalyticsScreenContent(
+    pieData:List<PieDataInfo>
+
+) {
+
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {

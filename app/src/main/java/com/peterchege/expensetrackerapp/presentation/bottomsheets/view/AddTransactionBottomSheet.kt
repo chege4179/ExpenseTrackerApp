@@ -37,38 +37,79 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.core.util.getNumericInitialValue
+import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.toExternalModel
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddTransactionFormState
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddTransactionScreenViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 import java.time.LocalTime
 
-@OptIn(ExperimentalComposeUiApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddTransactionBottomSheet(
     navController: NavController,
     viewModel: AddTransactionScreenViewModel = hiltViewModel()
-) {
-    val keyBoard = LocalSoftwareKeyboardController.current
-    val scaffoldState = rememberScaffoldState()
-
+){
     val transactionCategories = viewModel.transactionCategories
         .collectAsStateWithLifecycle(initialValue = emptyList())
         .value
         .map { it.toExternalModel() }
+
+    val formState = viewModel.formState.collectAsStateWithLifecycle()
+
+    AddTransactionBottomSheetContent(
+        transactionCategories = transactionCategories,
+        eventFlow = viewModel.eventFlow,
+        navController = navController,
+        formState = formState.value,
+        onChangeTransactionName = { viewModel.onChangeTransactionName(it) },
+        onChangeTransactionAmount = { viewModel.onChangeTransactionAmount(it) },
+        onChangeTransactionCategory ={ viewModel.onChangeSelectedTransactionCategory(it) } ,
+        onChangeTransactionTime = { viewModel.onChangeTransactionTime(it) },
+        onChangeTransactionDate = { viewModel.onChangeTransactionDate(it) },
+        addTransaction = { viewModel.addTransaction() }
+    )
+
+
+}
+
+
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun AddTransactionBottomSheetContent(
+    transactionCategories:List<TransactionCategory>,
+    eventFlow:SharedFlow<UiEvent>,
+    navController:NavController,
+    formState:AddTransactionFormState,
+    onChangeTransactionName:(String) -> Unit,
+    onChangeTransactionAmount:(String) -> Unit,
+    onChangeTransactionCategory:(TransactionCategory) -> Unit,
+    onChangeTransactionTime:(LocalTime) -> Unit,
+    onChangeTransactionDate:(LocalDate) -> Unit,
+    addTransaction:() -> Unit
+
+
+) {
+    val keyBoard = LocalSoftwareKeyboardController.current
+    val scaffoldState = rememberScaffoldState()
+
+
 
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
 
 
     LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
+        eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
@@ -112,9 +153,9 @@ fun AddTransactionBottomSheet(
                 )
             }
             TextField(
-                value = viewModel.transactionName.value,
+                value = formState.transactionName,
                 onValueChange = {
-                    viewModel.onChangeTransactionName(text = it)
+                    onChangeTransactionName(it)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
@@ -139,9 +180,9 @@ fun AddTransactionBottomSheet(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
-                    value = getNumericInitialValue(viewModel.transactionAmount.value),
+                    value = getNumericInitialValue(formState.transactionAmount),
                     onValueChange = {
-                        viewModel.onChangeTransactionAmount(text = it)
+                        onChangeTransactionAmount(it)
                     },
                     modifier = Modifier.fillMaxWidth(0.5f),
                     placeholder = {
@@ -155,14 +196,20 @@ fun AddTransactionBottomSheet(
                     )
                 )
                 Spacer(modifier = Modifier.size(16.dp))
+                val currentIndex =
+                    if (formState.transactionCategory == null) 0
+                    else
+                        transactionCategories
+                            .map { it.transactionCategoryName }
+                            .indexOf(formState.transactionCategory.transactionCategoryName)
+
                 MenuSample(
                     menuWidth = 300,
-                    selectedIndex = viewModel.selectedIndex.value,
+                    selectedIndex = currentIndex,
                     menuItems = transactionCategories.map { it.transactionCategoryName },
                     onChangeSelectedIndex = {
-                        viewModel.onChangeSelectedIndex(index = it)
                         val selectedTransactionCategory = transactionCategories[it]
-                        viewModel.onChangeSelectedTransactionCategory(category = selectedTransactionCategory)
+                        onChangeTransactionCategory(selectedTransactionCategory)
                     }
                 )
             }
@@ -183,7 +230,7 @@ fun AddTransactionBottomSheet(
                     verticalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     Text(
-                        text = viewModel.transactionDate.value.toString(),
+                        text = formState.transactionDate.toString(),
                         modifier = Modifier.fillMaxWidth(0.5f),
                         style = TextStyle(color = MaterialTheme.colors.primary)
                     )
@@ -212,7 +259,7 @@ fun AddTransactionBottomSheet(
                     verticalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     Text(
-                        text = viewModel.transactionTime.value.toString(),
+                        text = formState.transactionTime.toString(),
                         modifier = Modifier.fillMaxWidth(0.5f),
                         style = TextStyle(color = MaterialTheme.colors.primary)
                     )
@@ -242,7 +289,7 @@ fun AddTransactionBottomSheet(
                 ),
                 onClick = {
                     keyBoard?.hide()
-                    viewModel.addTransaction()
+                    addTransaction()
                 }
             ) {
                 Text(
@@ -253,7 +300,7 @@ fun AddTransactionBottomSheet(
 
             }
         }
-        if (viewModel.isLoading.value) {
+        if (formState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
 
@@ -273,7 +320,7 @@ fun AddTransactionBottomSheet(
                 initialDate = LocalDate.now(),
                 title = "Pick a date",
             ) {
-                viewModel.onChangeTransactionDate(date = it)
+                onChangeTransactionDate(it)
 
             }
 
@@ -294,7 +341,7 @@ fun AddTransactionBottomSheet(
                 initialTime = LocalTime.now(),
                 title = "Pick a time",
             ) {
-                viewModel.onChangeTransactionTime(time = it)
+                onChangeTransactionTime(it)
 
             }
 

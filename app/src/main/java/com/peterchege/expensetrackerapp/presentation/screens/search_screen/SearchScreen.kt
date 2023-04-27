@@ -39,42 +39,78 @@ import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SearchScreen(
     navController: NavController,
     viewModel: SearchScreenViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+
     val transactionCategories = viewModel.transactionCategories
         .collectAsStateWithLifecycle(initialValue = emptyList())
         .value
         .map { it.toExternalModel() }
+
+
+    SearchScreenContent(
+        eventFlow = viewModel.eventFlow,
+        navController = navController,
+        uiState = uiState.value,
+        transactionCategories = transactionCategories,
+        searchTransactions = { viewModel.searchTransactions() },
+        onChangeTransactionCategory = { viewModel.onChangeTransactionCategory(it) },
+        onChangeTransactionStartDate = { viewModel.onChangeTransactionStartDate(it) },
+        onChangeTransactionEndDate = { viewModel.onChangeTransactionEndDate(it) }
+    )
+
+
+}
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun SearchScreenContent(
+    eventFlow: SharedFlow<UiEvent>,
+    navController: NavController,
+    uiState: SearchScreenState,
+    transactionCategories: List<TransactionCategory>,
+    searchTransactions: () -> Unit,
+    onChangeTransactionCategory: (TransactionCategory) -> Unit,
+    onChangeTransactionStartDate: (LocalDate) -> Unit,
+    onChangeTransactionEndDate: (LocalDate) -> Unit
+
+
+) {
+    val scaffoldState = rememberScaffoldState()
+
     val startDateDialogState = rememberMaterialDialogState()
     val endDateDialogState = rememberMaterialDialogState()
 
-    val transactions = viewModel.transactions.value
+
 
     LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
+        eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.uiText
                     )
                 }
+
                 is UiEvent.Navigate -> {
                     navController.navigate(route = event.route)
                 }
+
                 else -> {}
             }
         }
@@ -117,7 +153,7 @@ fun SearchScreen(
                         verticalArrangement = Arrangement.SpaceEvenly,
                     ) {
                         Text(
-                            text = viewModel.transactionStartDate.value.toString(),
+                            text = uiState.startDate.toString(),
 
                             style = TextStyle(color = MaterialTheme.colors.primary)
                         )
@@ -143,7 +179,7 @@ fun SearchScreen(
                         verticalArrangement = Arrangement.SpaceEvenly,
                     ) {
                         Text(
-                            text = viewModel.transactionEndDate.value.toString(),
+                            text = uiState.endDate.toString(),
                             style = TextStyle(color = MaterialTheme.colors.primary)
                         )
                         Button(
@@ -172,14 +208,20 @@ fun SearchScreen(
                             modifier = Modifier.fillMaxWidth(0.5f),
                             style = TextStyle(color = MaterialTheme.colors.primary)
                         )
+                        val currentIndex =
+                            if (uiState.transactionCategory == null) 0
+                            else
+                                transactionCategories
+                                    .map { it.transactionCategoryName }
+                                    .indexOf(uiState.transactionCategory.transactionCategoryName)
                         MenuSample(
                             menuWidth = 120,
-                            selectedIndex = viewModel.selectedIndex.value,
+                            selectedIndex = currentIndex,
                             menuItems = transactionCategories.map { transactionCategory -> transactionCategory.transactionCategoryName },
                             onChangeSelectedIndex = {
-                                viewModel.onChangeSelectedTransactionCategoryIndex(index = it)
+
                                 val selectedTransactionCategory = transactionCategories[it]
-                                viewModel.onChangeSelectedTransactionCategory(category = selectedTransactionCategory)
+                                onChangeTransactionCategory(selectedTransactionCategory)
 
                             }
                         )
@@ -193,7 +235,7 @@ fun SearchScreen(
                     ) {
                         IconButton(
                             onClick = {
-                                viewModel.searchTransactions()
+                                searchTransactions()
 
                             },
                         ) {
@@ -216,7 +258,7 @@ fun SearchScreen(
                         .height(50.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (transactions.isEmpty()) {
+                    if (uiState.transactions.isEmpty()) {
                         Text(
                             text = "No transactions found ",
                             style = TextStyle(color = MaterialTheme.colors.primary),
@@ -224,11 +266,11 @@ fun SearchScreen(
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
-                    if (transactions.isNotEmpty()) {
+                    if (uiState.transactions.isNotEmpty()) {
                         Text(
-                            text = "A total of ${transactions.size} transactions have been made " +
-                                    "between ${viewModel.transactionStartDate.value.toString()}" +
-                                    " and ${viewModel.transactionEndDate.value.toString()}",
+                            text = "A total of ${uiState.transactions.size} transactions have been made " +
+                                    "between ${uiState.startDate}" +
+                                    " and ${uiState.endDate}",
                             style = TextStyle(color = MaterialTheme.colors.primary),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.fillMaxWidth()
@@ -239,7 +281,7 @@ fun SearchScreen(
                 }
 
             }
-            items(items = transactions) { transaction ->
+            items(items = uiState.transactions) { transaction ->
                 TransactionCard(
                     transaction = transaction,
                     onTransactionNavigate = {
@@ -267,7 +309,7 @@ fun SearchScreen(
                 initialDate = LocalDate.now(),
                 title = "Pick a start date",
             ) {
-                viewModel.onChangeTransactionStartDate(date = it)
+                onChangeTransactionStartDate(it)
 
             }
 
@@ -288,7 +330,7 @@ fun SearchScreen(
                 initialDate = LocalDate.now(),
                 title = "Pick an End date",
             ) {
-                viewModel.onChangeTransactionEndDate(date = it)
+                onChangeTransactionEndDate(it)
 
             }
 

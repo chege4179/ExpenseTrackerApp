@@ -37,39 +37,78 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.core.util.getNumericInitialValue
+import com.peterchege.expensetrackerapp.domain.models.ExpenseCategory
 import com.peterchege.expensetrackerapp.domain.toExternalModel
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddExpenseFormState
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddExpenseScreenViewModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalComposeUiApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddExpenseBottomSheet(
     navController: NavController,
     viewModel: AddExpenseScreenViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
-    val keyBoard = LocalSoftwareKeyboardController.current
-
     val expenseCategories = viewModel.expenseCategories
         .collectAsStateWithLifecycle(initialValue = emptyList())
         .value
         .map { it.toExternalModel() }
 
+    val formState = viewModel.formState.collectAsStateWithLifecycle()
+
+    AddExpenseBottomSheetContent(
+        eventFlow = viewModel.eventFlow,
+        expenseCategories = expenseCategories,
+        navController = navController,
+        formState = formState.value,
+        onChangeExpenseName = {
+            viewModel.onChangeExpenseName(it)
+        },
+        onChangeExpenseAmount = {
+            viewModel.onChangeExpenseAmount(it)
+        },
+        onChangeExpenseCategory = {
+            viewModel.onChangeSelectedExpenseCategory(it)
+        },
+        addExpense = {
+            viewModel.addExpense()
+        }
+    )
+}
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun AddExpenseBottomSheetContent(
+    eventFlow: SharedFlow<UiEvent>,
+    expenseCategories: List<ExpenseCategory>,
+    navController: NavController,
+    formState: AddExpenseFormState,
+    onChangeExpenseName: (String) -> Unit,
+    onChangeExpenseAmount: (String) -> Unit,
+    onChangeExpenseCategory: (ExpenseCategory) -> Unit,
+    addExpense: () -> Unit,
+
+    ) {
+    val scaffoldState = rememberScaffoldState()
+    val keyBoard = LocalSoftwareKeyboardController.current
 
 
     LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
+        eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.uiText
                     )
                 }
+
                 is UiEvent.Navigate -> {
                     navController.navigate(route = event.route)
                 }
+
                 else -> {}
             }
         }
@@ -79,7 +118,7 @@ fun AddExpenseBottomSheet(
             .fillMaxWidth()
             .height(370.dp)
     ) {
-        if (viewModel.isLoading.value) {
+        if (formState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
         Column(
@@ -107,9 +146,9 @@ fun AddExpenseBottomSheet(
                 )
             }
             TextField(
-                value = viewModel.expenseName.value,
+                value = formState.expenseName,
                 onValueChange = {
-                    viewModel.onChangeExpenseName(text = it)
+                    onChangeExpenseName(it)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
@@ -132,9 +171,9 @@ fun AddExpenseBottomSheet(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
-                    value = getNumericInitialValue(viewModel.expenseAmount.value),
+                    value = getNumericInitialValue(formState.expenseAmount),
                     onValueChange = {
-                        viewModel.onChangeExpenseAmount(text = it)
+                        onChangeExpenseAmount(it)
                     },
 
                     modifier = Modifier.fillMaxWidth(0.5f),
@@ -151,28 +190,34 @@ fun AddExpenseBottomSheet(
                     )
                 )
                 Spacer(modifier = Modifier.width(16.dp))
+                val currentIndex =
+                    if (formState.selectedExpenseCategory == null) 0
+                else
+                    expenseCategories.map { it.expenseCategoryName }.indexOf(formState.selectedExpenseCategory.expenseCategoryName)
                 MenuSample(
                     menuWidth = 300,
-                    selectedIndex = viewModel.selectedIndex.value,
+                    selectedIndex = currentIndex,
                     menuItems = expenseCategories.map { it.expenseCategoryName },
                     onChangeSelectedIndex = {
-                        viewModel.onChangeSelectedIndex(index = it)
                         val selectedExpenseCategory = expenseCategories[it]
-                        viewModel.onChangeSelectedExpenseCategory(category = selectedExpenseCategory)
+                        onChangeExpenseCategory(selectedExpenseCategory)
 
                     }
                 )
             }
-            if (expenseCategories.isEmpty()){
+            if (expenseCategories.isEmpty()) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().height(50.dp).padding(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .padding(10.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = "Enter an expense category to be add to an expense",
                         modifier = Modifier.fillMaxWidth(),
-                        fontSize=14.sp,
+                        fontSize = 14.sp,
                         textAlign = TextAlign.Center,
                         style = TextStyle(
                             color = MaterialTheme.colors.primary
@@ -189,7 +234,7 @@ fun AddExpenseBottomSheet(
                 ),
                 onClick = {
                     keyBoard?.hide()
-                    viewModel.addExpense()
+                    addExpense()
                 }
             ) {
                 Text(

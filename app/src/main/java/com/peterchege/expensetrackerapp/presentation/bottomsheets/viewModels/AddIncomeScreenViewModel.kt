@@ -29,7 +29,9 @@ import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.use_case.CreateIncomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -38,51 +40,54 @@ import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
+data class AddIncomeFormState(
+    val incomeName:String = "",
+    val incomeAmount:Int = 0,
+)
+
+
 @HiltViewModel
 class AddIncomeScreenViewModel @Inject constructor(
     private val createIncomeUseCase: CreateIncomeUseCase,
 ) :ViewModel() {
 
-    val _incomeName = mutableStateOf("")
-    val incomeName: State<String> = _incomeName
+    val _formState = MutableStateFlow(AddIncomeFormState())
+    val formState = _formState.asStateFlow()
 
-    val _incomeAmount = mutableStateOf(0)
-    val incomeAmount: State<Int> = _incomeAmount
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     fun onChangeIncomeAmount(text: String) {
         if (text.isBlank()) {
-            _incomeAmount.value = 0
+            _formState.value = _formState.value.copy(incomeAmount = 0)
             return
         }
         if (isNumeric(text)) {
-            _incomeAmount.value = text.toInt()
-
+            _formState.value = _formState.value.copy(incomeAmount =text.toInt())
         } else {
-            _incomeAmount.value = 0
+            _formState.value = _formState.value.copy(incomeAmount = 0)
         }
     }
 
     fun onChangeIncomeName(text: String) {
-        _incomeName.value = text
+        _formState.value = _formState.value.copy(incomeName = text)
 
     }
 
     fun addIncome() {
         viewModelScope.launch {
-            if (_incomeName.value.isBlank()) {
+            if (_formState.value.incomeName.isBlank()) {
                 _eventFlow.emit(UiEvent.ShowSnackbar(uiText = "Income Name cannot be black"))
                 return@launch
             }
-            if (_incomeAmount.value == 0 ) {
+            if (_formState.value.incomeAmount == 0 ) {
                 _eventFlow.emit(UiEvent.ShowSnackbar(uiText = "Income Amount cannot be 0"))
                 return@launch
             }
             val income = Income(
-                incomeName= _incomeName.value,
-                incomeAmount = _incomeAmount.value,
+                incomeName= formState.value.incomeName,
+                incomeAmount = _formState.value.incomeAmount,
                 incomeId = UUID.randomUUID().toString(),
                 incomeCreatedAt = generateFormatDate(date = LocalDate.now()) ,
             )
@@ -92,14 +97,15 @@ class AddIncomeScreenViewModel @Inject constructor(
 
                     }
                     is Resource.Success -> {
-
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(
                                 uiText = result.data?.msg ?: "Transaction added successfully"
                             )
                         )
-                        _incomeAmount.value = 0
-                        _incomeName.value = ""
+                        _formState.value = _formState.value.copy(
+                            incomeName = "",
+                            incomeAmount = 0
+                        )
                     }
                     is Resource.Error -> {
                         _eventFlow.emit(

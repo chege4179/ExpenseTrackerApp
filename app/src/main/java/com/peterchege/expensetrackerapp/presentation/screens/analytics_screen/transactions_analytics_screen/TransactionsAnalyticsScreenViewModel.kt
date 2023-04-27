@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peterchege.expensetrackerapp.presentation.screens.analytics_screen
+package com.peterchege.expensetrackerapp.presentation.screens.analytics_screen.transactions_analytics_screen
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

@@ -33,13 +33,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.peterchege.expensetrackerapp.domain.models.TransactionInfo
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TransactionScreen(
     navController: NavController,
-    viewModel:TransactionScreenViewModel = hiltViewModel()
+    viewModel: TransactionScreenViewModel = hiltViewModel()
 ) {
+    val transactionInfo = viewModel.transactionInfo.value
+
+    TransactionScreenContent(
+        transactionInfo = transactionInfo,
+        deleteTransaction = { viewModel.deleteTransaction() }
+    )
+
+}
+
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun TransactionScreenContent(
+    transactionInfo: TransactionInfo?,
+    deleteTransaction: () -> Unit,
+
+    ) {
     val context = LocalContext.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -56,14 +73,14 @@ fun TransactionScreen(
                 }
             )
         },
-    ){
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colors.background)
                 .padding(10.dp)
         ) {
-            viewModel.transactionInfo.value?.let {
+            transactionInfo?.let {
                 it.transaction?.let { transaction ->
                     Text(
                         text = "Transaction ID :" + transaction.transactionId,
@@ -103,11 +120,11 @@ fun TransactionScreen(
                         backgroundColor = MaterialTheme.colors.onBackground
                     ),
                     onClick = {
-                        viewModel.deleteTransaction()
-                        Toast.makeText(context, "Transaction deleted",Toast.LENGTH_SHORT).show()
+                        deleteTransaction()
+                        Toast.makeText(context, "Transaction deleted", Toast.LENGTH_SHORT).show()
 
                     }
-                ){
+                ) {
                     Text(
                         text = "Delete Transaction",
                         style = TextStyle(color = MaterialTheme.colors.primary),
