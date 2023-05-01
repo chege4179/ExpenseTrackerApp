@@ -71,6 +71,17 @@ android {
             exclude("META-INF/**")
         }
     }
+    testOptions {
+        managedDevices {
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>(name = "pixel4api30").apply {
+                    device = "Pixel 4"
+                    apiLevel = 30
+                    systemImageSource = "google"
+                }
+            }
+        }
+    }
 }
 
 dependencies {
