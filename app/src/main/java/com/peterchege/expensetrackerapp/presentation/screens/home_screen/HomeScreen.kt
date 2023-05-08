@@ -168,7 +168,7 @@ fun HomeScreenContent(
         }
     ) {
         Scaffold(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().testTag(tag = Screens.HOME_SCREEN),
             topBar = {
                 TopAppBar(
                     backgroundColor = MaterialTheme.colors.onBackground,

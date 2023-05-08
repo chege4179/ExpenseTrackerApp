@@ -21,6 +21,9 @@ plugins {
     id ("dagger.hilt.android.plugin")
     id ("com.google.gms.google-services")
     id ("com.google.firebase.crashlytics")
+
+
+
 }
 
 android {
@@ -86,21 +89,24 @@ android {
 
 dependencies {
     implementation ("androidx.core:core-ktx:1.10.0")
-    implementation ("androidx.compose.ui:ui:1.5.0-alpha02")
-    implementation ("androidx.compose.material:material:1.5.0-alpha02")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.5.0-alpha02")
+    implementation ("androidx.compose.ui:ui:1.5.0-alpha03")
+    implementation ("androidx.compose.material:material:1.5.0-alpha03")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.5.0-alpha03")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation ("androidx.activity:activity-compose:1.7.0")
+    implementation ("androidx.activity:activity-compose:1.7.1")
     testImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.0-alpha02")
-    debugImplementation ("androidx.compose.ui:ui-tooling:1.5.0-alpha02")
-    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.5.0-alpha02")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.0-alpha03")
+
+
+
+    debugImplementation ("androidx.compose.ui:ui-tooling:1.5.0-alpha03")
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.5.0-alpha03")
 
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    implementation("androidx.compose.foundation:foundation:1.4.1")
-    implementation("androidx.compose.foundation:foundation-layout:1.4.1")
+    implementation("androidx.compose.foundation:foundation:1.4.3")
+    implementation("androidx.compose.foundation:foundation-layout:1.4.3")
     implementation ("androidx.navigation:navigation-compose:2.5.3")
 
 
@@ -111,7 +117,7 @@ dependencies {
 
     //paging
     implementation("androidx.paging:paging-common-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha18")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha19")
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -137,7 +143,7 @@ dependencies {
     implementation("androidx.room:room-ktx:2.5.1")
 
     // compose icons
-    implementation ("androidx.compose.material:material-icons-extended:1.5.0-alpha02")
+    implementation ("androidx.compose.material:material-icons-extended:1.5.0-alpha03")
 
     //pager
     implementation( "com.google.accompanist:accompanist-pager:0.28.0")
@@ -155,7 +161,7 @@ dependencies {
     implementation ("com.github.tehras:charts:0.2.4-alpha")
 
 
-    implementation ("com.google.firebase:firebase-crashlytics-ktx:18.3.6")
+    implementation ("com.google.firebase:firebase-crashlytics-ktx:18.3.7")
     implementation ("com.google.firebase:firebase-analytics-ktx:21.2.2")
 
     // date picker
@@ -164,8 +170,8 @@ dependencies {
 
     testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     androidTestImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-    androidTestImplementation ("app.cash.turbine:turbine:0.7.0")
-    testImplementation("io.mockk:mockk:1.13.4")
+    androidTestImplementation ("app.cash.turbine:turbine:0.12.3")
+    testImplementation("io.mockk:mockk:1.13.5")
 
     testImplementation ("androidx.arch.core:core-testing:2.2.0")
     // Instrumentation tests
@@ -179,4 +185,8 @@ dependencies {
     androidTestImplementation( "com.squareup.okhttp3:mockwebserver:4.9.3")
     androidTestImplementation( "io.mockk:mockk-android:1.13.4")
     androidTestImplementation ("androidx.test:runner:1.5.2")
+
+    testImplementation ("org.robolectric:robolectric:4.10.2")
+
+
 }
