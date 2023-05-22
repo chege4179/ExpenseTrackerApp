@@ -22,6 +22,7 @@ plugins {
     id ("com.android.library") version "7.4.1" apply false
     id ( "org.jetbrains.kotlin.android") version "1.8.10" apply false
     id("com.diffplug.spotless") version "5.3.0"
+    id("org.jetbrains.kotlinx.kover") version "0.7.0-Beta"
 
 }
 
@@ -30,7 +31,6 @@ buildscript {
         classpath ("com.google.gms:google-services:4.3.15")
         classpath ("com.google.firebase:firebase-crashlytics-gradle:2.9.5")
         classpath ("com.google.dagger:hilt-android-gradle-plugin:2.45")
-
     }
 }
 
@@ -50,3 +50,4 @@ spotless {
         licenseHeaderFile(rootProject.file("spotless/LICENSE.txt"), "(^(?![\\/ ]\\*).*$)")
     }
 }
+
