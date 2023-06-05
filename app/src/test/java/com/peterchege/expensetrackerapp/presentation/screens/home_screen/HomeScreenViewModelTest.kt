@@ -19,6 +19,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.peterchege.expensetrackerapp.MainDispatcherRule
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
+import com.peterchege.expensetrackerapp.domain.use_case.GetAllExpensesUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetAllIncomeUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCase
 import io.mockk.*
@@ -44,6 +45,8 @@ class HomeScreenViewModelTest {
     @MockK(relaxed = true)
     val mockUseCase = mockk<GetFilteredTransactionsUseCase>()
     val mockUseCase2 = mockk<GetAllIncomeUseCase>()
+    val mockUseCase3 = mockk<GetAllExpensesUseCase>()
+
 
     val transactions: List<TransactionEntity> = mockk()
 
@@ -54,9 +57,13 @@ class HomeScreenViewModelTest {
         MockKAnnotations.init(this)
         every { mockUseCase.invoke(any()) } returns flowOf(transactions)
         every { mockUseCase2.invoke() } returns flowOf(emptyList())
+        every { mockUseCase3.invoke() } returns flowOf(emptyList())
+
         homeScreenViewModel = HomeScreenViewModel(
             getFilteredTransactionsUseCase = mockUseCase,
             getAllIncomeUseCase = mockUseCase2,
+            getAllExpensesUseCase = mockUseCase3,
+
         )
         every { homeScreenViewModel.getTransactions(any()) } just Runs
 
