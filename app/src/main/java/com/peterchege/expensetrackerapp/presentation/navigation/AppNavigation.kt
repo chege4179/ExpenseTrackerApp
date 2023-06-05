@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.peterchege.expensetrackerapp.core.util.Screens
+import com.peterchege.expensetrackerapp.presentation.screens.all_income_screen.AllIncomeScreen
 import com.peterchege.expensetrackerapp.presentation.screens.all_transactions_screen.AllTransactionsScreen
 import com.peterchege.expensetrackerapp.presentation.screens.transaction_screen.TransactionScreen
 
@@ -42,6 +43,9 @@ fun AppNavigation(
         }
         composable(route = Screens.ALL_TRANSACTIONS_SCREEN) {
             AllTransactionsScreen(navController = navHostController)
+        }
+        composable(route = Screens.ALL_INCOME_SCREEN) {
+            AllIncomeScreen(navController = navHostController)
         }
 
     }

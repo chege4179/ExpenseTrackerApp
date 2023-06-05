@@ -22,6 +22,7 @@ import androidx.lifecycle.viewModelScope
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.domain.use_case.GetAllExpensesUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetAllIncomeUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,6 +46,9 @@ enum class BottomSheets  {
 class HomeScreenViewModel @Inject constructor(
     private val getFilteredTransactionsUseCase: GetFilteredTransactionsUseCase,
     private val getAllIncomeUseCase: GetAllIncomeUseCase,
+    private val getAllExpensesUseCase: GetAllExpensesUseCase,
+
+
 ) : ViewModel() {
 
     val _selectedIndex = mutableStateOf(0)
@@ -61,6 +65,12 @@ class HomeScreenViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     val income = getAllIncomeUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = emptyList()
+        )
+    val expenses = getAllExpensesUseCase()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),

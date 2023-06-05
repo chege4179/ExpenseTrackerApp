@@ -53,6 +53,7 @@ import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.core.util.TestTags
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.domain.models.Expense
 import com.peterchege.expensetrackerapp.domain.models.Income
 import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.toExternalModel
@@ -62,6 +63,7 @@ import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddIncome
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionCategoryBottomSheet
 import com.peterchege.expensetrackerapp.presentation.components.HomeScreenActionsCard
+import com.peterchege.expensetrackerapp.presentation.components.IncomeCard
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
@@ -87,6 +89,11 @@ fun HomeScreen(
         .value
         .map { it.toExternalModel() }
 
+    val expenses = viewModel.expenses
+        .collectAsStateWithLifecycle()
+        .value
+        .map { it.toExternalModel() }
+
     val income = viewModel.income.collectAsStateWithLifecycle()
 
 
@@ -96,7 +103,8 @@ fun HomeScreen(
         activeBottomSheet = viewModel.activeBottomSheet.value,
         transactions = transactions,
         onChangeActiveBottomSheet = { viewModel.onChangeActiveBottomSheet(it) },
-        income = income.value
+        incomes = income.value,
+        expenses = expenses
     )
 
 }
@@ -110,10 +118,15 @@ fun HomeScreenContent(
     activeBottomSheet:BottomSheets?,
     transactions:List<Transaction>,
     onChangeActiveBottomSheet:(BottomSheets) -> Unit,
-    income:List<Income>,
-
-
+    incomes:List<Income>,
+    expenses:List<Expense>,
     ) {
+    val totalIncome = incomes.sumOf { it.incomeAmount }
+    val totalExpense = expenses.sumOf { it.expenseAmount }
+    val totalTransaction = transactions.sumOf { it.transactionAmount }
+
+    val remainingIncome = totalIncome - (totalExpense + totalTransaction)
+
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded },
@@ -168,7 +181,9 @@ fun HomeScreenContent(
         }
     ) {
         Scaffold(
-            modifier = Modifier.fillMaxSize().testTag(tag = Screens.HOME_SCREEN),
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(tag = Screens.HOME_SCREEN),
             topBar = {
                 TopAppBar(
                     backgroundColor = MaterialTheme.colors.onBackground,
@@ -206,7 +221,7 @@ fun HomeScreenContent(
                                 fontSize = 16.sp
                             )
                             Text(
-                                text = "KES ${income.sumOf { it.incomeAmount }} /=",
+                                text = "KES $remainingIncome /=",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp,
                                 style = TextStyle(color = MaterialTheme.colors.primary)
@@ -273,6 +288,46 @@ fun HomeScreenContent(
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Text(
+                                text = "Income",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                style = TextStyle(
+                                    color = MaterialTheme.colors.primary,
+                                )
+                            )
+                            IconButton(onClick = {
+                                navController.navigate(route = Screens.ALL_INCOME_SCREEN)
+                            }) {
+                                Text(
+                                    text = "See All",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    style = TextStyle(
+                                        color = MaterialTheme.colors.primary,
+                                    )
+                                )
+                            }
+
+                        }
+                    }
+                    items(items = incomes.take( n= 2)) { income ->
+                        IncomeCard(
+                            income = income,
+                            onIncomeNavigate = {
+
+                            }
+                        )
+                    }
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp)
+                                .padding(end = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Text(
                                 text = "Transactions",
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
@@ -295,11 +350,11 @@ fun HomeScreenContent(
 
                         }
                     }
-                    items(items = transactions) { transaction ->
+                    items(items = transactions.take(n= 2)) { transaction ->
                         TransactionCard(
                             transaction = transaction,
                             onTransactionNavigate = {
-                                navController.navigate(Screens.TRANSACTIONS_SCREEN + "/$it")
+                                navController.navigate(route = Screens.TRANSACTIONS_SCREEN + "/$it")
 
                             }
                         )
