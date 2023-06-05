@@ -85,7 +85,7 @@ class HomeScreenViewModelTest {
         runTest {
             homeScreenViewModel.onChangeActiveBottomSheet(BottomSheets.ADD_TRANSACTION_CATEGORY)
 
-            assert(homeScreenViewModel._activeBottomSheet.value == BottomSheets.ADD_TRANSACTION_CATEGORY)
+            assert(homeScreenViewModel.activeBottomSheet.value == BottomSheets.ADD_TRANSACTION_CATEGORY)
 
         }
 

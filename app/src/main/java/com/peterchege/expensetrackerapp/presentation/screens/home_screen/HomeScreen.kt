@@ -62,6 +62,7 @@ import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpens
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddIncomeBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionCategoryBottomSheet
+import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.IncomeInfoBottomSheet
 import com.peterchege.expensetrackerapp.presentation.components.HomeScreenActionsCard
 import com.peterchege.expensetrackerapp.presentation.components.IncomeCard
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
@@ -104,7 +105,11 @@ fun HomeScreen(
         transactions = transactions,
         onChangeActiveBottomSheet = { viewModel.onChangeActiveBottomSheet(it) },
         incomes = income.value,
-        expenses = expenses
+        expenses = expenses,
+        activeIncomeId = viewModel.activeIncomeId.value,
+        onChangeActiveIncomeId = {
+            viewModel.onChangeActiveIncomeId(it)
+        }
     )
 
 }
@@ -120,6 +125,8 @@ fun HomeScreenContent(
     onChangeActiveBottomSheet:(BottomSheets) -> Unit,
     incomes:List<Income>,
     expenses:List<Expense>,
+    activeIncomeId:String?,
+    onChangeActiveIncomeId:(String) -> Unit,
     ) {
     val totalIncome = incomes.sumOf { it.incomeAmount }
     val totalExpense = expenses.sumOf { it.expenseAmount }
@@ -174,6 +181,12 @@ fun HomeScreenContent(
                 }
                 BottomSheets.ADD_INCOME -> {
                     AddIncomeBottomSheet(navController = navController)
+                }
+                BottomSheets.VIEW_INCOME -> {
+                    IncomeInfoBottomSheet(
+                        activeIncomeId = activeIncomeId
+                    )
+
                 }
                 else -> {}
             }
@@ -310,10 +323,14 @@ fun HomeScreenContent(
 
                         }
                     }
-                    items(items = incomes.take( n= 2)) { income ->
+                    items(items = incomes.take(n= 2)) { income ->
                         IncomeCard(
                             income = income,
                             onIncomeNavigate = {
+                                onChangeActiveIncomeId(it)
+                                onChangeActiveBottomSheet(BottomSheets.VIEW_INCOME)
+
+
 
                             }
                         )
@@ -358,9 +375,6 @@ fun HomeScreenContent(
 
                             }
                         )
-                    }
-                    item {
-
                     }
                 }
             }

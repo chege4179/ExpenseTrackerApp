@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.presentation.screens.all_income_screen
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.peterchege.expensetrackerapp.domain.use_case.GetAllIncomeUseCase
@@ -36,5 +38,12 @@ class AllIncomeScreenViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
+    private val _activeIncomeId = mutableStateOf<String?>(null)
+    val activeIncomeId : State<String?> = _activeIncomeId
+
+
+    fun onChangeActiveIncomeId(id:String) {
+        _activeIncomeId.value = id
+    }
 
 }

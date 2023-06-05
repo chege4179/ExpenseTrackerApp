@@ -41,6 +41,7 @@ enum class BottomSheets  {
     ADD_EXPENSE,
     ADD_EXPENSE_CATEGORY,
     ADD_INCOME,
+    VIEW_INCOME,
 }
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
@@ -51,14 +52,18 @@ class HomeScreenViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    val _selectedIndex = mutableStateOf(0)
+    private val _selectedIndex = mutableStateOf(0)
     val selectedIndex: State<Int> = _selectedIndex
 
-    val _transactions =
+    private val _transactions =
         mutableStateOf<Flow<List<TransactionEntity>>>(flow { emptyList<TransactionEntity>() })
     val transactions: State<Flow<List<TransactionEntity>>> = _transactions
 
-    val _activeBottomSheet = mutableStateOf<BottomSheets?>(null)
+    private val _activeIncomeId = mutableStateOf<String?>(null)
+    val activeIncomeId :State<String?> = _activeIncomeId
+
+
+    private val _activeBottomSheet = mutableStateOf<BottomSheets?>(null)
     val activeBottomSheet: State<BottomSheets?> = _activeBottomSheet
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -93,6 +98,9 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _eventFlow.emit(UiEvent.OpenBottomSheet(bottomSheet = bottomSheet))
         }
+    }
+    fun onChangeActiveIncomeId(id:String) {
+        _activeIncomeId.value = id
     }
 
 
