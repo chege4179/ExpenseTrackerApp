@@ -22,18 +22,40 @@ import androidx.lifecycle.viewModelScope
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.domain.models.Expense
+import com.peterchege.expensetrackerapp.domain.models.Income
+import com.peterchege.expensetrackerapp.domain.models.Transaction
+import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.domain.use_case.GetAllExpensesUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetAllIncomeUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+sealed interface HomeScreenUiState {
+    object Loading:HomeScreenUiState
+
+    data class Success(
+        val income:List<Income>,
+        val expenses:List<Expense>,
+        val transactions:List<Transaction>,
+    ):HomeScreenUiState
+
+    data class Error(val message:String):HomeScreenUiState
+}
+
 
 enum class BottomSheets  {
     ADD_TRANSACTION,
@@ -43,6 +65,7 @@ enum class BottomSheets  {
     ADD_INCOME,
     VIEW_INCOME,
 }
+
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val getFilteredTransactionsUseCase: GetFilteredTransactionsUseCase,
@@ -52,12 +75,22 @@ class HomeScreenViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val _selectedIndex = mutableStateOf(0)
-    val selectedIndex: State<Int> = _selectedIndex
+    val uiState = combine(
+        getAllIncomeUseCase(),
+        getAllExpensesUseCase(),
+        getFilteredTransactionsUseCase(FilterConstants.ALL),
+    ) { incomes, expenseEntities ,transactionEntities->
+        val transactions = transactionEntities.map { it.toExternalModel() }
+        val expenses = expenseEntities.map { it.toExternalModel() }
+        HomeScreenUiState.Success(expenses = expenses, income = incomes, transactions = transactions)
+    }.onStart { HomeScreenUiState.Loading }
+        .catch { HomeScreenUiState.Error(message = "Failed to load your data") }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = HomeScreenUiState.Loading
+        )
 
-    private val _transactions =
-        mutableStateOf<Flow<List<TransactionEntity>>>(flow { emptyList<TransactionEntity>() })
-    val transactions: State<Flow<List<TransactionEntity>>> = _transactions
 
     private val _activeIncomeId = mutableStateOf<String?>(null)
     val activeIncomeId :State<String?> = _activeIncomeId
@@ -69,30 +102,7 @@ class HomeScreenViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    val income = getAllIncomeUseCase()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = emptyList()
-        )
-    val expenses = getAllExpensesUseCase()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = emptyList()
-        )
 
-
-
-    init {
-        getTransactions(filter = FilterConstants.FilterList[_selectedIndex.value])
-    }
-
-
-    fun onChangeSelectedIndex(index: Int) {
-        _selectedIndex.value = index
-        getTransactions(filter = FilterConstants.FilterList[index])
-    }
     fun onChangeActiveBottomSheet(bottomSheet: BottomSheets){
         _activeBottomSheet.value = bottomSheet
         viewModelScope.launch {
@@ -102,15 +112,5 @@ class HomeScreenViewModel @Inject constructor(
     fun onChangeActiveIncomeId(id:String) {
         _activeIncomeId.value = id
     }
-
-
-    fun getTransactions(filter: String) {
-        viewModelScope.launch {
-            val transactionsInfo = getFilteredTransactionsUseCase(filter = filter)
-            _transactions.value = transactionsInfo
-        }
-    }
-
-
 }
 

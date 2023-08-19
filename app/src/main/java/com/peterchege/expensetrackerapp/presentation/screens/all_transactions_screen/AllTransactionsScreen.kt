@@ -29,6 +29,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +44,8 @@ import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.toExternalModel
+import com.peterchege.expensetrackerapp.presentation.components.ErrorComponent
+import com.peterchege.expensetrackerapp.presentation.components.LoadingComponent
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.peterchege.expensetrackerapp.presentation.components.TransactionFilterCard
 
@@ -51,21 +54,12 @@ fun AllTransactionsScreen(
     viewModel: AllTransactionsScreenViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    val activeTransactionFilter = viewModel.activeTransactionCategoryFilterId.value
-    val transactionCategories = viewModel.transactionCategories
-        .collectAsStateWithLifecycle()
-        .value
-        .map { it.toExternalModel() }
-    val transactions = viewModel.transactions.value
-
-    LaunchedEffect(key1 = activeTransactionFilter) {
-        viewModel.getTransactions()
-    }
+    val activeTransactionFilter by viewModel.activeTransactionFilter.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     AllTransactionsScreenContent(
         activeTransactionFilter = activeTransactionFilter,
-        transactionCategories = transactionCategories,
-        transactions = transactions ,
+        uiState = uiState,
         onChangeActiveTransactionFilter = { viewModel.onChangeActiveTransactionFilter(it) },
         navController = navController
     )
@@ -77,14 +71,10 @@ fun AllTransactionsScreen(
 @Composable
 fun AllTransactionsScreenContent(
     activeTransactionFilter: String,
-    transactionCategories: List<TransactionCategory>,
-    transactions: List<Transaction>,
+    uiState: AllTransactionsScreenUiState,
     onChangeActiveTransactionFilter: (String) -> Unit,
     navController: NavController,
-
     ) {
-
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -101,49 +91,62 @@ fun AllTransactionsScreenContent(
             )
         },
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(5.dp)
-        ) {
-            LazyRow(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                item {
-                    TransactionFilterCard(
-                        filterName = FilterConstants.ALL,
-                        isActive = activeTransactionFilter == FilterConstants.ALL,
-                        onClick = {
-                            onChangeActiveTransactionFilter(FilterConstants.ALL)
-                        }
-                    )
-                }
-                items(items = transactionCategories) { category ->
-                    TransactionFilterCard(
-                        filterName = category.transactionCategoryName,
-                        isActive = activeTransactionFilter == category.transactionCategoryId,
-                        onClick = {
-                            onChangeActiveTransactionFilter(category.transactionCategoryId)
-
-                        }
-                    )
-                }
+        when(uiState){
+            is AllTransactionsScreenUiState.Loading -> {
+                LoadingComponent()
             }
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-
-                items(items = transactions) { transaction ->
-                    TransactionCard(
-                        transaction = transaction,
-                        onTransactionNavigate = {
-                            navController.navigate(Screens.TRANSACTIONS_SCREEN + "/$it")
-
+            is AllTransactionsScreenUiState.Error -> {
+                ErrorComponent(message = uiState.message)
+            }
+            is AllTransactionsScreenUiState.Success -> {
+                val transactionCategories = uiState.transactionCategories
+                val transactions = uiState.transactions
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(5.dp)
+                ) {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        item {
+                            TransactionFilterCard(
+                                filterName = FilterConstants.ALL,
+                                isActive = activeTransactionFilter == FilterConstants.ALL,
+                                onClick = {
+                                    onChangeActiveTransactionFilter(FilterConstants.ALL)
+                                }
+                            )
                         }
-                    )
+                        items(items = transactionCategories) { category ->
+                            TransactionFilterCard(
+                                filterName = category.transactionCategoryName,
+                                isActive = activeTransactionFilter == category.transactionCategoryId,
+                                onClick = {
+                                    onChangeActiveTransactionFilter(category.transactionCategoryId)
+
+                                }
+                            )
+                        }
+                    }
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+
+                        items(items = transactions) { transaction ->
+                            TransactionCard(
+                                transaction = transaction,
+                                onTransactionNavigate = {
+                                    navController.navigate(Screens.TRANSACTIONS_SCREEN + "/$it")
+
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
+
 
     }
 

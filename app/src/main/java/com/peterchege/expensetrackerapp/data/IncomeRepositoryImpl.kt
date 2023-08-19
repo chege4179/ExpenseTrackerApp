@@ -15,33 +15,44 @@
  */
 package com.peterchege.expensetrackerapp.data
 
+import com.peterchege.expensetrackerapp.core.di.IoDispatcher
 import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.core.room.entities.IncomeEntity
 import com.peterchege.expensetrackerapp.domain.repository.IncomeRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class IncomeRepositoryImpl @Inject constructor(
-    private val db:ExpenseTrackerAppDatabase
+    private val db:ExpenseTrackerAppDatabase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ):IncomeRepository {
 
     override suspend fun insertIncome(incomeEntity: IncomeEntity) {
-        return db.incomeEntityDao.insertIncome(incomeEntity = incomeEntity)
+        withContext(ioDispatcher){
+            db.incomeEntityDao.insertIncome(incomeEntity = incomeEntity)
+        }
     }
 
     override  fun getAllIncome(): Flow<List<IncomeEntity>> {
-        return db.incomeEntityDao.getAllIncome()
+        return db.incomeEntityDao.getAllIncome().flowOn(ioDispatcher)
     }
 
     override fun getIncomeById(id:String): Flow<IncomeEntity?> {
-        return db.incomeEntityDao.getIncomeById(id = id)
+        return db.incomeEntityDao.getIncomeById(id = id).flowOn(ioDispatcher)
     }
 
     override suspend fun deleteIncomeById(id: String) {
-        return db.incomeEntityDao.deleteIncomeById(id = id)
+        withContext(ioDispatcher){
+            db.incomeEntityDao.deleteIncomeById(id = id)
+        }
     }
 
     override suspend fun deleteAllIncome() {
-        return db.incomeEntityDao.deleteAllIncome()
+        withContext(ioDispatcher){
+            db.incomeEntityDao.deleteAllIncome()
+        }
     }
 }

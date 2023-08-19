@@ -25,9 +25,21 @@ import com.peterchege.expensetrackerapp.domain.use_case.DeleteTransactionUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetSingleTransactionUseCase
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+sealed interface TransactionScreenUiState {
+    object Loading:TransactionScreenUiState
+
+    data class Success(val transactionInfo:TransactionInfo):TransactionScreenUiState
+
+    data class Error(val message:String):TransactionScreenUiState
+
+
+}
 @HiltViewModel
 class TransactionScreenViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -35,26 +47,37 @@ class TransactionScreenViewModel @Inject constructor(
     private val deleteTransactionUseCase:DeleteTransactionUseCase,
 
 ) : ViewModel(){
-    val _transactionInfo = mutableStateOf<TransactionInfo?>(null)
-    val transactionInfo: State<TransactionInfo?> = _transactionInfo
+
+    val transactionId = savedStateHandle.get<String>("id")
+
+
+    val _uiState = MutableStateFlow<TransactionScreenUiState>(TransactionScreenUiState.Loading)
+    val uiState = _uiState.asStateFlow()
+
 
     init {
-        savedStateHandle.get<String>("id")?.let {
-            viewModelScope.launch {
-                val info = getSingleTransactionUseCase(transactionId = it)
-                _transactionInfo.value = info
+
+        viewModelScope.launch {
+            if (transactionId == null){
+                _uiState.value = TransactionScreenUiState.Error(message = "Transaction Not Found")
+            }else{
+                val info = getSingleTransactionUseCase(transactionId = transactionId)
+                if (info == null){
+                    _uiState.value = TransactionScreenUiState.Error(message = "Transaction Not Found")
+                }else{
+                    _uiState.value = TransactionScreenUiState.Success(transactionInfo = info)
+                }
             }
         }
     }
 
     fun deleteTransaction(){
         viewModelScope.launch {
-            _transactionInfo.value?.transaction?.let{
-                deleteTransactionUseCase(transactionId = it.transactionId)
-
+            if (_uiState.value is TransactionScreenUiState.Success){
+                if (transactionId != null) {
+                    deleteTransactionUseCase(transactionId = transactionId)
+                }
             }
         }
-
     }
-
 }

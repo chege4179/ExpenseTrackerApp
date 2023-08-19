@@ -15,38 +15,49 @@
  */
 package com.peterchege.expensetrackerapp.data
 
+import com.peterchege.expensetrackerapp.core.di.IoDispatcher
 import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
 import com.peterchege.expensetrackerapp.domain.models.Transaction
 import com.peterchege.expensetrackerapp.domain.repository.TransactionRepository
 import com.peterchege.expensetrackerapp.domain.toEntity
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class TransactionRepositoryImpl @Inject constructor(
     private val db: ExpenseTrackerAppDatabase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : TransactionRepository {
     override suspend fun createTransaction(transaction: Transaction) {
-        return db.transactionEntityDao.insertTransaction(
-            transactionEntity = transaction.toEntity()
-        )
+        return withContext(ioDispatcher) {
+            db.transactionEntityDao.insertTransaction(
+                transactionEntity = transaction.toEntity()
+            )
+        }
     }
 
-    override suspend fun getTransactionById(transactionId:String): TransactionEntity? {
-        return db.transactionEntityDao.getTransactionById(id = transactionId)
+    override suspend fun getTransactionById(transactionId: String): TransactionEntity? {
+        return withContext(ioDispatcher) {
+            db.transactionEntityDao.getTransactionById(id = transactionId)
+        }
     }
 
     override fun getAllTransactions(): Flow<List<TransactionEntity>> {
-        return db.transactionEntityDao.getTransactions()
+        return db.transactionEntityDao.getTransactions().flowOn(ioDispatcher)
 
     }
 
     override fun getTransactionsForACertainDay(date: String): Flow<List<TransactionEntity>> {
         return db.transactionEntityDao.getTransactionsForACertainDay(date = date)
+            .flowOn(ioDispatcher)
     }
 
     override fun getTransactionsBetweenTwoDates(dates: List<String>): Flow<List<TransactionEntity>> {
         return db.transactionEntityDao.getTransactionsBetweenTwoDates(dates = dates)
+            .flowOn(ioDispatcher)
     }
 
     override fun searchTransactions(
@@ -54,14 +65,18 @@ class TransactionRepositoryImpl @Inject constructor(
         categoryId: String
     ): Flow<List<TransactionEntity>> {
         return db.transactionEntityDao.searchTransactions(dates = dates, categoryId = categoryId)
+            .flowOn(ioDispatcher)
     }
 
     override suspend fun deleteTransactionById(transactionId: String) {
-        return db.transactionEntityDao.deleteTransactionById(id = transactionId)
+        withContext(ioDispatcher){
+            db.transactionEntityDao.deleteTransactionById(id = transactionId)
+        }
     }
 
     override fun getTransactionByCategory(categoryId: String): Flow<List<TransactionEntity>> {
         return db.transactionEntityDao.getTransactionsByCategory(categoryId = categoryId)
+            .flowOn(ioDispatcher)
     }
 
 }

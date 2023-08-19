@@ -30,6 +30,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -38,46 +39,61 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideExpenseCategoryRepository(database: ExpenseTrackerAppDatabase):
-            ExpenseCategoryRepository {
+    fun provideExpenseCategoryRepository(
+        database: ExpenseTrackerAppDatabase,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): ExpenseCategoryRepository {
         return ExpenseCategoryRepositoryImpl(
-            db = database
+            db = database,
+            ioDispatcher = ioDispatcher
         )
     }
 
     @Provides
     @Singleton
-    fun provideExpenseRepository(database: ExpenseTrackerAppDatabase):
-            ExpenseRepository {
+    fun provideExpenseRepository(
+        database: ExpenseTrackerAppDatabase,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): ExpenseRepository {
         return ExpenseRepositoryImpl(
-            db = database
+            db = database,
+            ioDispatcher = ioDispatcher
         )
     }
 
     @Provides
     @Singleton
-    fun provideTransactionCategoryRepository(database: ExpenseTrackerAppDatabase):
-            TransactionCategoryRepository {
+    fun provideTransactionCategoryRepository(
+        database: ExpenseTrackerAppDatabase,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): TransactionCategoryRepository {
         return TransactionCategoryRepositoryImpl(
-            db = database
+            db = database,
+            ioDispatcher = ioDispatcher
         )
     }
 
     @Provides
     @Singleton
-    fun provideTransactionRepository(database: ExpenseTrackerAppDatabase):
-            TransactionRepository {
+    fun provideTransactionRepository(
+        database: ExpenseTrackerAppDatabase,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): TransactionRepository {
         return TransactionRepositoryImpl(
-            db = database
+            db = database,
+            ioDispatcher = ioDispatcher
         )
     }
 
     @Provides
     @Singleton
-    fun provideIncomeRepository(database: ExpenseTrackerAppDatabase):
-            IncomeRepository {
+    fun provideIncomeRepository(
+        database: ExpenseTrackerAppDatabase,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): IncomeRepository {
         return IncomeRepositoryImpl(
-            db = database
+            db = database,
+            ioDispatcher = ioDispatcher
         )
     }
 }

@@ -15,66 +15,65 @@
  */
 package com.peterchege.expensetrackerapp.presentation.screens.all_transactions_screen
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.domain.models.Transaction
+import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.domain.use_case.GetAllTransactionCategoriesUseCase
-import com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCase
 import com.peterchege.expensetrackerapp.domain.use_case.GetTransactionsByCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+sealed interface AllTransactionsScreenUiState {
+    object Loading:AllTransactionsScreenUiState
+
+    data class Success(
+        val transactions:List<Transaction>,
+        val transactionCategories:List<TransactionCategory>,
+    ):AllTransactionsScreenUiState
+
+    data class Error(val message:String):AllTransactionsScreenUiState
+}
 
 @HiltViewModel
 class AllTransactionsScreenViewModel @Inject constructor(
-    private val getFilteredTransactionsUseCase: GetFilteredTransactionsUseCase,
-    private val getTransactionsByCategoryUseCase: GetTransactionsByCategoryUseCase,
-    private val getAllTransactionCategoriesUseCase: GetAllTransactionCategoriesUseCase,
+    private val savedStateHandle: SavedStateHandle,
+    getTransactionsByCategoryUseCase: GetTransactionsByCategoryUseCase,
+    getAllTransactionCategoriesUseCase: GetAllTransactionCategoriesUseCase,
 ):ViewModel() {
 
-    val transactionCategories = getAllTransactionCategoriesUseCase()
+    val activeTransactionFilter = savedStateHandle.getStateFlow<String>(
+        key = "filter", initialValue = FilterConstants.ALL)
+
+    val uiState = combine(
+        getAllTransactionCategoriesUseCase(),
+        getTransactionsByCategoryUseCase(categoryId = activeTransactionFilter.value),
+    ){ transactionsCategoryEntities,transactionEntities ->
+        val transactionCategories = transactionsCategoryEntities.map { it.toExternalModel() }
+        val transactions = transactionEntities.map { it.toExternalModel() }
+        AllTransactionsScreenUiState.Success(
+            transactions = transactions,
+            transactionCategories = transactionCategories
+        )
+    }.onStart {
+        AllTransactionsScreenUiState.Loading
+    }.catch { AllTransactionsScreenUiState.Error(message = "Failed to fetch categories") }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = emptyList(),
+            initialValue = AllTransactionsScreenUiState.Loading
         )
 
-    val _activeTransactionCategoryFilterId = mutableStateOf(FilterConstants.ALL)
-    val activeTransactionCategoryFilterId :State<String> = _activeTransactionCategoryFilterId
-
-
-    init {
-        getTransactions()
-    }
-
-
-    val _transactions = mutableStateOf<List<Transaction>>(emptyList())
-    val transactions: State<List<Transaction>> = _transactions
-
-
-
     fun onChangeActiveTransactionFilter(filter:String){
-        _activeTransactionCategoryFilterId.value = filter
+        savedStateHandle["filter"] = filter
+
     }
-
-    fun getTransactions(){
-        viewModelScope.launch {
-            val transactions = getTransactionsByCategoryUseCase(
-                categoryId = _activeTransactionCategoryFilterId.value)
-            transactions.collectLatest { transactionEntities ->
-                _transactions.value = transactionEntities.map { it.toExternalModel() }
-
-            }
-        }
-    }
-
 }

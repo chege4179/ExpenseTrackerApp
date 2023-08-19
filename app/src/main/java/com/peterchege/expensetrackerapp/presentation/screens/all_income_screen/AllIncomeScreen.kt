@@ -31,6 +31,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -49,7 +50,9 @@ import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddIncome
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionCategoryBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.IncomeInfoBottomSheet
+import com.peterchege.expensetrackerapp.presentation.components.ErrorComponent
 import com.peterchege.expensetrackerapp.presentation.components.IncomeCard
+import com.peterchege.expensetrackerapp.presentation.components.LoadingComponent
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.peterchege.expensetrackerapp.presentation.screens.home_screen.BottomSheets
 import kotlinx.coroutines.launch
@@ -59,12 +62,12 @@ fun AllIncomeScreen(
     navController: NavController,
     viewModel: AllIncomeScreenViewModel = hiltViewModel()
 ) {
-    val incomes = viewModel.incomes.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val activeIncomeId = viewModel.activeIncomeId.value
 
     AllIncomeScreenContent(
         navController = navController,
-        incomes = incomes.value,
+        uiState = uiState,
         activeIncomeId = activeIncomeId,
         onChangeActiveIncomeId = {
             viewModel.onChangeActiveIncomeId(it)
@@ -79,7 +82,7 @@ fun AllIncomeScreen(
 @Composable
 fun AllIncomeScreenContent(
     navController: NavController,
-    incomes: List<Income>,
+    uiState: AllIncomeScreenUiState,
     activeIncomeId:String?,
     onChangeActiveIncomeId:(String) -> Unit,
 ){
@@ -117,24 +120,35 @@ fun AllIncomeScreenContent(
             },
         ){
             val scope = rememberCoroutineScope()
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp),
-            ) {
-
-                items(items = incomes) { income ->
-                    IncomeCard(
-                        income = income,
-                        onIncomeNavigate = {
-                            scope.launch{
-                                onChangeActiveIncomeId(it)
-                                modalSheetState.show()
-                            }
+            when(uiState){
+                is AllIncomeScreenUiState.Loading -> {
+                    LoadingComponent()
+                }
+                is AllIncomeScreenUiState.Error -> {
+                    ErrorComponent(message = uiState.message)
+                }
+                is AllIncomeScreenUiState.Success -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(10.dp),
+                    ) {
+                        items(items = uiState.incomes) { income ->
+                            IncomeCard(
+                                income = income,
+                                onIncomeNavigate = {
+                                    scope.launch{
+                                        onChangeActiveIncomeId(it)
+                                        modalSheetState.show()
+                                    }
+                                }
+                            )
                         }
-                    )
+                    }
                 }
             }
+
+
         }
     }
 

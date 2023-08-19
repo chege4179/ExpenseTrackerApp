@@ -30,6 +30,12 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+sealed interface ExpensesAnalyticsScreenUiState {
+    object Loading:ExpensesAnalyticsScreenUiState
+    data class Success(val expenseCategories :List<ExpenseCategoryInfo>):ExpensesAnalyticsScreenUiState
+
+    data class Error(val message:String):ExpensesAnalyticsScreenUiState
+}
 
 @HiltViewModel
 class ExpenseAnalyticsScreenViewModel @Inject constructor(

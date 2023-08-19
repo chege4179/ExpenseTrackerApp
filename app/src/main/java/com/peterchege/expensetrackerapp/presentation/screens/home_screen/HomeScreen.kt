@@ -17,12 +17,9 @@ package com.peterchege.expensetrackerapp.presentation.screens.home_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -33,39 +30,27 @@ import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
-import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import com.peterchege.expensetrackerapp.core.util.Screens
-import com.peterchege.expensetrackerapp.core.util.TestTags
 import com.peterchege.expensetrackerapp.core.util.UiEvent
-import com.peterchege.expensetrackerapp.domain.models.Expense
-import com.peterchege.expensetrackerapp.domain.models.Income
-import com.peterchege.expensetrackerapp.domain.models.Transaction
-import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpenseBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpenseCategoryBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddIncomeBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddTransactionCategoryBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.IncomeInfoBottomSheet
+import com.peterchege.expensetrackerapp.presentation.components.ErrorComponent
 import com.peterchege.expensetrackerapp.presentation.components.HomeScreenActionsCard
 import com.peterchege.expensetrackerapp.presentation.components.IncomeCard
-import com.peterchege.expensetrackerapp.presentation.components.MenuSample
+import com.peterchege.expensetrackerapp.presentation.components.LoadingComponent
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
 import kotlinx.coroutines.flow.SharedFlow
@@ -81,31 +66,15 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ){
-    LaunchedEffect(key1 = viewModel.selectedIndex.value) {
-        viewModel.getTransactions(filter = FilterConstants.FilterList[viewModel.selectedIndex.value])
-    }
-    val transactions = viewModel.transactions
-        .value
-        .collectAsStateWithLifecycle(initialValue = emptyList())
-        .value
-        .map { it.toExternalModel() }
-
-    val expenses = viewModel.expenses
-        .collectAsStateWithLifecycle()
-        .value
-        .map { it.toExternalModel() }
-
-    val income = viewModel.income.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
 
     HomeScreenContent(
+        uiState = uiState,
         eventFlow = viewModel.eventFlow,
         navController = navController,
         activeBottomSheet = viewModel.activeBottomSheet.value,
-        transactions = transactions,
         onChangeActiveBottomSheet = { viewModel.onChangeActiveBottomSheet(it) },
-        incomes = income.value,
-        expenses = expenses,
         activeIncomeId = viewModel.activeIncomeId.value,
         onChangeActiveIncomeId = {
             viewModel.onChangeActiveIncomeId(it)
@@ -118,21 +87,15 @@ fun HomeScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeScreenContent(
+    uiState:HomeScreenUiState,
     eventFlow: SharedFlow<UiEvent>,
     navController:NavController,
     activeBottomSheet:BottomSheets?,
-    transactions:List<Transaction>,
     onChangeActiveBottomSheet:(BottomSheets) -> Unit,
-    incomes:List<Income>,
-    expenses:List<Expense>,
     activeIncomeId:String?,
     onChangeActiveIncomeId:(String) -> Unit,
     ) {
-    val totalIncome = incomes.sumOf { it.incomeAmount }
-    val totalExpense = expenses.sumOf { it.expenseAmount }
-    val totalTransaction = transactions.sumOf { it.transactionAmount }
 
-    val remainingIncome = totalIncome - (totalExpense + totalTransaction)
 
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -157,8 +120,6 @@ fun HomeScreenContent(
             }
         }
     }
-
-
 
     ModalBottomSheetLayout(
         sheetState = modalSheetState,
@@ -211,173 +172,189 @@ fun HomeScreenContent(
                 )
             },
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp)
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    item {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .height(100.dp),
-                            horizontalAlignment = Alignment.Start,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "Your Income ",
-                                style = TextStyle(color = GreyColor),
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 16.sp
-                            )
-                            Text(
-                                text = "KES $remainingIncome /=",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 30.sp,
-                                style = TextStyle(color = MaterialTheme.colors.primary)
-                            )
+            when(uiState){
+                is HomeScreenUiState.Loading -> {
+                    LoadingComponent()
+                }
+                is HomeScreenUiState.Error -> {
+                    ErrorComponent(message = uiState.message)
+                }
+                is HomeScreenUiState.Success -> {
+                    val totalIncome = uiState.income.sumOf { it.incomeAmount }
+                    val totalExpense = uiState.expenses.sumOf { it.expenseAmount }
+                    val totalTransaction = uiState.transactions.sumOf { it.transactionAmount }
 
-                        }
-                    }
-                    item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            verticalAlignment = Alignment.CenterVertically,
+                    val remainingIncome = totalIncome - (totalExpense + totalTransaction)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(10.dp)
+                    ) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
                         ) {
-                            HomeScreenActionsCard(
-                                name ="Add Income",
-                                icon = Icons.Outlined.Payments,
-                                onClick = {
-                                    onChangeActiveBottomSheet(
-                                        BottomSheets.ADD_INCOME)
-                                }
-                            )
-                            HomeScreenActionsCard(
-                                name ="Add Transaction",
-                                icon = Icons.Outlined.ReceiptLong,
-                                onClick = {
-                                    onChangeActiveBottomSheet(
-                                        BottomSheets.ADD_TRANSACTION)
-                                }
-                            )
-                            HomeScreenActionsCard(
-                                name ="Add Expense",
-                                icon = Icons.Outlined.ShoppingCart,
-                                onClick = {
-                                    onChangeActiveBottomSheet(
-                                        BottomSheets.ADD_EXPENSE)
-                                }
-                            )
-                            HomeScreenActionsCard(
-                                name ="Add Transaction Category",
-                                icon = Icons.Default.Add,
-                                onClick = {
-                                    onChangeActiveBottomSheet(
-                                        BottomSheets.ADD_TRANSACTION_CATEGORY)
-                                }
-                            )
-                            HomeScreenActionsCard(
-                                name ="Add Expense Category",
-                                icon = Icons.Default.Add,
-                                onClick = {
-                                    onChangeActiveBottomSheet(
-                                        BottomSheets.ADD_EXPENSE_CATEGORY)
-                                }
-                            )
-
-                        }
-                    }
-                    item {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp)
-                                .padding(end = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                        ) {
-                            Text(
-                                text = "Income",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                style = TextStyle(
-                                    color = MaterialTheme.colors.primary,
-                                )
-                            )
-                            IconButton(onClick = {
-                                navController.navigate(route = Screens.ALL_INCOME_SCREEN)
-                            }) {
-                                Text(
-                                    text = "See All",
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    style = TextStyle(
-                                        color = MaterialTheme.colors.primary,
+                            item {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .height(100.dp),
+                                    horizontalAlignment = Alignment.Start,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        text = "Your Income ",
+                                        style = TextStyle(color = GreyColor),
+                                        fontWeight = FontWeight.Medium,
+                                        fontSize = 16.sp
                                     )
-                                )
-                            }
-
-                        }
-                    }
-                    items(items = incomes.take(n= 2)) { income ->
-                        IncomeCard(
-                            income = income,
-                            onIncomeNavigate = {
-                                onChangeActiveIncomeId(it)
-                                onChangeActiveBottomSheet(BottomSheets.VIEW_INCOME)
-
-
-
-                            }
-                        )
-                    }
-                    item {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp)
-                                .padding(end = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                        ) {
-                            Text(
-                                text = "Transactions",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                style = TextStyle(
-                                    color = MaterialTheme.colors.primary,
-                                )
-                            )
-                            IconButton(onClick = {
-                                navController.navigate(Screens.ALL_TRANSACTIONS_SCREEN)
-                            }) {
-                                Text(
-                                    text = "See All",
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    style = TextStyle(
-                                        color = MaterialTheme.colors.primary,
+                                    Text(
+                                        text = "KES $remainingIncome /=",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 30.sp,
+                                        style = TextStyle(color = MaterialTheme.colors.primary)
                                     )
+
+                                }
+                            }
+                            item {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    HomeScreenActionsCard(
+                                        name ="Add Income",
+                                        icon = Icons.Outlined.Payments,
+                                        onClick = {
+                                            onChangeActiveBottomSheet(
+                                                BottomSheets.ADD_INCOME)
+                                        }
+                                    )
+                                    HomeScreenActionsCard(
+                                        name ="Add Transaction",
+                                        icon = Icons.Outlined.ReceiptLong,
+                                        onClick = {
+                                            onChangeActiveBottomSheet(
+                                                BottomSheets.ADD_TRANSACTION)
+                                        }
+                                    )
+                                    HomeScreenActionsCard(
+                                        name ="Add Expense",
+                                        icon = Icons.Outlined.ShoppingCart,
+                                        onClick = {
+                                            onChangeActiveBottomSheet(
+                                                BottomSheets.ADD_EXPENSE)
+                                        }
+                                    )
+                                    HomeScreenActionsCard(
+                                        name ="Add Transaction Category",
+                                        icon = Icons.Default.Add,
+                                        onClick = {
+                                            onChangeActiveBottomSheet(
+                                                BottomSheets.ADD_TRANSACTION_CATEGORY)
+                                        }
+                                    )
+                                    HomeScreenActionsCard(
+                                        name ="Add Expense Category",
+                                        icon = Icons.Default.Add,
+                                        onClick = {
+                                            onChangeActiveBottomSheet(
+                                                BottomSheets.ADD_EXPENSE_CATEGORY)
+                                        }
+                                    )
+
+                                }
+                            }
+                            item {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(40.dp)
+                                        .padding(end = 10.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                ) {
+                                    Text(
+                                        text = "Income",
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        style = TextStyle(
+                                            color = MaterialTheme.colors.primary,
+                                        )
+                                    )
+                                    IconButton(onClick = {
+                                        navController.navigate(route = Screens.ALL_INCOME_SCREEN)
+                                    }) {
+                                        Text(
+                                            text = "See All",
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Normal,
+                                            style = TextStyle(
+                                                color = MaterialTheme.colors.primary,
+                                            )
+                                        )
+                                    }
+
+                                }
+                            }
+                            items(items = uiState.income.take(n= 2)) { income ->
+                                IncomeCard(
+                                    income = income,
+                                    onIncomeNavigate = {
+                                        onChangeActiveIncomeId(it)
+                                        onChangeActiveBottomSheet(BottomSheets.VIEW_INCOME)
+
+
+
+                                    }
                                 )
                             }
+                            item {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(40.dp)
+                                        .padding(end = 10.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                ) {
+                                    Text(
+                                        text = "Transactions",
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        style = TextStyle(
+                                            color = MaterialTheme.colors.primary,
+                                        )
+                                    )
+                                    IconButton(onClick = {
+                                        navController.navigate(Screens.ALL_TRANSACTIONS_SCREEN)
+                                    }) {
+                                        Text(
+                                            text = "See All",
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Normal,
+                                            style = TextStyle(
+                                                color = MaterialTheme.colors.primary,
+                                            )
+                                        )
+                                    }
 
-                        }
-                    }
-                    items(items = transactions.take(n= 2)) { transaction ->
-                        TransactionCard(
-                            transaction = transaction,
-                            onTransactionNavigate = {
-                                navController.navigate(route = Screens.TRANSACTIONS_SCREEN + "/$it")
-
+                                }
                             }
-                        )
+                            items(items = uiState.transactions.take(n= 2)) { transaction ->
+                                TransactionCard(
+                                    transaction = transaction,
+                                    onTransactionNavigate = {
+                                        navController.navigate(route = Screens.TRANSACTIONS_SCREEN + "/$it")
+
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }
+
         }
     }
 }

@@ -77,13 +77,13 @@ fun ExpensesAnalyticsScreen(
 }
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ExpensesAnalyticsScreenContent(
     pieData:List<PieDataInfo>
 
 ) {
-
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -110,38 +110,41 @@ fun ExpensesAnalyticsScreenContent(
                         animation = simpleChartAnimation(),
                         sliceDrawer = SimpleSliceDrawer(),
                     )
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 5.dp),
-                        verticalArrangement = Arrangement.Top,
-                    ) {
-                        pieData.map { 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(40.dp),
-                                horizontalArrangement = Arrangement.Start,
-                            ){
-                                Box(
-                                    modifier = Modifier
-                                        .width(30.dp)
-                                        .height(20.dp)
-                                        .background(color = it.slice.color)
-                                        .padding(3.dp)
-                                )
-                                Text(
-                                    text = it.expenseCategory.expenseCategoryName,
-                                    modifier = Modifier.padding(3.dp),
-                                    fontSize = 17.sp,
-                                    style = TextStyle(color = MaterialTheme.colors.primary)
-                                    
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(5.dp))
-                        }
 
+                }
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    pieData.forEach {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp),
+                            horizontalArrangement = Arrangement.Start,
+                        ){
+                            Box(
+                                modifier = Modifier
+                                    .width(30.dp)
+                                    .height(20.dp)
+                                    .background(color = it.slice.color)
+                                    .padding(3.dp)
+                            )
+                            Text(
+                                text = it.expenseCategory.expenseCategoryName,
+                                modifier = Modifier.padding(3.dp),
+                                fontSize = 17.sp,
+                                style = TextStyle(color = MaterialTheme.colors.primary)
+                            )
+                            Text(
+                                text = "KES " + it.slice.value.toString() + "/=",
+                                modifier = Modifier.padding(3.dp),
+                                fontSize = 17.sp,
+                                style = TextStyle(color = MaterialTheme.colors.primary)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
                     }
+
                 }
 
             }

@@ -15,38 +15,51 @@
  */
 package com.peterchege.expensetrackerapp.data
 
+import com.peterchege.expensetrackerapp.core.di.IoDispatcher
 import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.core.room.entities.ExpenseCategoryEntity
 import com.peterchege.expensetrackerapp.domain.models.ExpenseCategory
 import com.peterchege.expensetrackerapp.domain.repository.ExpenseCategoryRepository
 import com.peterchege.expensetrackerapp.domain.toEntity
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ExpenseCategoryRepositoryImpl @Inject constructor(
-    private val db:ExpenseTrackerAppDatabase
+    private val db:ExpenseTrackerAppDatabase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ): ExpenseCategoryRepository {
     override suspend fun saveExpenseCategory(expenseCategory: ExpenseCategory) {
-        return db.expenseCategoryEntityDao.insertExpenseCategory(
-            expenseCategoryEntity = expenseCategory.toEntity())
+        return withContext(ioDispatcher){
+            db.expenseCategoryEntityDao.insertExpenseCategory(
+                expenseCategoryEntity = expenseCategory.toEntity())
+        }
     }
 
     override fun getAllExpenseCategories(): Flow<List<ExpenseCategoryEntity>> {
-        return db.expenseCategoryEntityDao.getExpenseCategories()
+        return db.expenseCategoryEntityDao.getExpenseCategories().flowOn(ioDispatcher)
     }
 
     override suspend fun getExpenseCategoryByName(name: String): ExpenseCategoryEntity? {
-        return db.expenseCategoryEntityDao.getExpenseCategoryByName(name = name)
+        return withContext(ioDispatcher){
+            db.expenseCategoryEntityDao.getExpenseCategoryByName(name = name)
+        }
 
     }
 
     override suspend fun updateExpenseCategory(expenseCategoryId: String, expenseCategoryName: String) {
-        return db.expenseCategoryEntityDao.updateExpenseCategoryName(
-            id = expenseCategoryId, name = expenseCategoryName)
+        withContext(ioDispatcher){
+            db.expenseCategoryEntityDao.updateExpenseCategoryName(
+                id = expenseCategoryId, name = expenseCategoryName)
+        }
     }
 
     override suspend fun deleteExpenseCategory(expenseCategoryId: String) {
-        return db.expenseCategoryEntityDao.deleteExpenseCategoryById(id = expenseCategoryId)
+        withContext(ioDispatcher){
+            db.expenseCategoryEntityDao.deleteExpenseCategoryById(id = expenseCategoryId)
+        }
     }
 
 }

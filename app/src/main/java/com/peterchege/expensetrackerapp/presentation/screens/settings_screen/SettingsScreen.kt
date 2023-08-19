@@ -50,7 +50,7 @@ fun SettingsScreen(
     viewModel:SettingsScreenViewModel = hiltViewModel()
 
 ){
-    val theme = viewModel.theme.collectAsStateWithLifecycle(initialValue = Constants.DARK_MODE)
+    val theme = viewModel.theme.collectAsStateWithLifecycle()
     SettingsScreenContent(
         theme = theme.value,
         updateTheme = { viewModel.updateTheme(it) }

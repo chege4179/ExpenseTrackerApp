@@ -15,48 +15,62 @@
  */
 package com.peterchege.expensetrackerapp.data
 
+import com.peterchege.expensetrackerapp.core.di.IoDispatcher
 import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionCategoryEntity
 import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.repository.TransactionCategoryRepository
 import com.peterchege.expensetrackerapp.domain.toEntity
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class TransactionCategoryRepositoryImpl @Inject constructor(
-    private val db:ExpenseTrackerAppDatabase
-
+    private val db:ExpenseTrackerAppDatabase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) :TransactionCategoryRepository{
     override suspend fun saveTransactionCategory(transactionCategory: TransactionCategory) {
-        return db.transactionCategoryEntityDao.insertTransactionCategory(
-            transactionCategoryEntity = transactionCategory.toEntity())
+        withContext(ioDispatcher){
+            db.transactionCategoryEntityDao.insertTransactionCategory(
+                transactionCategoryEntity = transactionCategory.toEntity())
+        }
     }
 
     override suspend fun getTransactionCategoryById(transactionId: String): TransactionCategoryEntity? {
-        return db.transactionCategoryEntityDao.getTransactionCategoryById(id = transactionId)
+        return withContext(ioDispatcher){
+            db.transactionCategoryEntityDao.getTransactionCategoryById(id = transactionId)
+        }
     }
 
     override fun getAllTransactionCategories(): Flow<List<TransactionCategoryEntity>> {
-        return db.transactionCategoryEntityDao.getTransactionCategories()
+        return db.transactionCategoryEntityDao.getTransactionCategories().flowOn(ioDispatcher)
     }
 
     override suspend fun getTransactionCategoryByName(name: String): TransactionCategoryEntity? {
-        return db.transactionCategoryEntityDao.getTransactionCategoryByName(name = name)
+        return withContext(ioDispatcher){
+            db.transactionCategoryEntityDao.getTransactionCategoryByName(name = name)
+        }
     }
 
     override suspend fun updateTransactionCategory(
         transactionCategoryId: String,
         transactionCategoryName: String
     ) {
-        return db.transactionCategoryEntityDao.updateExpenseCategoryName(
-            id = transactionCategoryId,
-            name = transactionCategoryName,
-        )
+        withContext(ioDispatcher){
+            db.transactionCategoryEntityDao.updateExpenseCategoryName(
+                id = transactionCategoryId,
+                name = transactionCategoryName,
+            )
+        }
 
     }
 
     override suspend fun deleteTransactionCategory(transactionCategoryId: String) {
-        return db.transactionCategoryEntityDao.deleteTransactionCategoryById(
-            id = transactionCategoryId)
+        withContext(ioDispatcher){
+            db.transactionCategoryEntityDao.deleteTransactionCategoryById(
+                id = transactionCategoryId)
+        }
     }
 }
