@@ -32,6 +32,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -47,12 +49,14 @@ object TestAppModule {
         ).build()
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Provides
     @Singleton
     fun provideExpenseCategoryRepository(database: ExpenseTrackerAppDatabase):
             ExpenseCategoryRepository {
         return ExpenseCategoryRepositoryImpl(
-            db = database
+            db = database,
+            ioDispatcher = UnconfinedTestDispatcher()
         )
     }
 
@@ -61,25 +65,30 @@ object TestAppModule {
     fun provideExpenseRepository(database: ExpenseTrackerAppDatabase):
             ExpenseRepository {
         return ExpenseRepositoryImpl(
-            db = database
+            db = database,
+            ioDispatcher = UnconfinedTestDispatcher()
         )
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Provides
     @Singleton
     fun provideTransactionCategoryRepository(database: ExpenseTrackerAppDatabase):
             TransactionCategoryRepository {
         return TransactionCategoryRepositoryImpl(
-            db = database
+            db = database,
+            ioDispatcher = UnconfinedTestDispatcher()
         )
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Provides
     @Singleton
     fun provideTransactionRepository(database: ExpenseTrackerAppDatabase):
             TransactionRepository {
         return TransactionRepositoryImpl(
-            db = database
+            db = database,
+            ioDispatcher = UnconfinedTestDispatcher()
         )
     }
 
@@ -109,12 +118,14 @@ object TestAppModule {
             preferences = userPreferences
         )
     }
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Provides
     @Singleton
     fun provideIncomeRepository(database: ExpenseTrackerAppDatabase):
             IncomeRepository {
         return IncomeRepositoryImpl(
-            db = database
+            db = database,
+            ioDispatcher = UnconfinedTestDispatcher()
         )
     }
 
