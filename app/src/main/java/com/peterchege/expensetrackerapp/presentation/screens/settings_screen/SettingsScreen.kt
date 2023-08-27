@@ -40,6 +40,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.peterchege.expensetrackerapp.BuildConfig
 import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.core.util.getAppVersionName
 import com.peterchege.expensetrackerapp.presentation.components.SettingsRow
@@ -121,7 +122,12 @@ fun SettingsScreenContent(
                     style = TextStyle(color = MaterialTheme.colors.primary),
                     fontSize = 11.sp
                 )
-
+                Text(
+                    text = "Build Type: ${BuildConfig.BUILD_TYPE}",
+                    modifier = Modifier,
+                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    fontSize = 11.sp
+                )
                 Text(
                     text = "Made with ❤️by Peter Chege 🇰🇪",
                     modifier = Modifier,

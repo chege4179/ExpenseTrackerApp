@@ -92,25 +92,25 @@ android {
 
 dependencies {
     implementation ("androidx.core:core-ktx:1.10.1")
-    implementation ("androidx.compose.ui:ui:1.6.0-alpha03")
-    implementation ("androidx.compose.material:material:1.6.0-alpha03")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.6.0-alpha03")
+    implementation ("androidx.compose.ui:ui:1.6.0-alpha04")
+    implementation ("androidx.compose.material:material:1.6.0-alpha04")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.6.0-alpha04")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation ("androidx.activity:activity-compose:1.7.2")
     testImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.6.0-alpha03")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.6.0-alpha04")
 
 
 
-    debugImplementation ("androidx.compose.ui:ui-tooling:1.6.0-alpha03")
-    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.6.0-alpha03")
+    debugImplementation ("androidx.compose.ui:ui-tooling:1.6.0-alpha04")
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.6.0-alpha04")
 
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.compose.foundation:foundation:1.5.0")
     implementation("androidx.compose.foundation:foundation-layout:1.5.0")
-    implementation ("androidx.navigation:navigation-compose:2.7.0")
+    implementation ("androidx.navigation:navigation-compose:2.7.1")
 
 
     // view model
@@ -136,17 +136,17 @@ dependencies {
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     // coil
-    implementation ("io.coil-kt:coil-compose:2.3.0")
+    implementation ("io.coil-kt:coil-compose:2.4.0")
 
     // room
     implementation ("androidx.room:room-runtime:2.5.2")
-    kapt ("androidx.room:room-compiler:2.5.1")
+    kapt ("androidx.room:room-compiler:2.5.2")
     implementation ("androidx.room:room-ktx:2.5.2")
     implementation("androidx.room:room-paging:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
 
     // compose icons
-    implementation ("androidx.compose.material:material-icons-extended:1.6.0-alpha03")
+    implementation ("androidx.compose.material:material-icons-extended:1.6.0-alpha04")
 
     //pager
     implementation( "com.google.accompanist:accompanist-pager:0.30.1")

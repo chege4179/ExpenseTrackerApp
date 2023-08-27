@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -41,23 +42,22 @@ import com.peterchege.expensetrackerapp.core.util.TestTags
 
 @Composable
 fun MenuSample(
-    selectedIndex:Int,
-    onChangeSelectedIndex:(Int) -> Unit,
+    selectedIndex: Int,
+    onChangeSelectedIndex: (Int) -> Unit,
     menuItems: List<String>,
-    menuWidth:Int
-){
+    menuWidth: Int
+) {
     var menuListExpanded by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .width(menuWidth.dp)
             .height(95.dp)
             .padding(10.dp)
-            .testTag(TestTags.GENERAL_DROPDOWN)
-        ,
+            .testTag(TestTags.GENERAL_DROPDOWN),
         contentAlignment = Alignment.CenterStart
     ) {
         ComposeMenu(
-            menuItems = menuItems ,
+            menuItems = menuItems,
             menuExpandedState = menuListExpanded,
             selectedIndex = selectedIndex,
             updateMenuExpandStatus = {
@@ -66,7 +66,7 @@ fun MenuSample(
             onDismissMenuView = {
                 menuListExpanded = false
             },
-            onMenuItemclick = { index->
+            onMenuItemclick = { index ->
                 onChangeSelectedIndex(index)
                 menuListExpanded = false
             }
@@ -75,85 +75,53 @@ fun MenuSample(
 }
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ComposeMenu(
     menuItems: List<String>,
     menuExpandedState: Boolean,
-    selectedIndex : Int,
-    updateMenuExpandStatus : () -> Unit,
-    onDismissMenuView : () -> Unit,
-    onMenuItemclick : (Int) -> Unit,
+    selectedIndex: Int,
+    updateMenuExpandStatus: () -> Unit,
+    onDismissMenuView: () -> Unit,
+    onMenuItemclick: (Int) -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.TopStart)
-            .padding(top = 10.dp)
-            .border(width = 0.8.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.5f))
-            .testTag(tag = TestTags.TRANSACTIONS_CATEGORIES_DROPDOWN)
-            .clickable(
-                onClick = {
-                    updateMenuExpandStatus()
-                },
-            ),
-
-
-        ) {
-
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-
-            val (lable, iconView) = createRefs()
-            if (menuItems.isNotEmpty()){
-                Text(
-                    text= menuItems[selectedIndex],
-                    style = TextStyle(color = MaterialTheme.colors.primary),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .constrainAs(lable) {
-                            top.linkTo(parent.top)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(iconView.start)
-                            width = Dimension.fillToConstraints
-                        }
+    // box
+    ExposedDropdownMenuBox(
+        expanded = menuExpandedState,
+        onExpandedChange = {
+            updateMenuExpandStatus()
+        }
+    ) {
+        // text field
+        TextField(
+            value = if (menuItems.isEmpty()) "" else menuItems[selectedIndex],
+            onValueChange = {},
+            readOnly = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(
+                    expanded = menuExpandedState
                 )
-            }
-
-
-            Icon(
-                Icons.Filled.ArrowDropDown,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(20.dp, 20.dp)
-                    .constrainAs(iconView) {
-                        end.linkTo(parent.end)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                    },
-                tint = MaterialTheme.colors.onSurface
+            },
+            textStyle = TextStyle(
+                color = MaterialTheme.colors.primary
             )
+        )
 
-            DropdownMenu(
-                expanded = menuExpandedState,
-                onDismissRequest = { onDismissMenuView() },
-                modifier = Modifier
-                    .width(150.dp)
-                    .background(MaterialTheme.colors.onBackground)
-            ) {
-                menuItems.forEachIndexed { index, title ->
-                    DropdownMenuItem(
-                        onClick = {
-                            onMenuItemclick(index)
-                        }) {
-                        Text(
-                            text = title,
-                            style = TextStyle(color = MaterialTheme.colors.primary)
-                        )
+        // menu
+        ExposedDropdownMenu(
+            expanded = menuExpandedState,
+            onDismissRequest = { onDismissMenuView() }
+        ) {
+            // this is a column scope
+            // all the items are added vertically
+            menuItems.forEachIndexed { index, selectedOption ->
+                // menu item
+                DropdownMenuItem(
+                    onClick = {
+                        onMenuItemclick(index)
                     }
+                ) {
+                    Text(text = selectedOption)
                 }
             }
         }

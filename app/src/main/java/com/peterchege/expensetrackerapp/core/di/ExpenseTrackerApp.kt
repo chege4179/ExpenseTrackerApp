@@ -34,7 +34,7 @@ class ExpenseTrackerApp :Application(){
 private fun initTimber() = when {
     BuildConfig.DEBUG -> {
         Timber.plant(object : Timber.DebugTree() {
-            override fun createStackElementTag(@NotNull element: StackTraceElement): String {
+            override fun createStackElementTag(element: StackTraceElement): String {
                 return super.createStackElementTag(element) + ":" + element.lineNumber
             }
         })

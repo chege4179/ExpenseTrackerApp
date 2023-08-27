@@ -1,0 +1,40 @@
+name: Deploy Release App to Firebase App Distribution
+
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache gradle
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-    
+
+      - name: Build Release App
+        run: ./gradlew assembleRelease
+
+      - name: Upload a Build Artifact (APK)
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: app
+          path: app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: trusted-testers
+          file: app/build/outputs/apk/release/app-release.apk
