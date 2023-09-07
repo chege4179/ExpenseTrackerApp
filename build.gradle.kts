@@ -13,24 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.jetbrains.kotlin.js.translate.context.Namer.kotlin
 
 
 plugins {
-
-    id ("com.android.application") version "7.4.1" apply false
-    id ("com.android.library") version "7.4.1" apply false
-    id ( "org.jetbrains.kotlin.android") version "1.8.10" apply false
+    id ("com.android.application") version "8.1.0" apply false
+    id ("com.android.library") version "8.1.0" apply false
+    id ( "org.jetbrains.kotlin.android") version "1.9.10" apply false
     id("com.diffplug.spotless") version "5.3.0"
     id("org.jetbrains.kotlinx.kover") version "0.7.0-Beta"
+    id ("org.jetbrains.kotlin.jvm") version "1.9.0"
+    id("com.google.devtools.ksp") version "1.9.10-1.0.13"
 
+}
+
+subprojects{
+    apply(plugin = "com.google.devtools.ksp")
+    apply(plugin = "dagger.hilt.android.plugin")
 }
 
 buildscript {
     dependencies {
         classpath ("com.google.gms:google-services:4.3.15")
-        classpath ("com.google.firebase:firebase-crashlytics-gradle:2.9.5")
-        classpath ("com.google.dagger:hilt-android-gradle-plugin:2.45")
+        classpath ("com.google.firebase:firebase-crashlytics-gradle:2.9.9")
+        classpath ("com.google.dagger:hilt-android-gradle-plugin:2.48")
     }
 }
 
