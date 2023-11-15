@@ -24,6 +24,7 @@ plugins {
     id ("org.jetbrains.kotlin.jvm") version "1.9.0"
     id("com.google.devtools.ksp") version "1.9.10-1.0.13"
 
+
 }
 
 subprojects{
@@ -33,9 +34,10 @@ subprojects{
 
 buildscript {
     dependencies {
-        classpath ("com.google.gms:google-services:4.3.15")
+        classpath ("com.google.gms:google-services:4.4.0")
         classpath ("com.google.firebase:firebase-crashlytics-gradle:2.9.9")
-        classpath ("com.google.dagger:hilt-android-gradle-plugin:2.48")
+        classpath ("com.google.dagger:hilt-android-gradle-plugin:2.48.1")
+        classpath("com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1")
     }
 }
 

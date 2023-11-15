@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
+val keyPasswordString: String = gradleLocalProperties(rootDir).getProperty("keyPassword")
 plugins {
     id ("com.android.application")
     id ("org.jetbrains.kotlin.android")
@@ -20,7 +23,7 @@ plugins {
     id ("com.google.gms.google-services")
     id ("com.google.firebase.crashlytics")
     id ("org.jetbrains.kotlinx.kover")
-
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 
 }
 
@@ -40,10 +43,19 @@ android {
             useSupportLibrary =true
         }
     }
-
+    signingConfigs {
+        create("release") {
+            storeFile = file("expense_tracker_app.jks")
+            keyAlias = "expense_tracker_app"
+            keyPassword = keyPasswordString
+            storePassword =  keyPasswordString
+        }
+    }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles (getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
@@ -88,24 +100,24 @@ android {
 
 dependencies {
     implementation ("androidx.core:core-ktx:1.12.0")
-    implementation ("androidx.compose.ui:ui:1.6.0-alpha04")
-    implementation ("androidx.compose.material:material:1.6.0-alpha04")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.6.0-alpha04")
-    implementation ("androidx.activity:activity-compose:1.7.2")
+    implementation ("androidx.compose.ui:ui:1.6.0-alpha08")
+    implementation ("androidx.compose.material:material:1.6.0-alpha08")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.6.0-alpha08")
+    implementation ("androidx.activity:activity-compose:1.8.0")
     testImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.6.0-alpha04")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.6.0-alpha08")
 
 
 
-    debugImplementation ("androidx.compose.ui:ui-tooling:1.6.0-alpha04")
-    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.6.0-alpha04")
+    debugImplementation ("androidx.compose.ui:ui-tooling:1.6.0-alpha08")
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.6.0-alpha08")
 
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    implementation("androidx.compose.foundation:foundation:1.5.0")
-    implementation("androidx.compose.foundation:foundation-layout:1.5.0")
-    implementation ("androidx.navigation:navigation-compose:2.7.2")
+    implementation("androidx.compose.foundation:foundation:1.5.4")
+    implementation("androidx.compose.foundation:foundation-layout:1.5.4")
+    implementation ("androidx.navigation:navigation-compose:2.7.5")
 
 
     // view model
@@ -114,8 +126,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
     //paging
-    implementation("androidx.paging:paging-common-ktx:3.2.0")
-    implementation("androidx.paging:paging-compose:3.2.0")
+    implementation("androidx.paging:paging-common-ktx:3.2.1")
+    implementation("androidx.paging:paging-compose:3.2.1")
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -125,29 +137,29 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // dagger hilt
-    implementation ("com.google.dagger:hilt-android:2.48")
-    ksp("com.google.dagger:dagger-compiler:2.48") // Dagger compiler
-    ksp("com.google.dagger:hilt-compiler:2.48")   // Hilt compiler
-    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation ("com.google.dagger:hilt-android:2.48.1")
+    ksp("com.google.dagger:dagger-compiler:2.48.1") // Dagger compiler
+    ksp("com.google.dagger:hilt-compiler:2.48.1")   // Hilt compiler
+    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // coil
     implementation ("io.coil-kt:coil-compose:2.4.0")
 
     // room
-    implementation ("androidx.room:room-runtime:2.5.2")
-    ksp ("androidx.room:room-compiler:2.5.2")
-    implementation ("androidx.room:room-ktx:2.5.2")
-    implementation("androidx.room:room-paging:2.5.2")
+    implementation ("androidx.room:room-runtime:2.6.0")
+    ksp ("androidx.room:room-compiler:2.6.0")
+    implementation ("androidx.room:room-ktx:2.6.0")
+    implementation("androidx.room:room-paging:2.6.0")
 
 
     // compose icons
-    implementation ("androidx.compose.material:material-icons-extended:1.6.0-alpha04")
+    implementation ("androidx.compose.material:material-icons-extended:1.6.0-alpha08")
 
     //pager
     implementation( "com.google.accompanist:accompanist-pager:0.30.1")
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.30.1")
 
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.31.0-alpha")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.33.1-alpha")
 
     // swipe refresh
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.28.0")
@@ -159,29 +171,29 @@ dependencies {
     implementation ("com.github.tehras:charts:0.2.4-alpha")
 
 
-    implementation ("com.google.firebase:firebase-crashlytics-ktx:18.4.1")
-    implementation ("com.google.firebase:firebase-analytics-ktx:21.3.0")
+    implementation ("com.google.firebase:firebase-crashlytics-ktx:18.5.1")
+    implementation ("com.google.firebase:firebase-analytics-ktx:21.5.0")
 
     // date picker
     implementation ("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
-    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
 
     testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     androidTestImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     androidTestImplementation ("app.cash.turbine:turbine:1.0.0")
-    testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation("io.mockk:mockk:1.13.8")
 
     testImplementation ("androidx.arch.core:core-testing:2.2.0")
     // Instrumentation tests
-    androidTestImplementation ("com.google.dagger:hilt-android-testing:2.48")
-    kspAndroidTest ("com.google.dagger:hilt-android-compiler:2.48")
+    androidTestImplementation ("com.google.dagger:hilt-android-testing:2.48.1")
+    kspAndroidTest ("com.google.dagger:hilt-android-compiler:2.48.1")
     androidTestImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.arch.core:core-testing:2.2.0")
     androidTestImplementation ("com.google.truth:truth:1.1.5")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test:core-ktx:1.5.0")
     androidTestImplementation( "com.squareup.okhttp3:mockwebserver:4.11.0")
-    androidTestImplementation( "io.mockk:mockk-android:1.13.5")
+    androidTestImplementation( "io.mockk:mockk-android:1.13.8")
     androidTestImplementation ("androidx.test:runner:1.5.2")
 
     testImplementation ("org.robolectric:robolectric:4.10.3")
