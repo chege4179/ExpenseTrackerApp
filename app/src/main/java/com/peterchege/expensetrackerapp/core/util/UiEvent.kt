@@ -15,7 +15,7 @@
  */
 package com.peterchege.expensetrackerapp.core.util
 
-import com.peterchege.expensetrackerapp.presentation.screens.home_screen.BottomSheets
+import com.peterchege.expensetrackerapp.presentation.screens.home.BottomSheets
 
 abstract class Event
 

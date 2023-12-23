@@ -51,7 +51,7 @@ fun AddExpenseBottomSheet(
     viewModel: AddExpenseScreenViewModel = hiltViewModel()
 ) {
     val expenseCategories = viewModel.expenseCategories
-        .collectAsStateWithLifecycle(initialValue = emptyList())
+        .collectAsStateWithLifecycle()
         .value
         .map { it.toExternalModel() }
 

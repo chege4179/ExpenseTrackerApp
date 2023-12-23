@@ -17,9 +17,8 @@ package com.peterchege.expensetrackerapp.core.di
 
 import android.app.Application
 import com.peterchege.expensetrackerapp.BuildConfig
-import com.peterchege.expensetrackerapp.core.crashlytics.CrashlyticsTree
+import com.peterchege.expensetrackerapp.core.analytics.crashlytics.CrashlyticsTree
 import dagger.hilt.android.HiltAndroidApp
-import org.jetbrains.annotations.NotNull
 import timber.log.Timber
 
 @HiltAndroidApp

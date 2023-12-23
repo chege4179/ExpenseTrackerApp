@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.android.build.api.dsl.ManagedVirtualDevice
 
 val keyPasswordString: String = gradleLocalProperties(rootDir).getProperty("keyPassword")
 plugins {
@@ -24,6 +25,9 @@ plugins {
     id ("com.google.firebase.crashlytics")
     id ("org.jetbrains.kotlinx.kover")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.devtools.ksp")
+    id ("com.google.dagger.hilt.android")
+    id("com.google.firebase.firebase-perf")
 
 }
 
@@ -59,11 +63,11 @@ android {
             proguardFiles (getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
-
+            isDebuggable = true
         }
     }
     ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
+        arg(k ="room.schemaLocation", v= "$projectDir/schemas")
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
@@ -77,7 +81,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion= "1.5.3"
+        kotlinCompilerExtensionVersion= "1.5.4"
     }
     packagingOptions {
         resources {
@@ -88,7 +92,7 @@ android {
     testOptions {
         managedDevices {
             devices {
-                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>(name = "pixel4api30").apply {
+                maybeCreate<ManagedVirtualDevice>(name = "pixel4api30").apply {
                     device = "Pixel 4"
                     apiLevel = 30
                     systemImageSource = "google"
@@ -100,24 +104,26 @@ android {
 
 dependencies {
     implementation ("androidx.core:core-ktx:1.12.0")
-    implementation ("androidx.compose.ui:ui:1.6.0-alpha08")
-    implementation ("androidx.compose.material:material:1.6.0-alpha08")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.6.0-alpha08")
-    implementation ("androidx.activity:activity-compose:1.8.0")
+    implementation ("androidx.compose.ui:ui:1.6.0-beta03")
+    implementation ("androidx.compose.material:material:1.6.0-beta03")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.6.0-beta03")
+    implementation ("androidx.activity:activity-compose:1.8.2")
     testImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.6.0-alpha08")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.6.0-beta03")
 
 
+    implementation("androidx.metrics:metrics-performance:1.0.0-alpha04")
 
-    debugImplementation ("androidx.compose.ui:ui-tooling:1.6.0-alpha08")
-    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.6.0-alpha08")
+    debugImplementation ("androidx.compose.ui:ui-tooling:1.6.0-beta03")
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.6.0-beta03")
+    implementation ("androidx.compose.material:material-icons-extended:1.6.0-beta03")
 
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.compose.foundation:foundation:1.5.4")
     implementation("androidx.compose.foundation:foundation-layout:1.5.4")
-    implementation ("androidx.navigation:navigation-compose:2.7.5")
+    implementation ("androidx.navigation:navigation-compose:2.7.6")
 
 
     // view model
@@ -137,32 +143,19 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // dagger hilt
-    implementation ("com.google.dagger:hilt-android:2.48.1")
-    ksp("com.google.dagger:dagger-compiler:2.48.1") // Dagger compiler
-    ksp("com.google.dagger:hilt-compiler:2.48.1")   // Hilt compiler
+    implementation ("com.google.dagger:hilt-android:2.49")
+    ksp("com.google.dagger:dagger-compiler:2.49")
+    ksp("com.google.dagger:hilt-compiler:2.49")
     implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // coil
-    implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation ("io.coil-kt:coil-compose:2.5.0")
 
     // room
-    implementation ("androidx.room:room-runtime:2.6.0")
-    ksp ("androidx.room:room-compiler:2.6.0")
-    implementation ("androidx.room:room-ktx:2.6.0")
-    implementation("androidx.room:room-paging:2.6.0")
-
-
-    // compose icons
-    implementation ("androidx.compose.material:material-icons-extended:1.6.0-alpha08")
-
-    //pager
-    implementation( "com.google.accompanist:accompanist-pager:0.30.1")
-    implementation ("com.google.accompanist:accompanist-pager-indicators:0.30.1")
-
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.33.1-alpha")
-
-    // swipe refresh
-    implementation ("com.google.accompanist:accompanist-swiperefresh:0.28.0")
+    implementation ("androidx.room:room-runtime:2.6.1")
+    ksp ("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.room:room-paging:2.6.1")
 
     //timber
     implementation("com.jakewharton.timber:timber:5.0.1")
@@ -171,8 +164,10 @@ dependencies {
     implementation ("com.github.tehras:charts:0.2.4-alpha")
 
 
-    implementation ("com.google.firebase:firebase-crashlytics-ktx:18.5.1")
-    implementation ("com.google.firebase:firebase-analytics-ktx:21.5.0")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation ("com.google.firebase:firebase-crashlytics")
+    implementation ("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-perf")
 
     // date picker
     implementation ("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
@@ -192,11 +187,11 @@ dependencies {
     androidTestImplementation ("com.google.truth:truth:1.1.5")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test:core-ktx:1.5.0")
-    androidTestImplementation( "com.squareup.okhttp3:mockwebserver:4.11.0")
+    androidTestImplementation( "com.squareup.okhttp3:mockwebserver:4.12.0")
     androidTestImplementation( "io.mockk:mockk-android:1.13.8")
     androidTestImplementation ("androidx.test:runner:1.5.2")
 
-    testImplementation ("org.robolectric:robolectric:4.10.3")
+    testImplementation ("org.robolectric:robolectric:4.11.1")
 }
 
 
