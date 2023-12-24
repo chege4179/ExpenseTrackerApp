@@ -30,3 +30,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ExpenseTrackerApp"
 include (":app")
+include(":benchmark")

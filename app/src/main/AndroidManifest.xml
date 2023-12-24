@@ -15,6 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ExpenseTrackerApp"
         tools:targetApi="31">
+        <profileable android:shell="true" />
+
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
@@ -26,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver android:name=".core.alarm.AlarmReceiver" />
     </application>
 

@@ -18,14 +18,19 @@ package com.peterchege.expensetrackerapp.core.di
 import android.app.Application
 import com.peterchege.expensetrackerapp.BuildConfig
 import com.peterchege.expensetrackerapp.core.analytics.crashlytics.CrashlyticsTree
+import com.peterchege.expensetrackerapp.core.util.ProfileVerifierLogger
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
+import javax.inject.Inject
 
 @HiltAndroidApp
 class ExpenseTrackerApp :Application(){
 
+    @Inject
+    lateinit var profileVerifierLogger: ProfileVerifierLogger
     override fun onCreate() {
         super.onCreate()
+        profileVerifierLogger()
         initTimber()
     }
 }

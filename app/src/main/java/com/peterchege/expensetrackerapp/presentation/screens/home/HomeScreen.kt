@@ -40,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.peterchege.expensetrackerapp.core.util.Screens
+import com.peterchege.expensetrackerapp.core.util.TestTags
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpenseBottomSheet
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.AddExpenseCategoryBottomSheet
@@ -65,7 +66,7 @@ enum class MultiFloatingState {
 fun HomeScreen(
     navController: NavController,
     viewModel: HomeScreenViewModel = hiltViewModel()
-){
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
 
@@ -87,14 +88,14 @@ fun HomeScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeScreenContent(
-    uiState:HomeScreenUiState,
+    uiState: HomeScreenUiState,
     eventFlow: SharedFlow<UiEvent>,
-    navController:NavController,
-    activeBottomSheet:BottomSheets?,
-    onChangeActiveBottomSheet:(BottomSheets) -> Unit,
-    activeIncomeId:String?,
-    onChangeActiveIncomeId:(String) -> Unit,
-    ) {
+    navController: NavController,
+    activeBottomSheet: BottomSheets?,
+    onChangeActiveBottomSheet: (BottomSheets) -> Unit,
+    activeIncomeId: String?,
+    onChangeActiveIncomeId: (String) -> Unit,
+) {
 
 
     val modalSheetState = rememberModalBottomSheetState(
@@ -103,7 +104,7 @@ fun HomeScreenContent(
         skipHalfExpanded = true
     )
     val scaffoldState = rememberScaffoldState()
-    LaunchedEffect(key1 = true){
+    LaunchedEffect(key1 = true) {
         eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
@@ -111,9 +112,11 @@ fun HomeScreenContent(
                         message = event.uiText
                     )
                 }
+
                 is UiEvent.Navigate -> {
                     navController.navigate(route = event.route)
                 }
+
                 is UiEvent.OpenBottomSheet -> {
                     modalSheetState.show()
                 }
@@ -127,28 +130,34 @@ fun HomeScreenContent(
         sheetBackgroundColor = MaterialTheme.colors.onBackground,
 
         sheetContent = {
-            when(activeBottomSheet){
+            when (activeBottomSheet) {
                 BottomSheets.ADD_EXPENSE -> {
                     AddExpenseBottomSheet(navController = navController)
                 }
+
                 BottomSheets.ADD_EXPENSE_CATEGORY -> {
                     AddExpenseCategoryBottomSheet(navController = navController)
                 }
+
                 BottomSheets.ADD_TRANSACTION -> {
                     AddTransactionBottomSheet(navController = navController)
                 }
+
                 BottomSheets.ADD_TRANSACTION_CATEGORY -> {
                     AddTransactionCategoryBottomSheet(navController = navController)
                 }
+
                 BottomSheets.ADD_INCOME -> {
                     AddIncomeBottomSheet(navController = navController)
                 }
+
                 BottomSheets.VIEW_INCOME -> {
                     IncomeInfoBottomSheet(
                         activeIncomeId = activeIncomeId
                     )
 
                 }
+
                 else -> {}
             }
 
@@ -160,6 +169,7 @@ fun HomeScreenContent(
                 .testTag(tag = Screens.HOME_SCREEN),
             topBar = {
                 TopAppBar(
+                    modifier = Modifier.testTag(TestTags.HOME_SCREEN_TOP_APP_BAR_TAG),
                     backgroundColor = MaterialTheme.colors.onBackground,
                     title = {
                         Text(
@@ -172,13 +182,15 @@ fun HomeScreenContent(
                 )
             },
         ) {
-            when(uiState){
+            when (uiState) {
                 is HomeScreenUiState.Loading -> {
                     LoadingComponent()
                 }
+
                 is HomeScreenUiState.Error -> {
                     ErrorComponent(message = uiState.message)
                 }
+
                 is HomeScreenUiState.Success -> {
                     val totalIncome = uiState.income.sumOf { it.incomeAmount }
                     val totalExpense = uiState.expenses.sumOf { it.expenseAmount }
@@ -223,43 +235,48 @@ fun HomeScreenContent(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     HomeScreenActionsCard(
-                                        name ="Add Income",
+                                        name = "Add Income",
                                         icon = Icons.Outlined.Payments,
                                         onClick = {
                                             onChangeActiveBottomSheet(
-                                                BottomSheets.ADD_INCOME)
+                                                BottomSheets.ADD_INCOME
+                                            )
                                         }
                                     )
                                     HomeScreenActionsCard(
-                                        name ="Add Transaction",
+                                        name = "Add Transaction",
                                         icon = Icons.Outlined.ReceiptLong,
                                         onClick = {
                                             onChangeActiveBottomSheet(
-                                                BottomSheets.ADD_TRANSACTION)
+                                                BottomSheets.ADD_TRANSACTION
+                                            )
                                         }
                                     )
                                     HomeScreenActionsCard(
-                                        name ="Add Expense",
+                                        name = "Add Expense",
                                         icon = Icons.Outlined.ShoppingCart,
                                         onClick = {
                                             onChangeActiveBottomSheet(
-                                                BottomSheets.ADD_EXPENSE)
+                                                BottomSheets.ADD_EXPENSE
+                                            )
                                         }
                                     )
                                     HomeScreenActionsCard(
-                                        name ="Add Transaction Category",
+                                        name = "Add Transaction Category",
                                         icon = Icons.Default.Add,
                                         onClick = {
                                             onChangeActiveBottomSheet(
-                                                BottomSheets.ADD_TRANSACTION_CATEGORY)
+                                                BottomSheets.ADD_TRANSACTION_CATEGORY
+                                            )
                                         }
                                     )
                                     HomeScreenActionsCard(
-                                        name ="Add Expense Category",
+                                        name = "Add Expense Category",
                                         icon = Icons.Default.Add,
                                         onClick = {
                                             onChangeActiveBottomSheet(
-                                                BottomSheets.ADD_EXPENSE_CATEGORY)
+                                                BottomSheets.ADD_EXPENSE_CATEGORY
+                                            )
                                         }
                                     )
 
@@ -297,13 +314,12 @@ fun HomeScreenContent(
 
                                 }
                             }
-                            items(items = uiState.income.take(n= 2)) { income ->
+                            items(items = uiState.income.take(n = 2)) { income ->
                                 IncomeCard(
                                     income = income,
                                     onIncomeNavigate = {
                                         onChangeActiveIncomeId(it)
                                         onChangeActiveBottomSheet(BottomSheets.VIEW_INCOME)
-
 
 
                                     }
@@ -341,7 +357,7 @@ fun HomeScreenContent(
 
                                 }
                             }
-                            items(items = uiState.transactions.take(n= 2)) { transaction ->
+                            items(items = uiState.transactions.take(n = 2)) { transaction ->
                                 TransactionCard(
                                     transaction = transaction,
                                     onTransactionNavigate = {

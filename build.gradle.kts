@@ -25,6 +25,9 @@ plugins {
     id("com.google.gms.google-services") version "4.4.0" apply false
     id("com.google.firebase.crashlytics") version "2.9.9" apply false
     id("com.google.firebase.firebase-perf") version "1.4.2" apply false
+    id("com.android.test") version "8.1.0" apply false
+    id("androidx.baselineprofile") version "1.2.1" apply false
+    id("io.gitlab.arturbosch.detekt") version "1.23.3"
 }
 buildscript {
     dependencies {
@@ -48,4 +51,11 @@ spotless {
         licenseHeaderFile(rootProject.file("spotless/LICENSE.txt"), "(^(?![\\/ ]\\*).*$)")
     }
 }
-
+subprojects{
+    apply(plugin= "io.gitlab.arturbosch.detekt")
+    detekt {
+        config.setFrom("${project.rootDir}/detekt.yml")
+        parallel = true
+        buildUponDefaultConfig = true
+    }
+}

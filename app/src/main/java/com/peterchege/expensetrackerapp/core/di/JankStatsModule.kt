@@ -4,15 +4,21 @@ import android.app.Activity
 import android.util.Log
 import android.view.Window
 import androidx.metrics.performance.JankStats
+import com.peterchege.expensetrackerapp.core.util.ProfileVerifierLogger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import timber.log.Timber
 
 @Module
 @InstallIn(ActivityComponent::class)
 object JankStatsModule {
+
+
     @Provides
     fun providesOnFrameListener(): JankStats.OnFrameListener {
         return JankStats.OnFrameListener { frameData ->

@@ -28,6 +28,7 @@ plugins {
     id("com.google.devtools.ksp")
     id ("com.google.dagger.hilt.android")
     id("com.google.firebase.firebase-perf")
+    id("androidx.baselineprofile")
 
 }
 
@@ -59,11 +60,17 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
             proguardFiles (getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
             isDebuggable = true
+        }
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
+
         }
     }
     ksp {
@@ -94,7 +101,7 @@ android {
             devices {
                 maybeCreate<ManagedVirtualDevice>(name = "pixel4api30").apply {
                     device = "Pixel 4"
-                    apiLevel = 30
+                    apiLevel = 33
                     systemImageSource = "google"
                 }
             }
@@ -103,6 +110,8 @@ android {
 }
 
 dependencies {
+    baselineProfile(project(":benchmark"))
+
     implementation ("androidx.core:core-ktx:1.12.0")
     implementation ("androidx.compose.ui:ui:1.6.0-beta03")
     implementation ("androidx.compose.material:material:1.6.0-beta03")
@@ -141,6 +150,7 @@ dependencies {
     //coroutines
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3")
 
     // dagger hilt
     implementation ("com.google.dagger:hilt-android:2.49")
@@ -163,6 +173,7 @@ dependencies {
     //charts
     implementation ("com.github.tehras:charts:0.2.4-alpha")
 
+    implementation("androidx.profileinstaller:profileinstaller:1.3.1")
 
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation ("com.google.firebase:firebase-crashlytics")
