@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.data
 
+import com.peterchege.expensetrackerapp.core.analytics.analytics.AnalyticsHelper
+import com.peterchege.expensetrackerapp.core.analytics.analytics.logNewIncome
 import com.peterchege.expensetrackerapp.core.di.IoDispatcher
 import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.core.room.entities.IncomeEntity
@@ -27,10 +29,12 @@ import javax.inject.Inject
 
 class IncomeRepositoryImpl @Inject constructor(
     private val db:ExpenseTrackerAppDatabase,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val analyticsHelper: AnalyticsHelper,
 ):IncomeRepository {
 
     override suspend fun insertIncome(incomeEntity: IncomeEntity) {
+        analyticsHelper.logNewIncome()
         withContext(ioDispatcher){
             db.incomeEntityDao.insertIncome(incomeEntity = incomeEntity)
         }

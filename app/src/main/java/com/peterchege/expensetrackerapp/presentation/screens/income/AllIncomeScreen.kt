@@ -20,19 +20,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,7 +42,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
-import com.peterchege.expensetrackerapp.presentation.bottomsheets.view.IncomeInfoBottomSheet
 import com.peterchege.expensetrackerapp.presentation.components.ErrorComponent
 import com.peterchege.expensetrackerapp.presentation.components.IncomeCard
 import com.peterchege.expensetrackerapp.presentation.components.LoadingComponent
@@ -68,79 +67,73 @@ fun AllIncomeScreen(
 }
 
 
-@OptIn(ExperimentalCoilApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalCoilApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AllIncomeScreenContent(
     navController: NavController,
     uiState: AllIncomeScreenUiState,
-    activeIncomeId:String?,
-    onChangeActiveIncomeId:(String) -> Unit,
-){
-    val modalSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded },
-        skipHalfExpanded = true
-    )
-    val scaffoldState = rememberScaffoldState()
-    ModalBottomSheetLayout(
-        sheetState = modalSheetState,
-        sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-        sheetBackgroundColor = MaterialTheme.colors.onBackground,
+    activeIncomeId: String?,
+    onChangeActiveIncomeId: (String) -> Unit,
+) {
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val modalSheetState = rememberModalBottomSheetState()
 
-        sheetContent = {
-            IncomeInfoBottomSheet(
-                activeIncomeId = activeIncomeId
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.onBackground,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
+                    navigationIconContentColor = MaterialTheme.colorScheme.background,
+                    actionIconContentColor = MaterialTheme.colorScheme.background,
+                ),
+                title = {
+                    Text(
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary),
+                        text = "My Income",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp
+                    )
+                }
             )
-        }
-    ){
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = {
-                TopAppBar(
-                    backgroundColor = MaterialTheme.colors.onBackground,
-                    title = {
-                        Text(
-                            style = TextStyle(color = MaterialTheme.colors.primary),
-                            text = "My Income",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp
-                        )
-                    }
-                )
-            },
-        ){
-            val scope = rememberCoroutineScope()
-            when(uiState){
-                is AllIncomeScreenUiState.Loading -> {
-                    LoadingComponent()
-                }
-                is AllIncomeScreenUiState.Error -> {
-                    ErrorComponent(message = uiState.message)
-                }
-                is AllIncomeScreenUiState.Success -> {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(10.dp),
-                    ) {
-                        items(items = uiState.incomes) { income ->
-                            IncomeCard(
-                                income = income,
-                                onIncomeNavigate = {
-                                    scope.launch{
-                                        onChangeActiveIncomeId(it)
-                                        modalSheetState.show()
-                                    }
+        },
+    ) { paddingValues ->
+        val scope = rememberCoroutineScope()
+        when (uiState) {
+            is AllIncomeScreenUiState.Loading -> {
+                LoadingComponent()
+            }
+
+            is AllIncomeScreenUiState.Error -> {
+                ErrorComponent(message = uiState.message)
+            }
+
+            is AllIncomeScreenUiState.Success -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(10.dp),
+                ) {
+                    items(items = uiState.incomes) { income ->
+                        IncomeCard(
+                            income = income,
+                            onIncomeNavigate = {
+                                scope.launch {
+                                    onChangeActiveIncomeId(it)
+                                    showBottomSheet = true
                                 }
-                            )
-                        }
+                            }
+                        )
                     }
                 }
             }
-
-
         }
+
+
     }
 
 

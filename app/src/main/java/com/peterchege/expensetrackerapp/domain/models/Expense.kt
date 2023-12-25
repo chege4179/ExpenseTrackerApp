@@ -26,9 +26,6 @@ data class Expense (
     val expenseCreatedAt: String,
     val expenseCreatedOn: String,
 
-
     val expenseUpdatedAt:String,
     val expenseUpdatedOn:String,
-
-
     )

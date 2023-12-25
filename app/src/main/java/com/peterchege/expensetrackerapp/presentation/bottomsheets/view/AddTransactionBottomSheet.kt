@@ -18,10 +18,13 @@ package com.peterchege.expensetrackerapp.presentation.bottomsheets.view
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -82,7 +85,7 @@ fun AddTransactionBottomSheet(
 
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddTransactionBottomSheetContent(
@@ -100,29 +103,10 @@ fun AddTransactionBottomSheetContent(
 
 ) {
     val keyBoard = LocalSoftwareKeyboardController.current
-    val scaffoldState = rememberScaffoldState()
-
-
 
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
 
-
-    LaunchedEffect(key1 = true) {
-        eventFlow.collectLatest { event ->
-            when (event) {
-                is UiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.uiText
-                    )
-                }
-                is UiEvent.Navigate -> {
-                    navController.navigate(route = event.route)
-                }
-                else -> {}
-            }
-        }
-    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -130,7 +114,7 @@ fun AddTransactionBottomSheetContent(
     ) {
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colors.background)
+                .background(color = MaterialTheme.colorScheme.onBackground)
                 .fillMaxSize()
                 .padding(10.dp),
             verticalArrangement = Arrangement.Top,
@@ -145,7 +129,7 @@ fun AddTransactionBottomSheetContent(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     text = "Create Transaction",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -161,11 +145,11 @@ fun AddTransactionBottomSheetContent(
                 placeholder = {
                     Text(
                         text = "Transaction Name",
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                 },
                 textStyle = TextStyle(
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colorScheme.primary
                 )
             )
             Spacer(modifier = Modifier.size(16.dp))
@@ -188,14 +172,15 @@ fun AddTransactionBottomSheetContent(
                     placeholder = {
                         Text(
                             text = "Transaction Amount",
-                            style = TextStyle(color = MaterialTheme.colors.primary)
+                            style = TextStyle(color = MaterialTheme.colorScheme.primary)
                         )
                     },
                     textStyle = TextStyle(
-                        color = MaterialTheme.colors.primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                 )
                 Spacer(modifier = Modifier.size(16.dp))
+                var isExpanded = remember { mutableStateOf(false) }
                 val currentIndex =
                     if (formState.transactionCategory == null) 0
                     else
@@ -203,15 +188,60 @@ fun AddTransactionBottomSheetContent(
                             .map { it.transactionCategoryName }
                             .indexOf(formState.transactionCategory.transactionCategoryName)
 
-                MenuSample(
-                    menuWidth = 300,
-                    selectedIndex = currentIndex,
-                    menuItems = transactionCategories.map { it.transactionCategoryName },
-                    onChangeSelectedIndex = {
-                        val selectedTransactionCategory = transactionCategories[it]
-                        onChangeTransactionCategory(selectedTransactionCategory)
+                ExposedDropdownMenuBox(
+                    expanded = isExpanded.value,
+                    onExpandedChange = {
+                        isExpanded.value = it
                     }
-                )
+                ) {
+                    // text field
+                    TextField(
+                        value = if (transactionCategories.isEmpty()) "" else transactionCategories[currentIndex].transactionCategoryName,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                expanded = isExpanded.value
+                            )
+                        },
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    )
+
+                    // menu
+                    ExposedDropdownMenu(
+                        scrollState = rememberScrollState(),
+                        expanded = isExpanded.value,
+                        onDismissRequest = { isExpanded.value = false }
+                    ) {
+                        transactionCategories.forEachIndexed { index, selectedOption ->
+                            DropdownMenuItem(
+                                text ={
+                                    Text(
+                                        text = selectedOption.transactionCategoryName,
+                                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
+                                    )
+                                },
+                                onClick = {
+                                    val selectedTransactionCategory = transactionCategories[index]
+                                    onChangeTransactionCategory(selectedTransactionCategory)
+                                },
+                            )
+                        }
+                    }
+                }
+
+
+//                MenuSample(
+//                    menuWidth = 300,
+//                    selectedIndex = currentIndex,
+//                    menuItems = transactionCategories.map { it.transactionCategoryName },
+//                    onChangeSelectedIndex = {
+//                        val selectedTransactionCategory = transactionCategories[it]
+//                        onChangeTransactionCategory(selectedTransactionCategory)
+//                    }
+//                )
             }
             Spacer(modifier = Modifier.size(16.dp))
             Row(
@@ -232,21 +262,22 @@ fun AddTransactionBottomSheetContent(
                     Text(
                         text = formState.transactionDate.toString(),
                         modifier = Modifier.fillMaxWidth(0.5f),
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                     Button(
                         modifier = Modifier
                             .width(width = 150.dp),
                         onClick = { dateDialogState.show() },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colors.onBackground
-                        )
-
-
+                        colors = ButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onBackground,
+                            containerColor = MaterialTheme.colorScheme.background,
+                            disabledContainerColor = MaterialTheme.colorScheme.primary,
+                            disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                        ),
                     ) {
                         Text(
                             text = "Pick A date",
-                            style = TextStyle(color = MaterialTheme.colors.primary)
+                            style = TextStyle(color = MaterialTheme.colorScheme.primary)
                         )
                     }
                 }
@@ -261,12 +292,15 @@ fun AddTransactionBottomSheetContent(
                     Text(
                         text = formState.transactionTime.toString(),
                         modifier = Modifier.fillMaxWidth(0.5f),
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                     Button(
                         modifier = Modifier.width(150.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colors.onBackground
+                        colors = ButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onBackground,
+                            containerColor = MaterialTheme.colorScheme.background,
+                            disabledContainerColor = MaterialTheme.colorScheme.primary,
+                            disabledContentColor = MaterialTheme.colorScheme.onPrimary,
                         ),
                         onClick = {
                             timeDialogState.show()
@@ -275,7 +309,7 @@ fun AddTransactionBottomSheetContent(
                     ) {
                         Text(
                             text = "Pick A Time",
-                            style = TextStyle(color = MaterialTheme.colors.primary)
+                            style = TextStyle(color = MaterialTheme.colorScheme.primary)
                         )
                     }
                 }
@@ -284,8 +318,11 @@ fun AddTransactionBottomSheetContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.onBackground
+                colors = ButtonColors(
+                    contentColor = MaterialTheme.colorScheme.background,
+                    containerColor = MaterialTheme.colorScheme.onBackground,
+                    disabledContainerColor = MaterialTheme.colorScheme.primary,
+                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 onClick = {
                     keyBoard?.hide()
@@ -295,7 +332,7 @@ fun AddTransactionBottomSheetContent(
                 Text(
                     text = "Save Transaction",
                     fontWeight = FontWeight.Bold,
-                    style = TextStyle(color = MaterialTheme.colors.primary)
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
                 )
 
             }

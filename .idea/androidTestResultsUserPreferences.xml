@@ -42,6 +42,33 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-931011079">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_4_API_33" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="samsung SM-A125U" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-397602257">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="107" />
+                  <entry key="Pixel_4_API_33" value="137" />
+                  <entry key="Tests" value="377" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="345936778">
           <value>
             <AndroidTestResultsTableState>

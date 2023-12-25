@@ -23,10 +23,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -80,7 +81,7 @@ fun IncomeInfoBottomSheetContent(
     ){
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colors.background)
+                .background(color = MaterialTheme.colorScheme.background)
                 .fillMaxSize()
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -88,7 +89,7 @@ fun IncomeInfoBottomSheetContent(
             incomeNullable?.let { income: Income ->
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     text = "Income Name : ${income.incomeName}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -97,7 +98,7 @@ fun IncomeInfoBottomSheetContent(
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     text = "Income Amount : ${income.incomeAmount}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -106,7 +107,7 @@ fun IncomeInfoBottomSheetContent(
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     text = "Income Created At : ${income.incomeCreatedAt}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -118,8 +119,11 @@ fun IncomeInfoBottomSheetContent(
                         .fillMaxWidth()
                         .testTag(tag = TestTags.CREATE_TRANSACTION_CATEGORY_SAVE_BUTTON)
                     ,
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.onBackground
+                    colors = ButtonColors(
+                        contentColor = MaterialTheme.colorScheme.background,
+                        containerColor = MaterialTheme.colorScheme.onBackground,
+                        disabledContainerColor = MaterialTheme.colorScheme.primary,
+                        disabledContentColor = MaterialTheme.colorScheme.onPrimary,
                     ),
                     onClick = {
                         deleteIncome()
@@ -128,7 +132,7 @@ fun IncomeInfoBottomSheetContent(
                 ){
                     Text(
                         text = "Delete Income",
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
 
                 }

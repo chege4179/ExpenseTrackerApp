@@ -23,10 +23,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -62,7 +64,7 @@ fun AllTransactionsScreen(
 }
 
 
-@OptIn(ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AllTransactionsScreenContent(
@@ -75,18 +77,24 @@ fun AllTransactionsScreenContent(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
                     Text(
-                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary),
                         text = "My Transactions",
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
                     )
-                }
+                },
+                colors = TopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.onBackground,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
+                    navigationIconContentColor = MaterialTheme.colorScheme.background,
+                    actionIconContentColor = MaterialTheme.colorScheme.background,
+                )
             )
         },
-    ) {
+    ) { paddingValues ->
         when(uiState){
             is AllTransactionsScreenUiState.Loading -> {
                 LoadingComponent()
@@ -100,6 +108,7 @@ fun AllTransactionsScreenContent(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(paddingValues)
                         .padding(5.dp)
                 ) {
                     LazyRow(

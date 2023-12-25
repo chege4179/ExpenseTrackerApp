@@ -2,7 +2,26 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="StartupBenchmark">
+        <State />
+      </entry>
       <entry key="app">
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\Administrator\.android\avd\Pixel_7_Pro_API_31.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2023-12-25T16:03:38.495178900Z" />
+        </State>
+      </entry>
+      <entry key="generate()">
         <State />
       </entry>
     </value>

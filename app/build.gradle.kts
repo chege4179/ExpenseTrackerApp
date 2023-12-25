@@ -114,13 +114,15 @@ dependencies {
 
     implementation ("androidx.core:core-ktx:1.12.0")
     implementation ("androidx.compose.ui:ui:1.6.0-beta03")
-    implementation ("androidx.compose.material:material:1.6.0-beta03")
     implementation ("androidx.compose.ui:ui-tooling-preview:1.6.0-beta03")
     implementation ("androidx.activity:activity-compose:1.8.2")
     testImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.6.0-beta03")
+
+    implementation("androidx.compose.material3:material3:1.2.0-beta01")
+    implementation("androidx.compose.material3:material3-window-size-class:1.2.0-beta01")
 
 
     implementation("androidx.metrics:metrics-performance:1.0.0-alpha04")
@@ -153,9 +155,9 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3")
 
     // dagger hilt
-    implementation ("com.google.dagger:hilt-android:2.49")
-    ksp("com.google.dagger:dagger-compiler:2.49")
-    ksp("com.google.dagger:hilt-compiler:2.49")
+    implementation ("com.google.dagger:hilt-android:2.50")
+    ksp("com.google.dagger:dagger-compiler:2.50")
+    ksp("com.google.dagger:hilt-compiler:2.50")
     implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // coil
@@ -191,7 +193,7 @@ dependencies {
 
     testImplementation ("androidx.arch.core:core-testing:2.2.0")
     // Instrumentation tests
-    androidTestImplementation ("com.google.dagger:hilt-android-testing:2.48.1")
+    androidTestImplementation ("com.google.dagger:hilt-android-testing:2.50")
     kspAndroidTest ("com.google.dagger:hilt-android-compiler:2.48.1")
     androidTestImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.arch.core:core-testing:2.2.0")

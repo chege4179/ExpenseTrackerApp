@@ -19,9 +19,9 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,14 +40,15 @@ import com.peterchege.expensetrackerapp.domain.models.ExpenseCategory
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 
 data class PieDataInfo(
-    val slice :PieChartData.Slice,
-    val expenseCategory:ExpenseCategory,
+    val slice: PieChartData.Slice,
+    val expenseCategory: ExpenseCategory,
 )
+
 @Composable
 fun ExpensesAnalyticsScreen(
     navController: NavController,
     viewModel: ExpenseAnalyticsScreenViewModel = hiltViewModel()
-){
+) {
 
     val expensesCategoriesInfo = viewModel.expenseCategories.value
     val pieData = expensesCategoriesInfo.map { expenseCategoryInfoEntity ->
@@ -78,15 +79,16 @@ fun ExpensesAnalyticsScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ExpensesAnalyticsScreenContent(
-    pieData:List<PieDataInfo>
+    pieData: List<PieDataInfo>
 
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
-    ) {
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .padding(10.dp)
         ) {
             item {
@@ -118,7 +120,7 @@ fun ExpensesAnalyticsScreenContent(
                                 .fillMaxWidth()
                                 .height(40.dp),
                             horizontalArrangement = Arrangement.Start,
-                        ){
+                        ) {
                             Box(
                                 modifier = Modifier
                                     .width(30.dp)
@@ -130,13 +132,13 @@ fun ExpensesAnalyticsScreenContent(
                                 text = it.expenseCategory.expenseCategoryName,
                                 modifier = Modifier.padding(3.dp),
                                 fontSize = 17.sp,
-                                style = TextStyle(color = MaterialTheme.colors.primary)
+                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
                             )
                             Text(
                                 text = "KES " + it.slice.value.toString() + "/=",
                                 modifier = Modifier.padding(3.dp),
                                 fontSize = 17.sp,
-                                style = TextStyle(color = MaterialTheme.colors.primary)
+                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
                             )
                         }
                         Spacer(modifier = Modifier.height(5.dp))

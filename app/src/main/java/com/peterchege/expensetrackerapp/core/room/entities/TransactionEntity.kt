@@ -17,7 +17,6 @@ package com.peterchege.expensetrackerapp.core.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
 
 @Entity(tableName = "Transactions")
 data class TransactionEntity (

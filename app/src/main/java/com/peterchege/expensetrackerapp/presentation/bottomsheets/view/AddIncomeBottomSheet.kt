@@ -25,18 +25,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -54,19 +50,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.core.util.getNumericInitialValue
-import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddIncomeFormState
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddIncomeScreenViewModel
-import com.peterchege.expensetrackerapp.presentation.components.MenuSample
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.datetime.date.datepicker
-import com.vanpra.composematerialdialogs.datetime.time.timepicker
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.collectLatest
-import java.time.LocalDate
-import java.time.LocalTime
 
 @Preview
 @Composable
@@ -118,25 +105,7 @@ fun AddIncomeBottomSheetContent(
 
 ) {
     val keyBoard = LocalSoftwareKeyboardController.current
-    val scaffoldState = rememberScaffoldState()
 
-    LaunchedEffect(key1 = true) {
-        eventFlow.collectLatest { event ->
-            when (event) {
-                is UiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.uiText
-                    )
-                }
-
-                is UiEvent.Navigate -> {
-                    navController.navigate(route = event.route)
-                }
-
-                else -> {}
-            }
-        }
-    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -144,7 +113,7 @@ fun AddIncomeBottomSheetContent(
     ) {
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colors.background)
+                .background(color = MaterialTheme.colorScheme.onBackground)
                 .fillMaxSize()
                 .padding(10.dp),
             verticalArrangement = Arrangement.Top,
@@ -159,7 +128,7 @@ fun AddIncomeBottomSheetContent(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     text = "Add Income",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -176,11 +145,11 @@ fun AddIncomeBottomSheetContent(
                 placeholder = {
                     Text(
                         text = "Income Name",
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                 },
                 textStyle = TextStyle(
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colorScheme.primary
                 )
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -196,11 +165,11 @@ fun AddIncomeBottomSheetContent(
                 placeholder = {
                     Text(
                         text = "Income Amount",
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                 },
                 textStyle = TextStyle(
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colorScheme.primary
                 )
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -208,8 +177,11 @@ fun AddIncomeBottomSheetContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.onBackground
+                colors = ButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onBackground,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.primary,
+                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 onClick = {
                     keyBoard?.hide()
@@ -219,7 +191,7 @@ fun AddIncomeBottomSheetContent(
                 Text(
                     text = "Save Income",
                     fontWeight = FontWeight.Bold,
-                    style = TextStyle(color = MaterialTheme.colors.primary)
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
                 )
 
             }

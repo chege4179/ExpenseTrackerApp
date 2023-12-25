@@ -67,13 +67,12 @@ class HomeScreenViewModel @Inject constructor(
     private val getAllIncomeUseCase: GetAllIncomeUseCase,
     private val getAllExpensesUseCase: GetAllExpensesUseCase,
 
-
 ) : ViewModel() {
-
     val uiState = combine(
         getAllIncomeUseCase(),
         getAllExpensesUseCase(),
         getFilteredTransactionsUseCase(FilterConstants.ALL),
+
     ) { incomes, expenseEntities ,transactionEntities->
         val transactions = transactionEntities.map { it.toExternalModel() }
         val expenses = expenseEntities.map { it.toExternalModel() }

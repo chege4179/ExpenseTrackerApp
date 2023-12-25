@@ -18,10 +18,12 @@ package com.peterchege.expensetrackerapp.presentation.screens.settings
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,9 +43,9 @@ import com.peterchege.expensetrackerapp.presentation.components.SettingsRow
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    viewModel:SettingsScreenViewModel = hiltViewModel()
+    viewModel: SettingsScreenViewModel = hiltViewModel()
 
-){
+) {
     val theme = viewModel.theme.collectAsStateWithLifecycle()
     SettingsScreenContent(
         theme = theme.value,
@@ -52,37 +54,43 @@ fun SettingsScreen(
 }
 
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreenContent(
-
-    theme:String,
-    updateTheme:(String) -> Unit,
-
-) {
+    theme: String,
+    updateTheme: (String) -> Unit,
+    ) {
 
     val context = LocalContext.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
                     Text(
-                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary),
                         text = "Settings",
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
                     )
-                }
+                },
+                colors = TopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.onBackground,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
+                    navigationIconContentColor = MaterialTheme.colorScheme.background,
+                    actionIconContentColor = MaterialTheme.colorScheme.background,
+                )
             )
         },
-    ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp)) {
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(10.dp)
+        ) {
             LazyColumn(
-
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 item {
@@ -90,10 +98,10 @@ fun SettingsScreenContent(
                         title = "Dark Theme",
                         checked = theme == Constants.DARK_MODE,
                         onCheckedChange = {
-                            if (it){
+                            if (it) {
                                 updateTheme(Constants.DARK_MODE)
 
-                            }else{
+                            } else {
                                 updateTheme(Constants.LIGHT_MODE)
                             }
 
@@ -112,19 +120,19 @@ fun SettingsScreenContent(
                 Text(
                     text = "App Version: ${getAppVersionName(context)}",
                     modifier = Modifier,
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     fontSize = 11.sp
                 )
                 Text(
                     text = "Build Type: ${BuildConfig.BUILD_TYPE}",
                     modifier = Modifier,
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     fontSize = 11.sp
                 )
                 Text(
                     text = "Made with ❤️by Peter Chege 🇰🇪",
                     modifier = Modifier,
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     fontSize = 12.sp
                 )
             }

@@ -16,18 +16,21 @@
 package com.peterchege.expensetrackerapp.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,18 +53,41 @@ fun SettingsRow(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = MaterialTheme.colors.onBackground)
+                .background(color = MaterialTheme.colorScheme.onBackground)
                 .padding(10.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = title,
-                style = TextStyle(color = MaterialTheme.colors.primary),
+                style = TextStyle(color = MaterialTheme.colorScheme.primary),
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
             Switch(
+                colors = SwitchColors(
+                    checkedTrackColor = MaterialTheme.colorScheme.background,
+                    checkedBorderColor = MaterialTheme.colorScheme.onBackground,
+                    checkedIconColor = MaterialTheme.colorScheme.onBackground,
+                    checkedThumbColor = MaterialTheme.colorScheme.background,
+
+                    uncheckedBorderColor = MaterialTheme.colorScheme.primary,
+                    uncheckedIconColor = MaterialTheme.colorScheme.onPrimary,
+                    uncheckedThumbColor = MaterialTheme.colorScheme.primary,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.onBackground,
+
+
+                    disabledCheckedBorderColor = MaterialTheme.colorScheme.background,
+                    disabledUncheckedBorderColor = MaterialTheme.colorScheme.onBackground,
+                    disabledCheckedIconColor = MaterialTheme.colorScheme.onBackground,
+                    disabledCheckedThumbColor = MaterialTheme.colorScheme.background,
+
+                    disabledCheckedTrackColor = MaterialTheme.colorScheme.primary,
+                    disabledUncheckedIconColor = MaterialTheme.colorScheme.onPrimary,
+                    disabledUncheckedThumbColor = MaterialTheme.colorScheme.primary,
+                    disabledUncheckedTrackColor = MaterialTheme.colorScheme.onBackground,
+
+                ),
                 checked = checked,
                 onCheckedChange = {
                     onCheckedChange(it)

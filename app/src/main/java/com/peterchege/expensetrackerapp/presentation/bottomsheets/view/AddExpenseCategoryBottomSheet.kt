@@ -18,7 +18,7 @@ package com.peterchege.expensetrackerapp.presentation.bottomsheets.view
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -70,24 +70,6 @@ fun AddExpenseCategoryBottomSheetContent(
     navController: NavController,
 ) {
     val keyBoard = LocalSoftwareKeyboardController.current
-    val scaffoldState = rememberScaffoldState()
-    LaunchedEffect(key1 = true) {
-        eventFlow.collectLatest { event ->
-            when (event) {
-                is UiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.uiText
-                    )
-                }
-
-                is UiEvent.Navigate -> {
-                    navController.navigate(route = event.route)
-                }
-
-                else -> {}
-            }
-        }
-    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -95,7 +77,7 @@ fun AddExpenseCategoryBottomSheetContent(
     ) {
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colors.background)
+                .background(color = MaterialTheme.colorScheme.onBackground)
                 .fillMaxSize()
                 .padding(10.dp),
             verticalArrangement = Arrangement.Top,
@@ -110,7 +92,7 @@ fun AddExpenseCategoryBottomSheetContent(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     text = "Create Expense Category",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -126,18 +108,21 @@ fun AddExpenseCategoryBottomSheetContent(
                 placeholder = {
                     Text(
                         text = "Expense Category Name",
-                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     )
                 },
                 textStyle = TextStyle(
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colorScheme.primary
                 )
             )
             Spacer(modifier = Modifier.size(16.dp))
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.onBackground
+                colors = ButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onBackground,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.primary,
+                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 onClick = {
                     keyBoard?.hide()
@@ -147,7 +132,7 @@ fun AddExpenseCategoryBottomSheetContent(
             ) {
                 Text(
                     text = "Save",
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
 
                     )
 

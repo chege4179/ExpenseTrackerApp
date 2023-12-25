@@ -1,18 +1,3 @@
-/*
- * Copyright 2023 Expense Tracker App By Peter Chege
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.peterchege.expensetrackerapp.presentation.components
 
 import androidx.compose.foundation.Image
@@ -35,6 +20,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,14 +33,14 @@ import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.peterchege.expensetrackerapp.core.util.generateAvatarURL
-import com.peterchege.expensetrackerapp.domain.models.Income
+import com.peterchege.expensetrackerapp.domain.models.Expense
 import com.peterchege.expensetrackerapp.domain.models.Transaction
 
 @ExperimentalCoilApi
 @Composable
-fun IncomeCard(
-    income:Income,
-    onIncomeNavigate: (String) -> Unit
+fun ExpenseCard(
+    expense: Expense,
+    onExpenseNavigate: (String) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -61,7 +48,7 @@ fun IncomeCard(
             .padding(4.dp)
             .height(70.dp)
             .clickable {
-                onIncomeNavigate(income.incomeId)
+                onExpenseNavigate(expense.expenseId)
             },
         shape = RoundedCornerShape(15),
     ) {
@@ -77,7 +64,7 @@ fun IncomeCard(
                 modifier = Modifier.weight(1f),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
-            ){
+            ) {
 
                 Spacer(modifier = Modifier.width(11.dp))
                 Image(
@@ -85,12 +72,12 @@ fun IncomeCard(
                         .width(48.dp)
                         .height(48.dp),
                     painter = rememberImagePainter(
-                        data = generateAvatarURL(income.incomeName),
+                        data = generateAvatarURL(expense.expenseName),
                         builder = {
                             crossfade(true)
                         },
                     ),
-                    contentDescription = ""
+                    contentDescription = "Expense Image"
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Column(
@@ -101,19 +88,19 @@ fun IncomeCard(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = income.incomeName,
+                        text = expense.expenseName,
                         fontWeight = FontWeight.Bold,
                         style = TextStyle(color = MaterialTheme.colorScheme.primary)
 
                     )
                     Text(
-                        text = income.incomeCreatedAt,
+                        text = expense.expenseCreatedOn,
                         style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
 
                 }
                 Text(
-                    text = "KES ${income.incomeAmount} /=",
+                    text = "KES ${expense.expenseAmount} /=",
                     textAlign = TextAlign.Start,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(color = MaterialTheme.colorScheme.primary)
@@ -121,8 +108,9 @@ fun IncomeCard(
             }
             IconButton(
                 onClick = {
-                onIncomeNavigate(income.incomeId)
-            }) {
+                    onExpenseNavigate(expense.expenseId)
+                }
+            ) {
                 Icon(
                     imageVector = Icons.Outlined.ChevronRight,
                     tint = Color.Black,

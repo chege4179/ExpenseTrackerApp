@@ -22,7 +22,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -52,6 +52,7 @@ fun TransactionScreen(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TransactionScreenContent(
@@ -64,18 +65,24 @@ fun TransactionScreenContent(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
                     Text(
-                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary),
                         text = "Transaction",
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
                     )
-                }
+                },
+                colors = TopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.onBackground,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
+                    navigationIconContentColor = MaterialTheme.colorScheme.background,
+                    actionIconContentColor = MaterialTheme.colorScheme.background,
+                )
             )
         },
-    ) {
+    ) { paddingValues ->
         when(uiState){
             is TransactionScreenUiState.Loading -> {
                 LoadingComponent()
@@ -88,47 +95,48 @@ fun TransactionScreenContent(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(color = MaterialTheme.colors.background)
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .padding(paddingValues)
                         .padding(10.dp)
                 ) {
                     transactionInfo.let {
                         it.transaction?.let { transaction ->
                             Text(
                                 text = "Transaction ID :" + transaction.transactionId,
-                                style = TextStyle(color = MaterialTheme.colors.primary)
+                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
 
                             )
                             Text(
                                 text = "Name :" + transaction.transactionName,
-                                style = TextStyle(color = MaterialTheme.colors.primary)
+                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
 
                             )
                             Text(
                                 text = "Amount :" + transaction.transactionAmount,
-                                style = TextStyle(color = MaterialTheme.colors.primary)
+                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
 
                             )
                             Text(
                                 text = "Created On :" + transaction.transactionCreatedOn,
-                                style = TextStyle(color = MaterialTheme.colors.primary)
+                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
                             )
                             Text(
                                 text = "Created At :" + transaction.transactionCreatedAt,
-                                style = TextStyle(color = MaterialTheme.colors.primary)
+                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
                             )
                         }
 
                         it.category?.let { category ->
                             Text(
                                 text = "Category:" + category.transactionCategoryName,
-                                style = TextStyle(color = MaterialTheme.colors.primary)
+                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
 
                             )
                         }
                         Button(
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colors.onBackground
+                                contentColor = MaterialTheme.colorScheme.onBackground
                             ),
                             onClick = {
                                 deleteTransaction()
@@ -138,7 +146,7 @@ fun TransactionScreenContent(
                         ) {
                             Text(
                                 text = "Delete Transaction",
-                                style = TextStyle(color = MaterialTheme.colors.primary),
+                                style = TextStyle(color = MaterialTheme.colorScheme.primary),
 
                                 )
 

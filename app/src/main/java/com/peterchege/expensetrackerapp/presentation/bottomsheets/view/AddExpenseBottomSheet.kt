@@ -19,7 +19,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -92,27 +92,7 @@ fun AddExpenseBottomSheetContent(
     addExpense: () -> Unit,
 
     ) {
-    val scaffoldState = rememberScaffoldState()
     val keyBoard = LocalSoftwareKeyboardController.current
-
-
-    LaunchedEffect(key1 = true) {
-        eventFlow.collectLatest { event ->
-            when (event) {
-                is UiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.uiText
-                    )
-                }
-
-                is UiEvent.Navigate -> {
-                    navController.navigate(route = event.route)
-                }
-
-                else -> {}
-            }
-        }
-    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,7 +103,7 @@ fun AddExpenseBottomSheetContent(
         }
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colors.background)
+                .background(color = MaterialTheme.colorScheme.onBackground)
                 .fillMaxSize()
                 .padding(10.dp),
 
@@ -138,7 +118,7 @@ fun AddExpenseBottomSheetContent(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     text = "Create Expense ",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -157,7 +137,7 @@ fun AddExpenseBottomSheetContent(
                     )
                 },
                 textStyle = TextStyle(
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colorScheme.primary
                 )
 
             )
@@ -181,12 +161,12 @@ fun AddExpenseBottomSheetContent(
                         Text(
                             text = "Expense Amount",
                             style = TextStyle(
-                                color = MaterialTheme.colors.primary
+                                color = MaterialTheme.colorScheme.primary
                             )
                         )
                     },
                     textStyle = TextStyle(
-                        color = MaterialTheme.colors.primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                 )
                 Spacer(modifier = Modifier.width(16.dp))
@@ -220,18 +200,21 @@ fun AddExpenseBottomSheetContent(
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center,
                         style = TextStyle(
-                            color = MaterialTheme.colors.primary
+                            color = MaterialTheme.colorScheme.primary
                         )
                     )
                 }
             }
             Button(
+                colors = ButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onBackground,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.primary,
+                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.onBackground
-                ),
                 onClick = {
                     keyBoard?.hide()
                     addExpense()
@@ -240,7 +223,7 @@ fun AddExpenseBottomSheetContent(
                 Text(
                     text = "Save",
                     style = TextStyle(
-                        color = MaterialTheme.colors.primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                 )
 

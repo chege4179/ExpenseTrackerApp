@@ -31,4 +31,4 @@ data class ExpenseEntity (
     val expenseCreatedOn:String,
     val expenseUpdatedAt:String,
     val expenseUpdatedOn:String,
-        )
+)

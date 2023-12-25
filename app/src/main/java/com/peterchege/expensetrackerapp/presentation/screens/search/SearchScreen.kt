@@ -20,13 +20,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,13 +40,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.core.util.convertTimeMillisToLocalDate
+import com.peterchege.expensetrackerapp.core.util.getFormattedDate
 import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.datetime.date.datepicker
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
@@ -74,6 +77,7 @@ fun SearchScreen(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SearchScreenContent(
@@ -88,20 +92,27 @@ fun SearchScreenContent(
 
 
 ) {
-    val scaffoldState = rememberScaffoldState()
-
-    val startDateDialogState = rememberMaterialDialogState()
-    val endDateDialogState = rememberMaterialDialogState()
 
 
+    val state = rememberDateRangePickerState()
 
+    LaunchedEffect(key1 = state.selectedEndDateMillis, key2 = state.selectedStartDateMillis) {
+        state.selectedStartDateMillis?.let {
+            onChangeTransactionStartDate(convertTimeMillisToLocalDate(it))
+        }
+        state.selectedEndDateMillis?.let {
+            onChangeTransactionEndDate(convertTimeMillisToLocalDate(it))
+        }
+
+
+    }
     LaunchedEffect(key1 = true) {
         eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.uiText
-                    )
+//                    scaffoldState.snackbarHostState.showSnackbar(
+//                        message = event.uiText
+//                    )
                 }
 
                 is UiEvent.Navigate -> {
@@ -112,27 +123,35 @@ fun SearchScreenContent(
             }
         }
     }
+    var showBottomSheet = remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
     Scaffold(
-        scaffoldState = scaffoldState,
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
                     Text(
                         text = "Search",
-                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary),
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
                     )
-                }
+                },
+                colors = TopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.onBackground,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
+                    navigationIconContentColor = MaterialTheme.colorScheme.background,
+                    actionIconContentColor = MaterialTheme.colorScheme.background,
+                )
             )
         },
-    ) {
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = MaterialTheme.colors.background)
+                .background(color = MaterialTheme.colorScheme.background)
+                .padding(paddingValues)
                 .padding(10.dp)
         ) {
             item {
@@ -150,50 +169,30 @@ fun SearchScreenContent(
                         verticalArrangement = Arrangement.SpaceEvenly,
                     ) {
                         Text(
-                            text = uiState.startDate.toString(),
-
-                            style = TextStyle(color = MaterialTheme.colors.primary)
+                            text = "Start Date : " + uiState.startDate.toString(),
+                            style = TextStyle(color = MaterialTheme.colorScheme.primary)
                         )
-                        Button(
-                            modifier = Modifier
-                                .width(width = 100.dp),
-                            onClick = { startDateDialogState.show() },
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colors.onBackground
-                            )
-                        ) {
-                            Text(
-                                text = "Start date",
-                                style = TextStyle(color = MaterialTheme.colors.primary)
-                            )
-                        }
-
-                    }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(3.dp),
-                        verticalArrangement = Arrangement.SpaceEvenly,
-                    ) {
                         Text(
-                            text = uiState.endDate.toString(),
-                            style = TextStyle(color = MaterialTheme.colors.primary)
+                            text = "End Date : " + uiState.endDate.toString(),
+                            style = TextStyle(color = MaterialTheme.colorScheme.primary)
                         )
                         Button(
-                            modifier = Modifier
-                                .width(width = 100.dp),
-                            onClick = { endDateDialogState.show() },
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colors.onBackground
-                            )
-                        ) {
+                            colors = ButtonColors(
+                                contentColor = MaterialTheme.colorScheme.background,
+                                containerColor = MaterialTheme.colorScheme.onBackground,
+                                disabledContainerColor = MaterialTheme.colorScheme.primary,
+                                disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                            ),
+                            onClick = {
+                                showBottomSheet.value = true
+                            }) {
                             Text(
-                                text = "End date",
-                                style = TextStyle(color = MaterialTheme.colors.primary)
+                                text = "Open Date Range Picker",
+                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
                             )
                         }
-
                     }
+
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
@@ -203,7 +202,7 @@ fun SearchScreenContent(
                         Text(
                             text = "Category",
                             modifier = Modifier.fillMaxWidth(0.5f),
-                            style = TextStyle(color = MaterialTheme.colors.primary)
+                            style = TextStyle(color = MaterialTheme.colorScheme.primary)
                         )
                         val currentIndex =
                             if (uiState.transactionCategory == null) 0
@@ -212,7 +211,7 @@ fun SearchScreenContent(
                                     .map { it.transactionCategoryName }
                                     .indexOf(uiState.transactionCategory.transactionCategoryName)
                         MenuSample(
-                            menuWidth = 120,
+                            menuWidth = 150,
                             selectedIndex = currentIndex,
                             menuItems = transactionCategories.map { transactionCategory -> transactionCategory.transactionCategoryName },
                             onChangeSelectedIndex = {
@@ -224,28 +223,18 @@ fun SearchScreenContent(
                         )
 
                     }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(end = 5.dp),
-                        verticalArrangement = Arrangement.SpaceEvenly,
+                    IconButton(
+                        onClick = {
+                            searchTransactions()
+                        },
                     ) {
-                        IconButton(
-                            onClick = {
-                                searchTransactions()
-
-                            },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Search,
-                                contentDescription = null,
-                                tint = MaterialTheme.colors.primary
-                            )
-
-                        }
+                        Icon(
+                            imageVector = Icons.Outlined.Search,
+                            contentDescription = "Search Transactions",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
 
                     }
-
                 }
             }
             item {
@@ -258,7 +247,7 @@ fun SearchScreenContent(
                     if (uiState.transactions.isEmpty()) {
                         Text(
                             text = "No transactions found ",
-                            style = TextStyle(color = MaterialTheme.colors.primary),
+                            style = TextStyle(color = MaterialTheme.colorScheme.primary),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -268,15 +257,12 @@ fun SearchScreenContent(
                             text = "A total of ${uiState.transactions.size} transactions have been made " +
                                     "between ${uiState.startDate}" +
                                     " and ${uiState.endDate}",
-                            style = TextStyle(color = MaterialTheme.colors.primary),
+                            style = TextStyle(color = MaterialTheme.colorScheme.primary),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
-
-
                 }
-
             }
             items(items = uiState.transactions) { transaction ->
                 TransactionCard(
@@ -287,52 +273,81 @@ fun SearchScreenContent(
                     }
                 )
             }
-
-
         }
-        MaterialDialog(
-            dialogState = startDateDialogState,
-            buttons = {
-                positiveButton(text = "Pick") {
-                    startDateDialogState.hide()
-
-                }
-                negativeButton(text = "Cancel") {
-
-                }
-            }
-        ) {
-            datepicker(
-                initialDate = LocalDate.now(),
-                title = "Pick a start date",
+        if (showBottomSheet.value) {
+            ModalBottomSheet(
+                containerColor = MaterialTheme.colorScheme.onBackground,
+                onDismissRequest = {
+                    showBottomSheet.value = false
+                },
+                sheetState = sheetState
             ) {
-                onChangeTransactionStartDate(it)
+                DateRangePicker(
+                    state = state,
+                    modifier = Modifier,
+                    title = {
+                        Text(
+                            text = "Select date range to assign the chart",
+                            style = TextStyle(color = MaterialTheme.colorScheme.primary),
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    },
+                    headline = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            Box(modifier = Modifier.weight(1f)) {
+                                (if (state.selectedStartDateMillis != null) state.selectedStartDateMillis?.let {
+                                    getFormattedDate(it)
+                                } else "Start Date")?.let {
+                                    Text(
+                                        text = it,
+                                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
+                                    )
+                                }
+                            }
+                            Box(modifier = Modifier.weight(1f)) {
+                                (if (state.selectedEndDateMillis != null) state.selectedEndDateMillis?.let {
+                                    getFormattedDate(it)
+                                } else "End Date")?.let {
+                                    Text(
+                                        text = it,
+                                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
+                                    )
+                                }
+                            }
+                            Box(modifier = Modifier.weight(0.2f)) {
+                                Icon(
+                                    imageVector = Icons.Default.Done,
+                                    contentDescription = "Okk"
+                                )
+                            }
 
+                        }
+                    },
+                    showModeToggle = true,
+                    colors = DatePickerDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.primary,
+                        headlineContentColor = MaterialTheme.colorScheme.primary,
+                        weekdayContentColor = MaterialTheme.colorScheme.primary,
+                        subheadContentColor = MaterialTheme.colorScheme.primary,
+                        yearContentColor = MaterialTheme.colorScheme.primary,
+                        currentYearContentColor = MaterialTheme.colorScheme.primary,
+                        selectedYearContainerColor = MaterialTheme.colorScheme.primary,
+                        disabledDayContentColor = Color.Gray,
+                        todayDateBorderColor = MaterialTheme.colorScheme.primary,
+                        dayInSelectionRangeContainerColor = MaterialTheme.colorScheme.background,
+                        dayInSelectionRangeContentColor = MaterialTheme.colorScheme.primary,
+                        selectedDayContainerColor = MaterialTheme.colorScheme.background
+                    )
+                )
             }
 
         }
-        MaterialDialog(
-            dialogState = endDateDialogState,
-            buttons = {
-                positiveButton(text = "Pick") {
-                    endDateDialogState.hide()
-
-                }
-                negativeButton(text = "Cancel") {
-
-                }
-            }
-        ) {
-            datepicker(
-                initialDate = LocalDate.now(),
-                title = "Pick an End date",
-            ) {
-                onChangeTransactionEndDate(it)
-
-            }
-
-        }
-
     }
-
 }
+
+

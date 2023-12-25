@@ -19,11 +19,12 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.*
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -37,34 +38,41 @@ import com.peterchege.expensetrackerapp.presentation.screens.analytics.expenses.
 import com.peterchege.expensetrackerapp.presentation.screens.analytics.transactions.TransactionsAnalyticsScreen
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AnalyticsScreen(
-    navController:NavController
+    navController: NavController
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                backgroundColor = MaterialTheme.colors.onBackground,
                 title = {
                     Text(
                         text = "Analytics",
-                        style = TextStyle(color = MaterialTheme.colors.primary),
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary),
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
                     )
-                }
+                },
+                colors = TopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.onBackground,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
+                    navigationIconContentColor = MaterialTheme.colorScheme.background,
+                    actionIconContentColor = MaterialTheme.colorScheme.background,
+                )
             )
         },
-    ){
+    ) { paddingValues ->
         val pagerState = rememberPagerState(pageCount = { 2 })
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colors.background)
+                .padding(paddingValues)
+                .background(color = MaterialTheme.colorScheme.background)
         ) {
             Tabs(pagerState = pagerState)
-            TabsContent(pagerState = pagerState,navController = navController)
+            TabsContent(pagerState = pagerState, navController = navController)
         }
     }
 }
@@ -72,34 +80,34 @@ fun AnalyticsScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Tabs(pagerState: PagerState) {
-    val list = listOf("Transactions","Expenses")
+    val list = listOf("Transactions", "Expenses")
     val scope = rememberCoroutineScope()
 
     TabRow(
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = MaterialTheme.colors.background,
-        contentColor = MaterialTheme.colors.onBackground,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+        containerColor = MaterialTheme.colorScheme.onBackground,
         divider = {
-            TabRowDefaults.Divider(
-                thickness = 3.dp,
-                color = MaterialTheme.colors.onBackground
-            )
+//            TabRowDefaults.(
+//                thickness = 3.dp,
+//                color = MaterialTheme.colorScheme.onBackground
+//            )
         },
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
                 height = 2.dp,
-                color = MaterialTheme.colors.primary
+                color = MaterialTheme.colorScheme.primary
 
             )
         }
     ) {
-        list.forEachIndexed { index, _->
+        list.forEachIndexed { index, _ ->
             Tab(
                 text = {
                     Text(
                         text = list[index],
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                 },
                 selected = pagerState.currentPage == index,
@@ -117,7 +125,7 @@ fun Tabs(pagerState: PagerState) {
 @Composable
 fun TabsContent(pagerState: PagerState, navController: NavController) {
     HorizontalPager(state = pagerState) { page ->
-        when(page) {
+        when (page) {
             0 -> TransactionsAnalyticsScreen(navController = navController)
             1 -> ExpensesAnalyticsScreen(navController = navController)
         }

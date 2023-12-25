@@ -22,9 +22,9 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,13 +70,13 @@ fun TransactionsAnalyticsScreen(
                 } else {
                     (transactionsState.indexOf(a) + 1).toString()
                 },
-                color = MaterialTheme.colors.primary
+                color = MaterialTheme.colorScheme.primary
             )
         } else {
             BarChartData.Bar(
                 value = total,
                 label = "",
-                color = MaterialTheme.colors.primary
+                color = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -117,10 +117,11 @@ fun TransactionsAnalyticsScreenContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
 
-        ) {
+        ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .padding(10.dp),
             horizontalAlignment = Alignment.Start,
             ) {
@@ -135,7 +136,7 @@ fun TransactionsAnalyticsScreenContent(
                         text = "KES ${transactions.sumOf { it.transactionAmount }} /=",
                         fontWeight = FontWeight.Bold,
                         fontSize = 21.sp,
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                     when (activeFilterConstant) {
                         FilterConstants.THIS_WEEK ->
@@ -189,16 +190,16 @@ fun TransactionsAnalyticsScreenContent(
                         barDrawer = SimpleBarDrawer(),
                         xAxisDrawer = SimpleXAxisDrawer(
                             axisLineThickness = 1.dp,
-                            axisLineColor = MaterialTheme.colors.primary
+                            axisLineColor = MaterialTheme.colorScheme.primary
                         ),
                         yAxisDrawer = SimpleYAxisDrawer(
                             axisLineThickness = 1.dp,
-                            axisLineColor = MaterialTheme.colors.primary
+                            axisLineColor = MaterialTheme.colorScheme.primary
 
                         ),
                         labelDrawer = SimpleValueDrawer(
                             drawLocation = SimpleValueDrawer.DrawLocation.XAxis,
-                            labelTextColor = MaterialTheme.colors.primary
+                            labelTextColor = MaterialTheme.colorScheme.primary
                         )
                     )
                 }

@@ -18,7 +18,7 @@ package com.peterchege.expensetrackerapp.presentation.bottomsheets.view
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -75,22 +75,6 @@ fun AddTransactionCategoryBottomSheetContent(
     addTransactionCategory:() -> Unit
 ) {
     val keyBoard = LocalSoftwareKeyboardController.current
-    val scaffoldState = rememberScaffoldState()
-    LaunchedEffect(key1 = true) {
-        eventFlow.collectLatest { event ->
-            when (event) {
-                is UiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.uiText
-                    )
-                }
-                is UiEvent.Navigate -> {
-                    navController.navigate(route = event.route)
-                }
-                else -> {}
-            }
-        }
-    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -98,7 +82,7 @@ fun AddTransactionCategoryBottomSheetContent(
     ){
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colors.background)
+                .background(color = MaterialTheme.colorScheme.onBackground)
                 .fillMaxSize()
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -112,7 +96,7 @@ fun AddTransactionCategoryBottomSheetContent(
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(color = MaterialTheme.colors.primary),
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     text = "Create Transaction Category",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -129,12 +113,12 @@ fun AddTransactionCategoryBottomSheetContent(
                     .testTag(tag = TestTags.CREATE_TRANSACTION_CATEGORY_INPUT)
                 ,
                 textStyle = TextStyle(
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colorScheme.primary
                 ),
                 placeholder = {
                     Text(
                         text = "Transaction Category Name",
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                 }
             )
@@ -143,8 +127,11 @@ fun AddTransactionCategoryBottomSheetContent(
                     .fillMaxWidth()
                     .testTag(tag = TestTags.CREATE_TRANSACTION_CATEGORY_SAVE_BUTTON)
                 ,
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.onBackground
+                colors = ButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onBackground,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.primary,
+                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 onClick = {
                     keyBoard?.hide()
@@ -154,7 +141,7 @@ fun AddTransactionCategoryBottomSheetContent(
             ){
                 Text(
                     text = "Save",
-                    style = TextStyle(color = MaterialTheme.colors.primary)
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
                 )
 
             }
