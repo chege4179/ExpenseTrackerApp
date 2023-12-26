@@ -30,6 +30,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -135,7 +136,7 @@ fun AddIncomeBottomSheetContent(
                     textAlign = TextAlign.Center
                 )
             }
-            TextField(
+            OutlinedTextField(
                 value = formState.incomeName,
                 onValueChange = {
 
@@ -153,7 +154,7 @@ fun AddIncomeBottomSheetContent(
                 )
             )
             Spacer(modifier = Modifier.height(10.dp))
-            TextField(
+            OutlinedTextField(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number
                 ),

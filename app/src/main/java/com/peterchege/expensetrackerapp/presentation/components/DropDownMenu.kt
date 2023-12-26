@@ -79,9 +79,10 @@ fun ComposeMenu(
         }
     ) {
         // text field
-        TextField(
+        OutlinedTextField(
             value = if (menuItems.isEmpty()) "" else menuItems[selectedIndex],
             onValueChange = {},
+            modifier = Modifier.menuAnchor(),
             readOnly = true,
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(

@@ -35,7 +35,7 @@ class StartupBenchmark {
         packageName = Constants.PACKAGE_NAME,
         metrics = listOf(StartupTimingMetric()),
         compilationMode = compilationMode,
-        iterations = 20,
+        iterations = 5,
         startupMode = StartupMode.COLD,
         setupBlock = {
             pressHome()

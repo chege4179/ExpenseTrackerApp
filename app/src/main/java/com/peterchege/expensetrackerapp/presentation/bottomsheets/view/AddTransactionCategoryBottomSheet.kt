@@ -103,7 +103,7 @@ fun AddTransactionCategoryBottomSheetContent(
                     textAlign = TextAlign.Center
                 )
             }
-            TextField(
+            OutlinedTextField(
                 value = formState.transactionCategoryName,
                 onValueChange = {
                     onChangeTransactionCategoryName(it)

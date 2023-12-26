@@ -125,7 +125,7 @@ fun AddExpenseBottomSheetContent(
                     textAlign = TextAlign.Center
                 )
             }
-            TextField(
+            OutlinedTextField(
                 value = formState.expenseName,
                 onValueChange = {
                     onChangeExpenseName(it)
@@ -147,7 +147,7 @@ fun AddExpenseBottomSheetContent(
                 horizontalArrangement = Arrangement.SpaceEvenly,
 
                 ) {
-                TextField(
+                OutlinedTextField(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),

@@ -99,7 +99,7 @@ fun AddExpenseCategoryBottomSheetContent(
                     textAlign = TextAlign.Center
                 )
             }
-            TextField(
+            OutlinedTextField(
                 value = formState.expenseCategoryName,
                 onValueChange = {
                     onChangeExpenseCategoryName(it)

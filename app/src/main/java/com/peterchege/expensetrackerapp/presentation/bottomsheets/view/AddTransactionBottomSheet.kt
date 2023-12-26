@@ -136,7 +136,7 @@ fun AddTransactionBottomSheetContent(
                     textAlign = TextAlign.Center
                 )
             }
-            TextField(
+            OutlinedTextField(
                 value = formState.transactionName,
                 onValueChange = {
                     onChangeTransactionName(it)
@@ -160,7 +160,7 @@ fun AddTransactionBottomSheetContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                TextField(
+                OutlinedTextField(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
@@ -195,9 +195,10 @@ fun AddTransactionBottomSheetContent(
                     }
                 ) {
                     // text field
-                    TextField(
+                    OutlinedTextField(
                         value = if (transactionCategories.isEmpty()) "" else transactionCategories[currentIndex].transactionCategoryName,
                         onValueChange = {},
+                        modifier = Modifier.menuAnchor(),
                         readOnly = true,
                         trailingIcon = {
                             ExposedDropdownMenuDefaults.TrailingIcon(
