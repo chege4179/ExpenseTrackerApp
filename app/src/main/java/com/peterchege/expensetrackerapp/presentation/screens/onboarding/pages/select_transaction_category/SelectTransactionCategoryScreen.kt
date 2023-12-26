@@ -1,0 +1,4 @@
+package com.peterchege.expensetrackerapp.presentation.screens.onboarding.pages.select_transaction_category
+
+class SelectTransactionCategoryScreen {
+}

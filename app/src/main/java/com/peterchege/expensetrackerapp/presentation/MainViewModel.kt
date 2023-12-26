@@ -36,6 +36,12 @@ class MainViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000L),
             initialValue = Constants.DARK_MODE
         )
+    val shouldShowOnboarding = userPreferencesRepository.getShouldShowOnBoarding()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = false
+        )
 
 
 

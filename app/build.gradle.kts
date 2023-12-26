@@ -169,6 +169,7 @@ dependencies {
     implementation ("androidx.room:room-ktx:2.6.1")
     implementation("androidx.room:room-paging:2.6.1")
 
+    implementation("androidx.core:core-splashscreen:1.0.1")
     //timber
     implementation("com.jakewharton.timber:timber:5.0.1")
 

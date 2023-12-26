@@ -17,29 +17,26 @@ package com.peterchege.expensetrackerapp.presentation.screens.home
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ReceiptLong
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Payments
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.core.util.TestTags
@@ -61,6 +58,7 @@ import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import com.peterchege.expensetrackerapp.R
 
 @Composable
 fun HomeScreen(
@@ -144,7 +142,7 @@ fun HomeScreenContent(
                 title = {
                     Text(
                         style = TextStyle(color = MaterialTheme.colorScheme.primary),
-                        text = "My Expense Tracker App",
+                        text = stringResource(id = R.string.app_name),
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
                     )

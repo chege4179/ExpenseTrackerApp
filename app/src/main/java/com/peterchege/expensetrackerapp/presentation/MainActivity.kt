@@ -21,7 +21,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.metrics.performance.JankStats
@@ -38,11 +40,12 @@ class MainActivity : ComponentActivity() {
     lateinit var lazyStats: dagger.Lazy<JankStats>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        installSplashScreen()
         setContent {
             val viewModel: MainViewModel = hiltViewModel()
-            val theme = viewModel.theme.collectAsStateWithLifecycle()
-            val isInDarkMode = theme.value == Constants.DARK_MODE
+            val theme by viewModel.theme.collectAsStateWithLifecycle()
+            val shouldShowOnboarding by viewModel.shouldShowOnboarding.collectAsStateWithLifecycle()
+            val isInDarkMode = theme == Constants.DARK_MODE
 
             ExpenseTrackerAppTheme(
                 darkTheme = isInDarkMode
@@ -53,8 +56,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navHostController = rememberNavController()
-                    AppNavigation(navHostController = navHostController)
-
+                    AppNavigation(
+                        navHostController = navHostController,
+                        shouldShowOnBoarding = shouldShowOnboarding
+                    )
                 }
             }
         }

@@ -17,6 +17,7 @@ package com.peterchege.expensetrackerapp.core.util
 
 
 object Screens {
+    const val ONBOARDING_SCREEN = "ON_BOARDING_SCREEN"
     const val HOME_SCREEN = "HOME_SCREEN"
     const val ANALYTICS_SCREEN = "ANALYTICS_SCREEN"
     const val BOTTOM_TAB_NAVIGATION = "BOTTOM_TAB_NAVIGATION"

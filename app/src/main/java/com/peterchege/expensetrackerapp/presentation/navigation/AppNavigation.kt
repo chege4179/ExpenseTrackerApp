@@ -27,20 +27,25 @@ import com.peterchege.expensetrackerapp.core.util.TrackDisposableJank
 import com.peterchege.expensetrackerapp.presentation.screens.expense.ExpenseScreen
 import com.peterchege.expensetrackerapp.presentation.screens.expenses.AllExpensesScreen
 import com.peterchege.expensetrackerapp.presentation.screens.income.AllIncomeScreen
+import com.peterchege.expensetrackerapp.presentation.screens.onboarding.OnboardingScreen
 import com.peterchege.expensetrackerapp.presentation.screens.transactions.AllTransactionsScreen
 import com.peterchege.expensetrackerapp.presentation.screens.transaction.TransactionScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    shouldShowOnBoarding: Boolean,
 ) {
     NavigationTrackingSideEffect(navController = navHostController)
     NavHost(
         navController = navHostController,
-        startDestination = Screens.BOTTOM_TAB_NAVIGATION
+        startDestination = if (shouldShowOnBoarding) Screens.ONBOARDING_SCREEN else Screens.BOTTOM_TAB_NAVIGATION
     ) {
 
+        composable(Screens.ONBOARDING_SCREEN) {
+            OnboardingScreen()
+        }
         composable(route = Screens.BOTTOM_TAB_NAVIGATION) {
             BottomNavigationWrapper(navHostController = navHostController)
         }
@@ -51,9 +56,9 @@ fun AppNavigation(
             AllTransactionsScreen(navController = navHostController)
         }
 
-        composable(route = Screens.ALL_EXPENSES_SCREEN ) {
+        composable(route = Screens.ALL_EXPENSES_SCREEN) {
             AllExpensesScreen(
-                navigateToExpenseScreen =navHostController::navigateToExpenseScreen
+                navigateToExpenseScreen = navHostController::navigateToExpenseScreen
             )
         }
         composable(route = Screens.EXPENSE_SCREEN + "/{id}") {
