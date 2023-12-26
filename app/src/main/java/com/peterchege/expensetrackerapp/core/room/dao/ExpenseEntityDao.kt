@@ -29,6 +29,9 @@ interface ExpenseEntityDao {
     @Query("SELECT * FROM Expenses")
     fun getAllExpenses(): Flow<List<ExpenseEntity>>
 
+    @Query("SELECT * FROM Expenses WHERE expenseId =:expenseId")
+    suspend fun getExpenseById(expenseId:String):ExpenseEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExpense(expenseEntity: ExpenseEntity)
 

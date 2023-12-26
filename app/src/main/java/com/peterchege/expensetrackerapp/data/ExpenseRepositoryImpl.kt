@@ -41,6 +41,12 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getExpenseById(expenseId: String): ExpenseEntity? {
+        return withContext(ioDispatcher){
+            db.expenseEntityDao.getExpenseById(expenseId)
+        }
+    }
+
     override fun getAllExpenses(): Flow<List<ExpenseEntity>> {
         return db.expenseEntityDao.getAllExpenses().flowOn(ioDispatcher)
     }

@@ -21,8 +21,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.core.util.TrackDisposableJank
+import com.peterchege.expensetrackerapp.presentation.screens.expense.ExpenseScreen
+import com.peterchege.expensetrackerapp.presentation.screens.expenses.AllExpensesScreen
 import com.peterchege.expensetrackerapp.presentation.screens.income.AllIncomeScreen
 import com.peterchege.expensetrackerapp.presentation.screens.transactions.AllTransactionsScreen
 import com.peterchege.expensetrackerapp.presentation.screens.transaction.TransactionScreen
@@ -47,6 +50,17 @@ fun AppNavigation(
         composable(route = Screens.ALL_TRANSACTIONS_SCREEN) {
             AllTransactionsScreen(navController = navHostController)
         }
+
+        composable(route = Screens.ALL_EXPENSES_SCREEN ) {
+            AllExpensesScreen(
+                navigateToExpenseScreen =navHostController::navigateToExpenseScreen
+            )
+        }
+        composable(route = Screens.EXPENSE_SCREEN + "/{id}") {
+            ExpenseScreen()
+        }
+
+
         composable(route = Screens.ALL_INCOME_SCREEN) {
             AllIncomeScreen(navController = navHostController)
         }

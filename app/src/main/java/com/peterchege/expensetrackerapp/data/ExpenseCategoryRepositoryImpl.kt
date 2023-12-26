@@ -42,6 +42,12 @@ class ExpenseCategoryRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getExpenseCategoryById(expenseCategoryId: String): ExpenseCategoryEntity? {
+        return withContext(ioDispatcher){
+            db.expenseCategoryEntityDao.getExpenseCategoryById(expenseCategoryId = expenseCategoryId)
+        }
+    }
+
     override fun getAllExpenseCategories(): Flow<List<ExpenseCategoryEntity>> {
         return db.expenseCategoryEntityDao.getExpenseCategories().flowOn(ioDispatcher)
     }

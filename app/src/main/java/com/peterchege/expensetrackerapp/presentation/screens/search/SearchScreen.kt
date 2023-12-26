@@ -52,7 +52,7 @@ import java.time.LocalDate
 
 @Composable
 fun SearchScreen(
-    navController: NavController,
+    navigateToTransactionScreen:(String) -> Unit,
     viewModel: SearchScreenViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
@@ -64,14 +64,13 @@ fun SearchScreen(
 
 
     SearchScreenContent(
-        eventFlow = viewModel.eventFlow,
-        navController = navController,
         uiState = uiState.value,
         transactionCategories = transactionCategories,
         searchTransactions = { viewModel.searchTransactions() },
         onChangeTransactionCategory = { viewModel.onChangeTransactionCategory(it) },
         onChangeTransactionStartDate = { viewModel.onChangeTransactionStartDate(it) },
-        onChangeTransactionEndDate = { viewModel.onChangeTransactionEndDate(it) }
+        onChangeTransactionEndDate = { viewModel.onChangeTransactionEndDate(it) },
+        navigateToTransactionScreen = navigateToTransactionScreen
     )
 
 
@@ -81,8 +80,7 @@ fun SearchScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SearchScreenContent(
-    eventFlow: SharedFlow<UiEvent>,
-    navController: NavController,
+    navigateToTransactionScreen:(String) -> Unit,
     uiState: SearchScreenState,
     transactionCategories: List<TransactionCategory>,
     searchTransactions: () -> Unit,
@@ -102,25 +100,6 @@ fun SearchScreenContent(
         }
         state.selectedEndDateMillis?.let {
             onChangeTransactionEndDate(convertTimeMillisToLocalDate(it))
-        }
-
-
-    }
-    LaunchedEffect(key1 = true) {
-        eventFlow.collectLatest { event ->
-            when (event) {
-                is UiEvent.ShowSnackbar -> {
-//                    scaffoldState.snackbarHostState.showSnackbar(
-//                        message = event.uiText
-//                    )
-                }
-
-                is UiEvent.Navigate -> {
-                    navController.navigate(route = event.route)
-                }
-
-                else -> {}
-            }
         }
     }
     var showBottomSheet = remember { mutableStateOf(false) }
@@ -268,8 +247,7 @@ fun SearchScreenContent(
                 TransactionCard(
                     transaction = transaction,
                     onTransactionNavigate = {
-                        navController.navigate(Screens.TRANSACTIONS_SCREEN + "/$it")
-
+                        navigateToTransactionScreen(it)
                     }
                 )
             }

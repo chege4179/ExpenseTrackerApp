@@ -22,6 +22,8 @@ import kotlinx.coroutines.flow.Flow
 interface ExpenseCategoryRepository {
     suspend fun saveExpenseCategory(expenseCategory: ExpenseCategory)
 
+    suspend fun getExpenseCategoryById(expenseCategoryId: String):ExpenseCategoryEntity?
+
     fun getAllExpenseCategories(): Flow<List<ExpenseCategoryEntity>>
 
     suspend fun getExpenseCategoryByName(name:String):ExpenseCategoryEntity?

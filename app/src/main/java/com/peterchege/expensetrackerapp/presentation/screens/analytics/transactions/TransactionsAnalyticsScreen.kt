@@ -53,7 +53,6 @@ import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
 
 @Composable
 fun TransactionsAnalyticsScreen(
-    navController: NavController,
     viewModel: AnalyticsScreenViewModel = hiltViewModel()
 ){
     val transactionsState = viewModel.graphData.value

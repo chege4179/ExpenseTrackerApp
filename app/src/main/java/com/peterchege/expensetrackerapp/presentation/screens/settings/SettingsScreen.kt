@@ -42,7 +42,6 @@ import com.peterchege.expensetrackerapp.presentation.components.SettingsRow
 
 @Composable
 fun SettingsScreen(
-    navController: NavController,
     viewModel: SettingsScreenViewModel = hiltViewModel()
 
 ) {

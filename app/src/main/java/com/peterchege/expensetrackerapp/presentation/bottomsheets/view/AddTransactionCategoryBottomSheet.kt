@@ -45,15 +45,13 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddTransactionCategoryBottomSheet(
-    navController: NavController,
+
     viewModel: AddTransactionCategoryScreenViewModel = hiltViewModel()
 ){
 
     val formState = viewModel.formState.collectAsStateWithLifecycle()
 
     AddTransactionCategoryBottomSheetContent(
-        eventFlow = viewModel.eventFlow,
-        navController = navController,
         formState = formState.value,
         onChangeTransactionCategoryName = { viewModel.onChangeTransactionCategoryName(it) },
         addTransactionCategory = { viewModel.addTransactionCategory() }
@@ -68,8 +66,6 @@ fun AddTransactionCategoryBottomSheet(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddTransactionCategoryBottomSheetContent(
-    eventFlow: SharedFlow<UiEvent>,
-    navController: NavController,
     formState:AddTransactionCategoryFormState,
     onChangeTransactionCategoryName:(String) -> Unit,
     addTransactionCategory:() -> Unit

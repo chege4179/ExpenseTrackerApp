@@ -41,9 +41,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AnalyticsScreen(
-    navController: NavController
-) {
+fun AnalyticsScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -72,7 +70,7 @@ fun AnalyticsScreen(
                 .background(color = MaterialTheme.colorScheme.background)
         ) {
             Tabs(pagerState = pagerState)
-            TabsContent(pagerState = pagerState, navController = navController)
+            TabsContent(pagerState = pagerState)
         }
     }
 }
@@ -123,11 +121,11 @@ fun Tabs(pagerState: PagerState) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabsContent(pagerState: PagerState, navController: NavController) {
+fun TabsContent(pagerState: PagerState) {
     HorizontalPager(state = pagerState) { page ->
         when (page) {
-            0 -> TransactionsAnalyticsScreen(navController = navController)
-            1 -> ExpensesAnalyticsScreen(navController = navController)
+            0 -> TransactionsAnalyticsScreen()
+            1 -> ExpensesAnalyticsScreen()
         }
     }
 }

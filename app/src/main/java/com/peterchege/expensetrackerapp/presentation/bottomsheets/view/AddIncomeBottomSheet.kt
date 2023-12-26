@@ -59,10 +59,7 @@ import kotlinx.coroutines.flow.SharedFlow
 @Preview
 @Composable
 fun AddIncomeBottomSheetPreview(){
-    val navController = rememberNavController()
     AddIncomeBottomSheetContent(
-        eventFlow = MutableSharedFlow(),
-        navController = navController,
         formState = AddIncomeFormState(),
         onChangeIncomeName = {  },
         onChangeIncomeAmount = {  },
@@ -72,14 +69,11 @@ fun AddIncomeBottomSheetPreview(){
 
 @Composable
 fun AddIncomeBottomSheet(
-    navController: NavController,
     viewModel: AddIncomeScreenViewModel = hiltViewModel(),
 ) {
     val formState = viewModel.formState.collectAsStateWithLifecycle()
 
     AddIncomeBottomSheetContent(
-        eventFlow = viewModel.eventFlow,
-        navController = navController,
         formState = formState.value,
         onChangeIncomeName = {
             viewModel.onChangeIncomeName(text = it)
@@ -97,8 +91,6 @@ fun AddIncomeBottomSheet(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddIncomeBottomSheetContent(
-    eventFlow: SharedFlow<UiEvent>,
-    navController: NavController,
     formState: AddIncomeFormState,
     onChangeIncomeName: (String) -> Unit,
     onChangeIncomeAmount: (String) -> Unit,

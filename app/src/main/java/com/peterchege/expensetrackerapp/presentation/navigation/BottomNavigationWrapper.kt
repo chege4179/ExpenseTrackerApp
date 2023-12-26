@@ -142,27 +142,35 @@ fun BottomNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.HOME_SCREEN){
+        startDestination = Screens.HOME_SCREEN
+    ){
 
         composable(
             route = Screens.HOME_SCREEN
         ){
-            HomeScreen(navController = navHostController)
+            HomeScreen(
+                navigateToAllExpensesScreen = navHostController::navigateToAllExpenseScreen,
+                navigateToAllIncomeScreen = navHostController::navigateToAllIncomeScreen,
+                navigateToAllTransactionsScreen = navHostController::navigateToAllTransactionsScreen,
+                navigateToTransactionScreen = navHostController::navigateToTransactionScreen
+            )
         }
         composable(
             route = Screens.SEARCH_SCREEN
         ){
-            SearchScreen(navController = navHostController)
+            SearchScreen(
+                navigateToTransactionScreen = navHostController::navigateToTransactionScreen
+            )
         }
         composable(
             route = Screens.ANALYTICS_SCREEN
         ){
-            AnalyticsScreen(navController = navController)
+            AnalyticsScreen()
         }
         composable(
             route = Screens.SETTINGS_SCREEN
         ){
-            SettingsScreen(navController = navController)
+            SettingsScreen()
         }
 
 

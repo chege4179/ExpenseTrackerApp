@@ -46,7 +46,6 @@ data class PieDataInfo(
 
 @Composable
 fun ExpensesAnalyticsScreen(
-    navController: NavController,
     viewModel: ExpenseAnalyticsScreenViewModel = hiltViewModel()
 ) {
 

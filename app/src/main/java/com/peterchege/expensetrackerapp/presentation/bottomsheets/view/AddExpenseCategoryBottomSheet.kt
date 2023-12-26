@@ -41,19 +41,17 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddExpenseCategoryBottomSheet(
-    navController: NavController,
     viewModel: AddExpenseCategoryScreenViewModel = hiltViewModel()
 ) {
     val formState = viewModel.formState.collectAsStateWithLifecycle()
 
     AddExpenseCategoryBottomSheetContent(
-        eventFlow = viewModel.eventFlow,
         formState = formState.value,
         onChangeExpenseCategoryName = {
             viewModel.onChangeExpenseName(it)
         },
         addExpenseCategory = { viewModel.addExpenseCategory() },
-        navController = navController
+
     )
 
 }
@@ -63,11 +61,9 @@ fun AddExpenseCategoryBottomSheet(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddExpenseCategoryBottomSheetContent(
-    eventFlow: SharedFlow<UiEvent>,
     formState: AddExpenseCategoryFormState,
     onChangeExpenseCategoryName: (String) -> Unit,
     addExpenseCategory: () -> Unit,
-    navController: NavController,
 ) {
     val keyBoard = LocalSoftwareKeyboardController.current
     Box(

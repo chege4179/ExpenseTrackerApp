@@ -62,14 +62,12 @@ import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 
-enum class MultiFloatingState {
-    EXPANDED,
-    COLLAPSED
-}
-
 @Composable
 fun HomeScreen(
-    navController: NavController,
+    navigateToAllIncomeScreen: () -> Unit,
+    navigateToAllTransactionsScreen: () -> Unit,
+    navigateToAllExpensesScreen: () -> Unit,
+    navigateToTransactionScreen: (String) -> Unit,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -78,13 +76,16 @@ fun HomeScreen(
     HomeScreenContent(
         uiState = uiState,
         eventFlow = viewModel.eventFlow,
-        navController = navController,
         activeBottomSheet = viewModel.activeBottomSheet.value,
         onChangeActiveBottomSheet = { viewModel.onChangeActiveBottomSheet(it) },
         activeIncomeId = viewModel.activeIncomeId.value,
+        navigateToAllIncomeScreen = navigateToAllIncomeScreen,
+        navigateToAllTransactionsScreen = navigateToAllTransactionsScreen,
+        navigateToAllExpensesScreen = navigateToAllExpensesScreen,
+        navigateToTransactionScreen = navigateToTransactionScreen,
         onChangeActiveIncomeId = {
             viewModel.onChangeActiveIncomeId(it)
-        }
+        },
     )
 
 }
@@ -95,12 +96,16 @@ fun HomeScreen(
 fun HomeScreenContent(
     uiState: HomeScreenUiState,
     eventFlow: SharedFlow<UiEvent>,
-    navController: NavController,
     activeBottomSheet: BottomSheets?,
     onChangeActiveBottomSheet: (BottomSheets) -> Unit,
     activeIncomeId: String?,
     onChangeActiveIncomeId: (String) -> Unit,
-) {
+    navigateToAllIncomeScreen: () -> Unit,
+    navigateToAllTransactionsScreen: () -> Unit,
+    navigateToAllExpensesScreen: () -> Unit,
+    navigateToTransactionScreen: (String) -> Unit,
+
+    ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -112,7 +117,7 @@ fun HomeScreenContent(
                 }
 
                 is UiEvent.Navigate -> {
-                    navController.navigate(route = event.route)
+
                 }
 
                 is UiEvent.OpenBottomSheet -> {
@@ -252,7 +257,7 @@ fun HomeScreenContent(
                             HomeSubHeader(
                                 name = "Income",
                                 onClick = {
-                                    navController.navigate(route = Screens.ALL_INCOME_SCREEN)
+                                    navigateToAllIncomeScreen()
                                 }
                             )
                         }
@@ -278,7 +283,7 @@ fun HomeScreenContent(
                             HomeSubHeader(
                                 name = "Transactions",
                                 onClick = {
-                                    navController.navigate(route = Screens.ALL_TRANSACTIONS_SCREEN)
+                                    navigateToAllTransactionsScreen()
                                 }
                             )
                         }
@@ -293,8 +298,7 @@ fun HomeScreenContent(
                                 TransactionCard(
                                     transaction = transaction,
                                     onTransactionNavigate = {
-                                        navController.navigate(route = Screens.TRANSACTIONS_SCREEN + "/$it")
-
+                                        navigateToTransactionScreen(it)
                                     }
                                 )
                             }
@@ -303,7 +307,7 @@ fun HomeScreenContent(
                             HomeSubHeader(
                                 name = "Expenses",
                                 onClick = {
-                                    navController.navigate(route = Screens.ALL_TRANSACTIONS_SCREEN)
+                                    navigateToAllExpensesScreen()
                                 }
                             )
                         }
@@ -337,23 +341,23 @@ fun HomeScreenContent(
             ) {
                 when (activeBottomSheet) {
                     BottomSheets.ADD_EXPENSE -> {
-                        AddExpenseBottomSheet(navController = navController)
+                        AddExpenseBottomSheet()
                     }
 
                     BottomSheets.ADD_EXPENSE_CATEGORY -> {
-                        AddExpenseCategoryBottomSheet(navController = navController)
+                        AddExpenseCategoryBottomSheet()
                     }
 
                     BottomSheets.ADD_TRANSACTION -> {
-                        AddTransactionBottomSheet(navController = navController)
+                        AddTransactionBottomSheet()
                     }
 
                     BottomSheets.ADD_TRANSACTION_CATEGORY -> {
-                        AddTransactionCategoryBottomSheet(navController = navController)
+                        AddTransactionCategoryBottomSheet()
                     }
 
                     BottomSheets.ADD_INCOME -> {
-                        AddIncomeBottomSheet(navController = navController)
+                        AddIncomeBottomSheet()
                     }
 
                     BottomSheets.VIEW_INCOME -> {

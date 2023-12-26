@@ -56,7 +56,6 @@ import java.time.LocalTime
 
 @Composable
 fun AddTransactionBottomSheet(
-    navController: NavController,
     viewModel: AddTransactionScreenViewModel = hiltViewModel()
 ){
     val transactionCategories = viewModel.transactionCategories
@@ -68,8 +67,6 @@ fun AddTransactionBottomSheet(
 
     AddTransactionBottomSheetContent(
         transactionCategories = transactionCategories,
-        eventFlow = viewModel.eventFlow,
-        navController = navController,
         formState = formState.value,
         onChangeTransactionName = { viewModel.onChangeTransactionName(it) },
         onChangeTransactionAmount = { viewModel.onChangeTransactionAmount(it) },
@@ -90,8 +87,6 @@ fun AddTransactionBottomSheet(
 @Composable
 fun AddTransactionBottomSheetContent(
     transactionCategories:List<TransactionCategory>,
-    eventFlow:SharedFlow<UiEvent>,
-    navController:NavController,
     formState:AddTransactionFormState,
     onChangeTransactionName:(String) -> Unit,
     onChangeTransactionAmount:(String) -> Unit,
