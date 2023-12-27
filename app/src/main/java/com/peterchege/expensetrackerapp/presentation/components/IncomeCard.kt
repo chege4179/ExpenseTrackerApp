@@ -28,11 +28,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.runtime.Composable
@@ -64,11 +64,10 @@ fun IncomeCard(
                 onIncomeNavigate(income.incomeId)
             },
         shape = RoundedCornerShape(15),
-        elevation = 3.dp
     ) {
         Row(
             modifier = Modifier
-                .background(color = MaterialTheme.colors.onBackground)
+                .background(color = MaterialTheme.colorScheme.onBackground)
                 .fillMaxWidth()
                 .fillMaxHeight(),
             horizontalArrangement = Arrangement.Start,
@@ -104,12 +103,12 @@ fun IncomeCard(
                     Text(
                         text = income.incomeName,
                         fontWeight = FontWeight.Bold,
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
 
                     )
                     Text(
                         text = income.incomeCreatedAt,
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
 
                 }
@@ -117,7 +116,7 @@ fun IncomeCard(
                     text = "KES ${income.incomeAmount} /=",
                     textAlign = TextAlign.Start,
                     fontWeight = FontWeight.Bold,
-                    style = TextStyle(color = MaterialTheme.colors.primary)
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
                 )
             }
             IconButton(

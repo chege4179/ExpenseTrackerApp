@@ -16,3 +16,6 @@ local.properties
 
 distribution_key.json
 
+play_service_account.json
+
+

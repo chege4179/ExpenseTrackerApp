@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2986b5443978e22d9d626b1526efb139",
+    "identityHash": "e0da1b8deefcd96a284e1ba55c7733ef",
     "entities": [
       {
         "tableName": "ExpenseCategory",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`expenseCategoryId` TEXT NOT NULL, `expenseCategoryName` TEXT NOT NULL, `expenseCategoryCreatedAt` TEXT NOT NULL, PRIMARY KEY(`expenseCategoryId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`expenseCategoryId` TEXT NOT NULL, `expenseCategoryName` TEXT NOT NULL, PRIMARY KEY(`expenseCategoryId`))",
         "fields": [
           {
             "fieldPath": "expenseCategoryId",
@@ -17,12 +17,6 @@
           {
             "fieldPath": "expenseCategoryName",
             "columnName": "expenseCategoryName",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "expenseCategoryCreatedAt",
-            "columnName": "expenseCategoryCreatedAt",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -38,7 +32,7 @@
       },
       {
         "tableName": "TransactionCategory",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transactionCategoryId` TEXT NOT NULL, `transactionCategoryName` TEXT NOT NULL, `transactionCategoryCreatedAt` TEXT NOT NULL, PRIMARY KEY(`transactionCategoryId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transactionCategoryId` TEXT NOT NULL, `transactionCategoryName` TEXT NOT NULL, PRIMARY KEY(`transactionCategoryId`))",
         "fields": [
           {
             "fieldPath": "transactionCategoryId",
@@ -49,12 +43,6 @@
           {
             "fieldPath": "transactionCategoryName",
             "columnName": "transactionCategoryName",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "transactionCategoryCreatedAt",
-            "columnName": "transactionCategoryCreatedAt",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -234,7 +222,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2986b5443978e22d9d626b1526efb139')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e0da1b8deefcd96a284e1ba55c7733ef')"
     ]
   }
 }

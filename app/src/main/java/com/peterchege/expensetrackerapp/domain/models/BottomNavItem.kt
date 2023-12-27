@@ -22,5 +22,4 @@ data class BottomNavItem(
     val route:String,
     val icon: ImageVector,
     val badgeCount:Int = 0,
-
     )

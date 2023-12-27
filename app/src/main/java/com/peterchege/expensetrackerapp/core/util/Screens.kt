@@ -17,12 +17,17 @@ package com.peterchege.expensetrackerapp.core.util
 
 
 object Screens {
+    const val ONBOARDING_SCREEN = "ON_BOARDING_SCREEN"
     const val HOME_SCREEN = "HOME_SCREEN"
     const val ANALYTICS_SCREEN = "ANALYTICS_SCREEN"
     const val BOTTOM_TAB_NAVIGATION = "BOTTOM_TAB_NAVIGATION"
 
     const val TRANSACTIONS_SCREEN = "TRANSACTIONS_SCREEN"
     const val ALL_TRANSACTIONS_SCREEN = "ALL_TRANSACTIONS_SCREEN"
+
+    const val ALL_EXPENSES_SCREEN = "ALL_EXPENSES_SCREEN"
+    const val EXPENSE_SCREEN ="EXPENSE_SCREEN"
+
     const val ALL_INCOME_SCREEN = "ALL_INCOME_SCREEN"
 
     const val SETTINGS_SCREEN = "SETTINGS_SCREEN"

@@ -15,24 +15,26 @@
  */
 package com.peterchege.expensetrackerapp.presentation.navigation
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.BarChart
-import androidx.compose.material.icons.outlined.ShowChart
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -40,14 +42,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.domain.models.BottomNavItem
-import com.peterchege.expensetrackerapp.presentation.screens.analytics_screen.AnalyticsScreen
-import com.peterchege.expensetrackerapp.presentation.screens.home_screen.HomeScreen
-import com.peterchege.expensetrackerapp.presentation.screens.search_screen.SearchScreen
-import com.peterchege.expensetrackerapp.presentation.screens.settings_screen.SettingsScreen
-import com.peterchege.expensetrackerapp.presentation.theme.BlueColor
+import com.peterchege.expensetrackerapp.presentation.screens.analytics.AnalyticsScreen
+import com.peterchege.expensetrackerapp.presentation.screens.home.HomeScreen
+import com.peterchege.expensetrackerapp.presentation.screens.search.SearchScreen
+import com.peterchege.expensetrackerapp.presentation.screens.settings.SettingsScreen
 
 
-@ExperimentalMaterialApi
+@ExperimentalMaterial3Api
 @Composable
 fun BottomNavigationWrapper(
     navHostController: NavHostController,
@@ -80,8 +81,14 @@ fun BottomNavigationWrapper(
                     ),
                 ),
                 navController = navController,
-                onItemClick ={
-                    navController.navigate(it.route)
+                onItemClick = {
+                    navController.navigate(it.route){
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo(navController.graph.findStartDestination().id){
+                            saveState = true
+                        }
+                    }
                 }
             )
         }
@@ -100,56 +107,34 @@ fun BottomNavigationWrapper(
     }
 }
 
-@ExperimentalMaterialApi
+@ExperimentalMaterial3Api
 @Composable
 fun BottomNavBar(
     items:List<BottomNavItem>,
     navController: NavController,
-    modifier: Modifier = Modifier,
     onItemClick:(BottomNavItem) -> Unit
 ){
     val backStackEntry = navController.currentBackStackEntryAsState()
-    BottomNavigation(
-        modifier = modifier,
-        backgroundColor = MaterialTheme.colors.background,
-        elevation = 5.dp
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.onBackground,
     ) {
-        items.forEach { item ->
+        items.forEachIndexed { index, item ->
             val selected = item.route == backStackEntry.value?.destination?.route
-            BottomNavigationItem(
-                selected = selected,
-                selectedContentColor = Color.Blue,
-                unselectedContentColor = Color.Gray,
-                onClick = { onItemClick(item) },
+            NavigationBarItem(
                 icon = {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.name
-                        )
-                        if (selected) {
-                            Text(
-                                text = item.name,
-                                textAlign = TextAlign.Center,
-                                fontSize = 10.sp
-
-                            )
-                        }
-
-                    }
-
-                }
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.name
+                    )
+                },
+                label = { Text(text = item.name) },
+                selected = selected,
+                onClick = { onItemClick(item) }
             )
         }
-
-
     }
-
-
 }
 
-
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BottomNavigation(
     navController: NavHostController,
@@ -157,27 +142,35 @@ fun BottomNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.HOME_SCREEN){
+        startDestination = Screens.HOME_SCREEN
+    ){
 
         composable(
             route = Screens.HOME_SCREEN
         ){
-            HomeScreen(navController = navHostController)
+            HomeScreen(
+                navigateToAllExpensesScreen = navHostController::navigateToAllExpenseScreen,
+                navigateToAllIncomeScreen = navHostController::navigateToAllIncomeScreen,
+                navigateToAllTransactionsScreen = navHostController::navigateToAllTransactionsScreen,
+                navigateToTransactionScreen = navHostController::navigateToTransactionScreen
+            )
         }
         composable(
             route = Screens.SEARCH_SCREEN
         ){
-            SearchScreen(navController = navHostController)
+            SearchScreen(
+                navigateToTransactionScreen = navHostController::navigateToTransactionScreen
+            )
         }
         composable(
             route = Screens.ANALYTICS_SCREEN
         ){
-            AnalyticsScreen(navController = navController)
+            AnalyticsScreen()
         }
         composable(
             route = Screens.SETTINGS_SCREEN
         ){
-            SettingsScreen(navController = navController)
+            SettingsScreen()
         }
 
 

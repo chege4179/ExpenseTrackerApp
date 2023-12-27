@@ -16,18 +16,31 @@
 package com.peterchege.expensetrackerapp.core.di
 
 import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.peterchege.expensetrackerapp.BuildConfig
-import com.peterchege.expensetrackerapp.core.crashlytics.CrashlyticsTree
+import com.peterchege.expensetrackerapp.core.alarm.AlarmItem
+import com.peterchege.expensetrackerapp.core.alarm.AndroidAlarmScheduler
+import com.peterchege.expensetrackerapp.core.analytics.crashlytics.CrashlyticsTree
+import com.peterchege.expensetrackerapp.core.util.ProfileVerifierLogger
 import dagger.hilt.android.HiltAndroidApp
-import org.jetbrains.annotations.NotNull
 import timber.log.Timber
+import java.time.LocalDateTime
+import javax.inject.Inject
 
 @HiltAndroidApp
 class ExpenseTrackerApp :Application(){
+//    lateinit var scheduler: AndroidAlarmScheduler
 
+    @Inject
+    lateinit var profileVerifierLogger: ProfileVerifierLogger
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate() {
         super.onCreate()
+        profileVerifierLogger()
         initTimber()
+//        scheduler = AndroidAlarmScheduler(this)
+//        scheduler.schedule(AlarmItem(LocalDateTime.now(),""))
     }
 }
 

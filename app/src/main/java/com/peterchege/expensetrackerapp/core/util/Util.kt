@@ -18,6 +18,7 @@ package com.peterchege.expensetrackerapp.core.util
 import android.content.Context
 import android.content.pm.PackageManager
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.time.*
 import java.util.*
 
@@ -62,4 +63,34 @@ fun getNumericInitialValue(value:Int):String{
     }else{
         value.toString()
     }
+}
+
+
+fun getFormattedDate(timeInMillis: Long): String {
+    val calender = Calendar.getInstance()
+    calender.timeInMillis = timeInMillis
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+    return dateFormat.format(calender.timeInMillis)
+}
+
+fun dateValidator(): (Long) -> Boolean {
+    return { timeInMillis ->
+        val endCalenderDate = Calendar.getInstance()
+        endCalenderDate.timeInMillis = timeInMillis
+        endCalenderDate.set(Calendar.DATE, Calendar.DATE + 20)
+        timeInMillis > Calendar.getInstance().timeInMillis && timeInMillis < endCalenderDate.timeInMillis
+    }
+}
+
+
+
+fun convertTimeMillisToLocalDate(timeMillis: Long): LocalDate {
+    // Create an Instant from the timeMillis value
+    val instant = Instant.ofEpochMilli(timeMillis)
+
+    // Specify the desired time zone if needed (default is your system's time zone)
+    val zoneId = ZoneId.systemDefault() // Or any specific ZoneId like ZoneId.of("UTC")
+
+    // Convert the Instant to a LocalDate in the specified time zone
+    return instant.atZone(zoneId).toLocalDate()
 }

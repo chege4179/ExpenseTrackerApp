@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.data
 
+import com.peterchege.expensetrackerapp.core.analytics.analytics.AnalyticsHelper
+import com.peterchege.expensetrackerapp.core.analytics.analytics.logNewTransaction
 import com.peterchege.expensetrackerapp.core.di.IoDispatcher
 import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
@@ -29,9 +31,11 @@ import javax.inject.Inject
 
 class TransactionRepositoryImpl @Inject constructor(
     private val db: ExpenseTrackerAppDatabase,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val analyticsHelper: AnalyticsHelper,
 ) : TransactionRepository {
     override suspend fun createTransaction(transaction: Transaction) {
+        analyticsHelper.logNewTransaction()
         return withContext(ioDispatcher) {
             db.transactionEntityDao.insertTransaction(
                 transactionEntity = transaction.toEntity()

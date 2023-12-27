@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.data
 
+import com.peterchege.expensetrackerapp.core.analytics.analytics.AnalyticsHelper
+import com.peterchege.expensetrackerapp.core.analytics.analytics.logNewExpenseCategoryCreated
 import com.peterchege.expensetrackerapp.core.di.IoDispatcher
 import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.core.room.entities.ExpenseCategoryEntity
@@ -29,12 +31,20 @@ import javax.inject.Inject
 
 class ExpenseCategoryRepositoryImpl @Inject constructor(
     private val db:ExpenseTrackerAppDatabase,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val analyticsHelper: AnalyticsHelper,
 ): ExpenseCategoryRepository {
     override suspend fun saveExpenseCategory(expenseCategory: ExpenseCategory) {
         return withContext(ioDispatcher){
+            analyticsHelper.logNewExpenseCategoryCreated()
             db.expenseCategoryEntityDao.insertExpenseCategory(
                 expenseCategoryEntity = expenseCategory.toEntity())
+        }
+    }
+
+    override suspend fun getExpenseCategoryById(expenseCategoryId: String): ExpenseCategoryEntity? {
+        return withContext(ioDispatcher){
+            db.expenseCategoryEntityDao.getExpenseCategoryById(expenseCategoryId = expenseCategoryId)
         }
     }
 

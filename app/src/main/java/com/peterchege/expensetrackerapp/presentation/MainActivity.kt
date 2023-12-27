@@ -18,49 +18,61 @@ package com.peterchege.expensetrackerapp.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.core.view.WindowCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.metrics.performance.JankStats
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.presentation.navigation.AppNavigation
 import com.peterchege.expensetrackerapp.presentation.theme.ExpenseTrackerAppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var lazyStats: dagger.Lazy<JankStats>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         setContent {
             val viewModel: MainViewModel = hiltViewModel()
-            val theme = viewModel.theme
-                .collectAsStateWithLifecycle(
-                    initialValue = Constants.DARK_MODE,
-                    context = Dispatchers.Main.immediate
-                )
-            val isInDarkMode = theme.value == Constants.DARK_MODE
+            val theme by viewModel.theme.collectAsStateWithLifecycle()
+            val shouldShowOnboarding by viewModel.shouldShowOnboarding.collectAsStateWithLifecycle()
+            val isInDarkMode = theme == Constants.DARK_MODE
+
             ExpenseTrackerAppTheme(
                 darkTheme = isInDarkMode
             ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     val navHostController = rememberNavController()
-                    AppNavigation(navHostController = navHostController)
-
+                    AppNavigation(
+                        navHostController = navHostController,
+                        shouldShowOnBoarding = shouldShowOnboarding
+                    )
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lazyStats.get().isTrackingEnabled = true
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        lazyStats.get().isTrackingEnabled = false
     }
 }

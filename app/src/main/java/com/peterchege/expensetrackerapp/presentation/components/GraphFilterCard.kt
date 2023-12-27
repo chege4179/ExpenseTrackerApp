@@ -19,8 +19,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,7 +50,7 @@ fun GraphFilterCard(
                 modifier = modifier
                     .border(
                         width = 1.dp,
-                        color = MaterialTheme.colors.primaryVariant,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         shape = RoundedCornerShape(5.dp),
                     )
                     .padding(6.dp)
@@ -60,7 +60,7 @@ fun GraphFilterCard(
                     text = filterName,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 14.sp,
-                    style = TextStyle(color = MaterialTheme.colors.primary)
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
                 )
             }
         }else{
@@ -75,7 +75,7 @@ fun GraphFilterCard(
                     text = filterName,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 14.sp,
-                    style = TextStyle(color = MaterialTheme.colors.primary)
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
                 )
             }
         }

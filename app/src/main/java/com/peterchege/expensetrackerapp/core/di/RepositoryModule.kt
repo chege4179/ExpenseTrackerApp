@@ -15,6 +15,7 @@
  */
 package com.peterchege.expensetrackerapp.core.di
 
+import com.peterchege.expensetrackerapp.core.analytics.analytics.AnalyticsHelper
 import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.data.ExpenseCategoryRepositoryImpl
 import com.peterchege.expensetrackerapp.data.ExpenseRepositoryImpl
@@ -41,11 +42,13 @@ object RepositoryModule {
     @Singleton
     fun provideExpenseCategoryRepository(
         database: ExpenseTrackerAppDatabase,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+        analyticsHelper: AnalyticsHelper,
     ): ExpenseCategoryRepository {
         return ExpenseCategoryRepositoryImpl(
             db = database,
-            ioDispatcher = ioDispatcher
+            ioDispatcher = ioDispatcher,
+            analyticsHelper = analyticsHelper
         )
     }
 
@@ -53,11 +56,13 @@ object RepositoryModule {
     @Singleton
     fun provideExpenseRepository(
         database: ExpenseTrackerAppDatabase,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+        analyticsHelper: AnalyticsHelper,
     ): ExpenseRepository {
         return ExpenseRepositoryImpl(
             db = database,
-            ioDispatcher = ioDispatcher
+            ioDispatcher = ioDispatcher,
+            analyticsHelper = analyticsHelper
         )
     }
 
@@ -65,11 +70,13 @@ object RepositoryModule {
     @Singleton
     fun provideTransactionCategoryRepository(
         database: ExpenseTrackerAppDatabase,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+        analyticsHelper: AnalyticsHelper,
     ): TransactionCategoryRepository {
         return TransactionCategoryRepositoryImpl(
             db = database,
-            ioDispatcher = ioDispatcher
+            ioDispatcher = ioDispatcher,
+            analyticsHelper = analyticsHelper
         )
     }
 
@@ -77,11 +84,13 @@ object RepositoryModule {
     @Singleton
     fun provideTransactionRepository(
         database: ExpenseTrackerAppDatabase,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+        analyticsHelper: AnalyticsHelper,
     ): TransactionRepository {
         return TransactionRepositoryImpl(
             db = database,
-            ioDispatcher = ioDispatcher
+            ioDispatcher = ioDispatcher,
+            analyticsHelper = analyticsHelper
         )
     }
 
@@ -89,11 +98,13 @@ object RepositoryModule {
     @Singleton
     fun provideIncomeRepository(
         database: ExpenseTrackerAppDatabase,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+        analyticsHelper: AnalyticsHelper,
     ): IncomeRepository {
         return IncomeRepositoryImpl(
             db = database,
-            ioDispatcher = ioDispatcher
+            ioDispatcher = ioDispatcher,
+            analyticsHelper = analyticsHelper
         )
     }
 }

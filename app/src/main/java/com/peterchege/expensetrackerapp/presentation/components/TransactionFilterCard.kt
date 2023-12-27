@@ -23,8 +23,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,18 +42,18 @@ fun TransactionFilterCard(
 
 ) {
     val currentBackgroundColor = if (isActive)
-        MaterialTheme.colors.surface
+        MaterialTheme.colorScheme.surface
     else
-        MaterialTheme.colors.background
+        MaterialTheme.colorScheme.background
     Box(
         modifier = Modifier
             .padding(6.dp)
             .border(
                 width = 1.dp,
                 color = if (isActive)
-                    MaterialTheme.colors.surface
+                    MaterialTheme.colorScheme.surface
                 else
-                    MaterialTheme.colors.primaryVariant,
+                    MaterialTheme.colorScheme.onPrimary,
                 shape = RoundedCornerShape(5.dp),
             )
             .clickable {
@@ -67,9 +67,9 @@ fun TransactionFilterCard(
                 .border(
                     width = 1.dp,
                     color = if (isActive)
-                        MaterialTheme.colors.surface
+                        MaterialTheme.colorScheme.surface
                     else
-                        MaterialTheme.colors.primaryVariant,
+                        MaterialTheme.colorScheme.onPrimary,
                     shape = RoundedCornerShape(5.dp),
                 )
                 .background(color = currentBackgroundColor)
@@ -81,7 +81,7 @@ fun TransactionFilterCard(
                 text = filterName,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp,
-                style = TextStyle(color = MaterialTheme.colors.primary)
+                style = TextStyle(color = MaterialTheme.colorScheme.primary)
             )
         }
     }

@@ -15,9 +15,12 @@
  */
 package com.peterchege.expensetrackerapp.data
 
+import androidx.datastore.preferences.core.edit
 import com.peterchege.expensetrackerapp.core.datastore.preferences.UserPreferences
+import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.domain.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserPreferenceRepositoryImpl @Inject constructor(
@@ -33,4 +36,11 @@ class UserPreferenceRepositoryImpl @Inject constructor(
         return preferences.getTheme()
     }
 
+    override suspend fun setShouldShowOnboarding(){
+        preferences.setShouldShowOnboarding()
+    }
+
+    override fun getShouldShowOnBoarding(): Flow<Boolean> {
+        return preferences.getShouldShowOnBoarding()
+    }
 }

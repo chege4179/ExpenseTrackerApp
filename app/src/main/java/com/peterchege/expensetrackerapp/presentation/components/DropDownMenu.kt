@@ -15,28 +15,14 @@
  */
 package com.peterchege.expensetrackerapp.presentation.components
 
-import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import com.peterchege.expensetrackerapp.core.util.TestTags
 
 
@@ -75,7 +61,7 @@ fun MenuSample(
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComposeMenu(
     menuItems: List<String>,
@@ -93,9 +79,10 @@ fun ComposeMenu(
         }
     ) {
         // text field
-        TextField(
+        OutlinedTextField(
             value = if (menuItems.isEmpty()) "" else menuItems[selectedIndex],
             onValueChange = {},
+            modifier = Modifier.menuAnchor(),
             readOnly = true,
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
@@ -103,7 +90,7 @@ fun ComposeMenu(
                 )
             },
             textStyle = TextStyle(
-                color = MaterialTheme.colors.primary
+                color = MaterialTheme.colorScheme.primary
             )
         )
 
@@ -115,14 +102,14 @@ fun ComposeMenu(
             // this is a column scope
             // all the items are added vertically
             menuItems.forEachIndexed { index, selectedOption ->
-                // menu item
                 DropdownMenuItem(
+                    text ={
+                        Text(text = selectedOption)
+                    },
                     onClick = {
                         onMenuItemclick(index)
                     }
-                ) {
-                    Text(text = selectedOption)
-                }
+                )
             }
         }
     }

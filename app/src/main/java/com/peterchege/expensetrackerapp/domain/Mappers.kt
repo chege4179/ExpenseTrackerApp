@@ -85,7 +85,7 @@ fun TransactionCategory.toEntity(): TransactionCategoryEntity {
     return TransactionCategoryEntity(
         transactionCategoryId = transactionCategoryId,
         transactionCategoryName = transactionCategoryName,
-        transactionCategoryCreatedAt = transactionCategoryCreatedAt,
+
 
         )
 }
@@ -94,7 +94,7 @@ fun TransactionCategoryEntity.toExternalModel(): TransactionCategory {
     return TransactionCategory(
         transactionCategoryId = transactionCategoryId,
         transactionCategoryName = transactionCategoryName,
-        transactionCategoryCreatedAt = transactionCategoryCreatedAt,
+
 
         )
 }
@@ -103,7 +103,7 @@ fun ExpenseCategory.toEntity(): ExpenseCategoryEntity {
     return ExpenseCategoryEntity(
         expenseCategoryId = expenseCategoryId,
         expenseCategoryName = expenseCategoryName,
-        expenseCategoryCreatedAt = expenseCategoryCreatedAt,
+
 
         )
 }
@@ -112,8 +112,6 @@ fun ExpenseCategoryEntity.toExternalModel(): ExpenseCategory {
     return ExpenseCategory(
         expenseCategoryId = expenseCategoryId,
         expenseCategoryName = expenseCategoryName,
-        expenseCategoryCreatedAt = expenseCategoryCreatedAt,
-
         )
 }
 

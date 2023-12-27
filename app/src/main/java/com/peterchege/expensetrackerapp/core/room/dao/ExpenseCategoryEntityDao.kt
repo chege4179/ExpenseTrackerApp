@@ -29,6 +29,9 @@ interface ExpenseCategoryEntityDao {
     @Query("SELECT * FROM ExpenseCategory")
     fun getExpenseCategories(): Flow<List<ExpenseCategoryEntity>>
 
+    @Query("SELECT * FROM ExpenseCategory WHERE expenseCategoryId =:expenseCategoryId")
+    suspend fun getExpenseCategoryById(expenseCategoryId:String):ExpenseCategoryEntity?
+
     @Query("SELECT * FROM ExpenseCategory WHERE expenseCategoryName =:name")
     suspend fun getExpenseCategoryByName(name:String):ExpenseCategoryEntity?
 

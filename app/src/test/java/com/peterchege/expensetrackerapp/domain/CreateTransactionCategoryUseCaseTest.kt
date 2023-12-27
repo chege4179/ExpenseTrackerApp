@@ -44,7 +44,6 @@ class CreateTransactionCategoryUseCaseTest {
             val transactionCategory = TransactionCategory(
                 transactionCategoryName = "Test Category",
                 transactionCategoryId = UUID.randomUUID().toString(),
-                transactionCategoryCreatedAt = Date()
             )
             coEvery { repository.getTransactionCategoryByName(any()) } returns null
             coEvery { repository.saveTransactionCategory(any()) } just Runs
@@ -65,7 +64,7 @@ class CreateTransactionCategoryUseCaseTest {
             val transactionCategory = TransactionCategoryEntity(
                 transactionCategoryName = "Test Category",
                 transactionCategoryId = UUID.randomUUID().toString(),
-                transactionCategoryCreatedAt = Date()
+
             )
             coEvery { repository.getTransactionCategoryByName(any()) } returns transactionCategory
 
@@ -85,7 +84,7 @@ class CreateTransactionCategoryUseCaseTest {
         val transactionCategory = TransactionCategory(
             transactionCategoryName = "Test Category",
             transactionCategoryId = UUID.randomUUID().toString(),
-            transactionCategoryCreatedAt = Date()
+
         )
         val errorMessage = "Test error message"
         coEvery { repository.getTransactionCategoryByName(any()) } throws IOException(errorMessage)

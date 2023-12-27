@@ -29,7 +29,7 @@ import com.peterchege.expensetrackerapp.core.room.entities.ExpenseEntity
 import com.peterchege.expensetrackerapp.core.room.entities.IncomeEntity
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionCategoryEntity
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity
-import com.peterchege.expensetrackerapp.core.room.type_converters.DateConverter
+import com.peterchege.expensetrackerapp.core.room.converters.DateConverter
 
 @TypeConverters(DateConverter::class)
 @Database(

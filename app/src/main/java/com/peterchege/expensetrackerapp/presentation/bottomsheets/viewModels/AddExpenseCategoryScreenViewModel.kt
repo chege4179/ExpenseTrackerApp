@@ -69,7 +69,7 @@ class AddExpenseCategoryScreenViewModel @Inject constructor(
                 val expenseCategory = ExpenseCategory(
                     expenseCategoryName = _formState.value.expenseCategoryName,
                     expenseCategoryId = UUID.randomUUID().toString(),
-                    expenseCategoryCreatedAt = Date(),
+
 
                     )
                 createExpenseCategoryUseCase(expenseCategory = expenseCategory).onEach { result ->

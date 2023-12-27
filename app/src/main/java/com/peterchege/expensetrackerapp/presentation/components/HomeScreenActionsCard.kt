@@ -26,10 +26,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -112,7 +112,7 @@ fun HomeScreenActionsCard(
         IconButton(
             modifier = Modifier
                 .clip(CircleShape)
-                .background(color = MaterialTheme.colors.surface)
+                .background(color = MaterialTheme.colorScheme.surface)
             ,
             onClick = { onClick() }) {
             Icon(
@@ -127,7 +127,7 @@ fun HomeScreenActionsCard(
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
             style = TextStyle(
-                color = MaterialTheme.colors.primary,
+                color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
 
             )

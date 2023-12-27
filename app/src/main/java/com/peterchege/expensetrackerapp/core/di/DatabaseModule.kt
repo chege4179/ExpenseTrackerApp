@@ -35,6 +35,9 @@ object DatabaseModule {
             app,
             ExpenseTrackerAppDatabase::class.java,
             Constants.DATABASE_NAME
-        ).build()
+        )
+//            .createFromAsset(databaseFilePath = "expensetracker.db")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }

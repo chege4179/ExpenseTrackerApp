@@ -24,5 +24,5 @@ data class ExpenseCategoryEntity(
     @PrimaryKey
     val expenseCategoryId:String,
     val expenseCategoryName:String,
-    val expenseCategoryCreatedAt:Date,
+
 )

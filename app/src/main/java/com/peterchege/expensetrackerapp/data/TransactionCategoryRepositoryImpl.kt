@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.data
 
+import com.peterchege.expensetrackerapp.core.analytics.analytics.AnalyticsHelper
+import com.peterchege.expensetrackerapp.core.analytics.analytics.logNewTransactionCategoryCreated
 import com.peterchege.expensetrackerapp.core.di.IoDispatcher
 import com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase
 import com.peterchege.expensetrackerapp.core.room.entities.TransactionCategoryEntity
@@ -30,8 +32,10 @@ import javax.inject.Inject
 class TransactionCategoryRepositoryImpl @Inject constructor(
     private val db:ExpenseTrackerAppDatabase,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val analyticsHelper: AnalyticsHelper,
 ) :TransactionCategoryRepository{
     override suspend fun saveTransactionCategory(transactionCategory: TransactionCategory) {
+        analyticsHelper.logNewTransactionCategoryCreated()
         withContext(ioDispatcher){
             db.transactionCategoryEntityDao.insertTransactionCategory(
                 transactionCategoryEntity = transactionCategory.toEntity())

@@ -20,7 +20,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.runtime.Composable
@@ -51,11 +51,10 @@ fun TransactionCard(
                 onTransactionNavigate(transaction.transactionId)
             },
         shape = RoundedCornerShape(15),
-        elevation = 3.dp
     ) {
         Row(
             modifier = Modifier
-                .background(color = MaterialTheme.colors.onBackground)
+                .background(color = MaterialTheme.colorScheme.onBackground)
                 .fillMaxWidth()
                 .fillMaxHeight(),
             horizontalArrangement = Arrangement.Start,
@@ -91,12 +90,12 @@ fun TransactionCard(
                     Text(
                         text = transaction.transactionName,
                         fontWeight = FontWeight.Bold,
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
 
                     )
                     Text(
                         text = transaction.transactionCreatedOn,
-                        style = TextStyle(color = MaterialTheme.colors.primary)
+                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
 
                 }
@@ -104,7 +103,7 @@ fun TransactionCard(
                     text = "KES ${transaction.transactionAmount} /=",
                     textAlign = TextAlign.Start,
                     fontWeight = FontWeight.Bold,
-                    style = TextStyle(color = MaterialTheme.colors.primary)
+                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
                 )
             }
             IconButton(onClick = {
