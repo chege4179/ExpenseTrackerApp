@@ -99,7 +99,7 @@ android {
     testOptions {
         managedDevices {
             devices {
-                maybeCreate<ManagedVirtualDevice>(name = "pixel4api30").apply {
+                maybeCreate<ManagedVirtualDevice>(name = "pixel4api33").apply {
                     device = "Pixel 4"
                     apiLevel = 33
                     systemImageSource = "google"
@@ -107,6 +107,10 @@ android {
             }
         }
     }
+}
+baselineProfile {
+    saveInSrc = true
+
 }
 
 dependencies {

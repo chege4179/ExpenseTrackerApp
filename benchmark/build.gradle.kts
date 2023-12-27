@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.ManagedVirtualDevice
+
 plugins {
     id("com.android.test")
     id("org.jetbrains.kotlin.android")
@@ -34,10 +36,28 @@ android {
             matchingFallbacks += listOf("release")
         }
     }
+    testOptions {
+        managedDevices {
+            devices {
+                maybeCreate<ManagedVirtualDevice>(name = "pixel4api33").apply {
+                    device = "Pixel 4"
+                    apiLevel = 33
+                    systemImageSource = "google"
+                }
+            }
+        }
+    }
 
     targetProjectPath = ":app"
     experimentalProperties["android.experimental.self-instrumenting"] = true
 }
+
+baselineProfile {
+
+    useConnectedDevices = false
+    managedDevices += "pixel4Api33"
+}
+
 
 dependencies {
     implementation("androidx.test.ext:junit:1.1.5")

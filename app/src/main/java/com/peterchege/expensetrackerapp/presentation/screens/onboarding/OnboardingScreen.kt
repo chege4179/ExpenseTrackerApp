@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -54,9 +55,11 @@ fun OnboardingScreen(
                     0 -> {
                         pagerState.scrollToPage(1)
                     }
+
                     1 -> {
                         pagerState.scrollToPage(2)
                     }
+
                     2 -> {
                         viewModel.finishOnboarding(navigateHome)
 
@@ -70,9 +73,11 @@ fun OnboardingScreen(
                 when (pagerState.currentPage) {
                     0 -> {
                     }
+
                     1 -> {
                         pagerState.scrollToPage(0)
                     }
+
                     2 -> {
                         pagerState.scrollToPage(1)
 
@@ -99,6 +104,7 @@ fun OnboardingScreenContent(
 ) {
     Column(
         modifier = Modifier
+            .testTag("onboarding")
             .fillMaxSize()
     ) {
         HorizontalPager(state = pagerState) { page ->
@@ -149,7 +155,9 @@ fun OnboardingScreenContent(
             }
 
             Button(
-                modifier = Modifier.width(180.dp),
+                modifier = Modifier
+                    .width(180.dp)
+                    .testTag( "next"),
                 onClick = { proceed() },
                 colors = ButtonColors(
                     contentColor = MaterialTheme.colorScheme.background,
