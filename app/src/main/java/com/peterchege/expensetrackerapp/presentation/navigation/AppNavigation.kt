@@ -44,7 +44,13 @@ fun AppNavigation(
     ) {
 
         composable(Screens.ONBOARDING_SCREEN) {
-            OnboardingScreen()
+            OnboardingScreen(
+                navigateHome = {
+                    navHostController.navigate(Screens.BOTTOM_TAB_NAVIGATION){
+
+                    }
+                }
+            )
         }
         composable(route = Screens.BOTTOM_TAB_NAVIGATION) {
             BottomNavigationWrapper(navHostController = navHostController)

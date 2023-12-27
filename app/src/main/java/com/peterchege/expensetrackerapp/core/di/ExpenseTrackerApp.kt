@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class ExpenseTrackerApp :Application(){
-    lateinit var scheduler: AndroidAlarmScheduler
+//    lateinit var scheduler: AndroidAlarmScheduler
 
     @Inject
     lateinit var profileVerifierLogger: ProfileVerifierLogger
@@ -39,8 +39,8 @@ class ExpenseTrackerApp :Application(){
         super.onCreate()
         profileVerifierLogger()
         initTimber()
-        scheduler = AndroidAlarmScheduler(this)
-        scheduler.schedule(AlarmItem(LocalDateTime.now(),""))
+//        scheduler = AndroidAlarmScheduler(this)
+//        scheduler.schedule(AlarmItem(LocalDateTime.now(),""))
     }
 }
 

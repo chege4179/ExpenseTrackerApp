@@ -28,6 +28,7 @@ class AndroidAlarmScheduler(
         set(Calendar.HOUR_OF_DAY, 21) // Set the hour to 21 (9 PM)
         set(Calendar.MINUTE, 0) // Set the minute to 0
     }
+
     @SuppressLint("ScheduleExactAlarm")
     @RequiresApi(Build.VERSION_CODES.M)
     override fun schedule(item: AlarmItem) {
@@ -58,7 +59,6 @@ class AndroidAlarmScheduler(
             )
         )
     }
-
 
 
 }
