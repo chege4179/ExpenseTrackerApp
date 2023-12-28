@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.view.ContentInfoCompat.Flags
 import com.peterchege.expensetrackerapp.R
 import com.peterchege.expensetrackerapp.presentation.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +30,7 @@ class AlarmReceiver : BroadcastReceiver() {
         // Create an explicit intent for the notification
         val notificationIntent = Intent(context, MainActivity::class.java)
         notificationIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0)
+        val pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
 
         // Create a notification
         val builder = NotificationCompat.Builder(context, channelId)

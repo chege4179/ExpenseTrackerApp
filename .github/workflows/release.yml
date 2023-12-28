@@ -32,13 +32,13 @@ jobs:
             ${{ runner.os }}-gradle-    
 
       - name: Build Release App
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleStagingRelease
 
       - name: Upload a Build Artifact (APK)
         uses: actions/upload-artifact@v2.2.4
         with:
           name: app
-          path: app/build/outputs/apk/release/app-release.apk
+          path: app/build/outputs/apk/staging/release/app-staging-release.apk
 
       - name: Upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -46,4 +46,4 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: trusted-testers
-          file: app/build/outputs/apk/release/app-release.apk
+          file: app/build/outputs/apk/staging/release/app-staging-release.apk

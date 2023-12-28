@@ -49,7 +49,7 @@ android {
         }
     }
     signingConfigs {
-        create("release") {
+        create("stagingRelease") {
             storeFile = file("expense_tracker_app.jks")
             keyAlias = "expense_tracker_app"
             keyPassword = keyPasswordString
@@ -60,7 +60,6 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("debug")
             proguardFiles (getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
@@ -73,6 +72,18 @@ android {
 
         }
     }
+    flavorDimensions += "version"
+    productFlavors {
+        create("staging") {
+            signingConfig = signingConfigs.getByName("stagingRelease")
+            dimension = "version"
+        }
+        create("production") {
+            dimension = "version"
+        }
+    }
+
+
     ksp {
         arg(k ="room.schemaLocation", v= "$projectDir/schemas")
     }
