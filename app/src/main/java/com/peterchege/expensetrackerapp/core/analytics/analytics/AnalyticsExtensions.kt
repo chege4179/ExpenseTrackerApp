@@ -1,5 +1,6 @@
 package com.peterchege.expensetrackerapp.core.analytics.analytics
 
+import androidx.metrics.performance.FrameData
 import com.peterchege.expensetrackerapp.core.analytics.analytics.AnalyticsEvent.Param
 fun AnalyticsHelper.logNewTransactionCategoryCreated() {
     logEvent(
@@ -52,5 +53,18 @@ fun AnalyticsHelper.logNewIncome() {
                 Param(key = "new_income",value = "new_income")
             ),
         ),
+    )
+}
+
+fun AnalyticsHelper.logJankyFrames(frameData: FrameData){
+    logEvent(
+        AnalyticsEvent(
+            type ="jank",
+            extras = listOf(
+                Param(key = "frameStartNanos",value = frameData.frameStartNanos.toString()),
+                Param(key = "frameDurationUiNanos",value = frameData.frameDurationUiNanos.toString()),
+                Param(key = "states",value = frameData.states[0].value),
+            )
+        )
     )
 }

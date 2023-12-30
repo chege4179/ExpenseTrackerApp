@@ -315,8 +315,8 @@ fun AddTransactionBottomSheetContent(
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonColors(
-                    contentColor = MaterialTheme.colorScheme.background,
-                    containerColor = MaterialTheme.colorScheme.onBackground,
+                    contentColor = MaterialTheme.colorScheme.onBackground,
+                    containerColor = MaterialTheme.colorScheme.background,
                     disabledContainerColor = MaterialTheme.colorScheme.primary,
                     disabledContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),

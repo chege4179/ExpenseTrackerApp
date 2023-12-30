@@ -20,6 +20,8 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ReceiptLong
 import androidx.compose.material.icons.filled.Add
@@ -59,6 +61,7 @@ import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import com.peterchege.expensetrackerapp.R
+import com.peterchege.expensetrackerapp.core.util.rememberImeState
 
 @Composable
 fun HomeScreen(
@@ -105,8 +108,11 @@ fun HomeScreenContent(
 
     ) {
     var showBottomSheet by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
     val scope = rememberCoroutineScope()
+
     LaunchedEffect(key1 = true) {
         eventFlow.collectLatest { event ->
             when (event) {
@@ -331,6 +337,9 @@ fun HomeScreenContent(
         }
         if (showBottomSheet) {
             ModalBottomSheet(
+                modifier = Modifier
+                    .fillMaxHeight(0.8f)
+                    .fillMaxWidth(),
                 containerColor = MaterialTheme.colorScheme.onBackground,
                 onDismissRequest = {
                     showBottomSheet = false
@@ -370,7 +379,6 @@ fun HomeScreenContent(
             }
         }
     }
-
 }
 
 
