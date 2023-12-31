@@ -122,7 +122,21 @@ fun SearchScreenContent(
                     scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
                     navigationIconContentColor = MaterialTheme.colorScheme.background,
                     actionIconContentColor = MaterialTheme.colorScheme.background,
-                )
+                ),
+                actions = {
+                    IconButton(
+                        onClick = {
+                            searchTransactions()
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Search,
+                            contentDescription = "Search Transactions",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+
+                    }
+                }
             )
         },
     ) { paddingValues ->
@@ -190,7 +204,7 @@ fun SearchScreenContent(
                                     .map { it.transactionCategoryName }
                                     .indexOf(uiState.transactionCategory.transactionCategoryName)
                         MenuSample(
-                            menuWidth = 150,
+                            menuWidth = 190,
                             selectedIndex = currentIndex,
                             menuItems = transactionCategories.map { transactionCategory -> transactionCategory.transactionCategoryName },
                             onChangeSelectedIndex = {
@@ -200,19 +214,6 @@ fun SearchScreenContent(
 
                             }
                         )
-
-                    }
-                    IconButton(
-                        onClick = {
-                            searchTransactions()
-                        },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Search,
-                            contentDescription = "Search Transactions",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-
                     }
                 }
             }

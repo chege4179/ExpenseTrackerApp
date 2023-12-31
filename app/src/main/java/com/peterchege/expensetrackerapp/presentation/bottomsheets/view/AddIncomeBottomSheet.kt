@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -58,12 +59,12 @@ import kotlinx.coroutines.flow.SharedFlow
 
 @Preview
 @Composable
-fun AddIncomeBottomSheetPreview(){
+fun AddIncomeBottomSheetPreview() {
     AddIncomeBottomSheetContent(
         formState = AddIncomeFormState(),
-        onChangeIncomeName = {  },
-        onChangeIncomeAmount = {  },
-        addIncome = {  }
+        onChangeIncomeName = { },
+        onChangeIncomeAmount = { },
+        addIncome = { }
     )
 }
 
@@ -103,6 +104,7 @@ fun AddIncomeBottomSheetContent(
         modifier = Modifier
             .fillMaxWidth()
             .height(400.dp)
+            .testTag("addIncomeBottomSheet")
     ) {
         Column(
             modifier = Modifier
@@ -134,7 +136,9 @@ fun AddIncomeBottomSheetContent(
 
                     onChangeIncomeName(it)
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("incomeName"),
                 placeholder = {
                     Text(
                         text = "Income Name",
@@ -154,7 +158,9 @@ fun AddIncomeBottomSheetContent(
                 onValueChange = {
                     onChangeIncomeAmount(it)
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("incomeAmount"),
                 placeholder = {
                     Text(
                         text = "Income Amount",
@@ -169,7 +175,9 @@ fun AddIncomeBottomSheetContent(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(50.dp)
+                    .testTag("submitIncome")
+                ,
                 colors = ButtonColors(
                     contentColor = MaterialTheme.colorScheme.onBackground,
                     containerColor = MaterialTheme.colorScheme.background,

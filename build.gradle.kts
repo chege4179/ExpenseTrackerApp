@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 plugins {
-    id ("com.android.application") version "8.1.0" apply false
-    id ("com.android.library") version "8.1.0" apply false
+    id ("com.android.application") version "8.2.0" apply false
+    id ("com.android.library") version "8.2.0" apply false
     id ( "org.jetbrains.kotlin.android") version "1.9.20" apply false
     id("com.diffplug.spotless") version "5.3.0"
     id("org.jetbrains.kotlinx.kover") version "0.7.0-Beta"
@@ -25,7 +25,7 @@ plugins {
     id("com.google.gms.google-services") version "4.4.0" apply false
     id("com.google.firebase.crashlytics") version "2.9.9" apply false
     id("com.google.firebase.firebase-perf") version "1.4.2" apply false
-    id("com.android.test") version "8.1.0" apply false
+    id("com.android.test") version "8.2.0" apply false
     id("androidx.baselineprofile") version "1.2.1" apply false
     id("io.gitlab.arturbosch.detekt") version "1.23.3"
 }

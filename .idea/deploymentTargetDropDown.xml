@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="OnboardingBaselineProfileGenerator">
+        <State />
+      </entry>
       <entry key="StartUpBaselineProfileGenerator">
         <State />
       </entry>
@@ -16,15 +19,15 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\Administrator\.android\avd\Pixel_7_Pro_API_31.avd" />
+                  <value value="C:\Users\Administrator\.android\avd\Pixel_4_API_33.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2023-12-25T16:03:38.495178900Z" />
+          <timeTargetWasSelectedWithDropDown value="2023-12-30T20:38:41.224466400Z" />
         </State>
       </entry>
-      <entry key="generate()">
+      <entry key="generate() (1)">
         <State />
       </entry>
     </value>

@@ -205,7 +205,10 @@ fun HomeScreenContent(
                         }
                         item {
                             Row(
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .testTag("home:menuOptions")
+                                ,
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {

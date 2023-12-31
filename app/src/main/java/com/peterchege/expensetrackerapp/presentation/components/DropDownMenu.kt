@@ -15,6 +15,9 @@
  */
 package com.peterchege.expensetrackerapp.presentation.components
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -24,6 +27,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.peterchege.expensetrackerapp.core.util.TestTags
+import com.peterchege.expensetrackerapp.core.util.truncate
 
 
 @Composable
@@ -80,7 +84,7 @@ fun ComposeMenu(
     ) {
         // text field
         OutlinedTextField(
-            value = if (menuItems.isEmpty()) "" else menuItems[selectedIndex],
+            value = if (menuItems.isEmpty()) "" else truncate(menuItems[selectedIndex],15),
             onValueChange = {},
             modifier = Modifier.menuAnchor(),
             readOnly = true,
@@ -96,6 +100,9 @@ fun ComposeMenu(
 
         // menu
         ExposedDropdownMenu(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.onBackground)
+                .border(BorderStroke(1.dp, MaterialTheme.colorScheme.primary)),
             expanded = menuExpandedState,
             onDismissRequest = { onDismissMenuView() }
         ) {
@@ -103,7 +110,9 @@ fun ComposeMenu(
             // all the items are added vertically
             menuItems.forEachIndexed { index, selectedOption ->
                 DropdownMenuItem(
-                    text ={
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.onBackground),
+                    text = {
                         Text(text = selectedOption)
                     },
                     onClick = {

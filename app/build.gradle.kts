@@ -15,6 +15,7 @@
  */
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import com.android.build.api.dsl.ManagedVirtualDevice
+import com.android.build.api.dsl.Packaging
 
 val keyPasswordString: String = gradleLocalProperties(rootDir).getProperty("keyPassword")
 plugins {
@@ -49,7 +50,7 @@ android {
         }
     }
     signingConfigs {
-        create("stagingRelease") {
+        create("release") {
             storeFile = file("expense_tracker_app.jks")
             keyAlias = "expense_tracker_app"
             keyPassword = keyPasswordString
@@ -58,32 +59,36 @@ android {
     }
     buildTypes {
         getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles (getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            baselineProfile.automaticGenerationDuringBuild = true
         }
         getByName("debug") {
             isDebuggable = true
         }
         create("benchmark") {
+            signingConfig = signingConfigs.getByName("debug")
             initWith(buildTypes.getByName("release"))
             matchingFallbacks += listOf("release")
-            isDebuggable = false
-
+            isMinifyEnabled = true
+            proguardFiles("baseline-profiles-rule.pro")
         }
     }
-    flavorDimensions += "version"
-    productFlavors {
-        create("staging") {
-            signingConfig = signingConfigs.getByName("stagingRelease")
-            dimension = "version"
-        }
-        create("production") {
-            dimension = "version"
-        }
-    }
+//    flavorDimensions += "version"
+//    productFlavors {
+//        create("staging") {
+//            signingConfig = signingConfigs.getByName("stagingRelease")
+//            applicationIdSuffix = ".staging"
+//            dimension = "version"
+//        }
+//        create("production") {
+//            dimension = "version"
+//        }
+//    }
 
-
+    experimentalProperties["android.experimental.self-instrumenting"] = true
     ksp {
         arg(k ="room.schemaLocation", v= "$projectDir/schemas")
     }
@@ -101,27 +106,21 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion= "1.5.4"
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            exclude("META-INF/**")
         }
     }
-    testOptions {
-        managedDevices {
-            devices {
-                maybeCreate<ManagedVirtualDevice>(name = "pixel4api33").apply {
-                    device = "Pixel 4"
-                    apiLevel = 33
-                    systemImageSource = "google"
-                }
-            }
-        }
+}
+androidComponents {
+    onVariants(selector().withBuildType("release")) {
+        // Exclude AndroidX version files
+        it.packaging.resources.excludes.add("META-INF/*.version")
     }
 }
 baselineProfile {
     saveInSrc = true
-
+    automaticGenerationDuringBuild = false
 }
 
 dependencies {

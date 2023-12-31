@@ -23,13 +23,13 @@ class OnboardingBaselineProfileGenerator {
 
     @Test
     fun generate() = baselineProfileRule.collect(
-        Constants.PACKAGE_NAME,
+        packageName = Constants.PACKAGE_NAME,
         includeInStartupProfile = true,
         profileBlock = {
             pressHome()
             startActivityAndWait()
             device.wait(Until.hasObject(By.res("onboarding")),5000)
-//            goThroughOnboardingProcess()
+            goThroughOnboardingProcess()
         },
     )
 }

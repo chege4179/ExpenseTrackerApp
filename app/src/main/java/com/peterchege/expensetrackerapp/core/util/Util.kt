@@ -94,3 +94,11 @@ fun convertTimeMillisToLocalDate(timeMillis: Long): LocalDate {
     // Convert the Instant to a LocalDate in the specified time zone
     return instant.atZone(zoneId).toLocalDate()
 }
+
+fun truncate(str:String, n:Int):String {
+    if (str.length > n){
+        return str.substring(0, n - 1) + "...."
+    }else{
+        return str
+    }
+}

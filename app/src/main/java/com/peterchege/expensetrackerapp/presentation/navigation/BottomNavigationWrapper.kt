@@ -31,8 +31,11 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -135,12 +138,14 @@ fun BottomNavBar(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun BottomNavigation(
     navController: NavHostController,
     navHostController: NavHostController
 ) {
     NavHost(
+
         navController = navController,
         startDestination = Screens.HOME_SCREEN
     ){

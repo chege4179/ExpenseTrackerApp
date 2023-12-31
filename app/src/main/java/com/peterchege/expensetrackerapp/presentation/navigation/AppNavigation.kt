@@ -17,6 +17,10 @@ package com.peterchege.expensetrackerapp.presentation.navigation
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -31,7 +35,7 @@ import com.peterchege.expensetrackerapp.presentation.screens.onboarding.Onboardi
 import com.peterchege.expensetrackerapp.presentation.screens.transactions.AllTransactionsScreen
 import com.peterchege.expensetrackerapp.presentation.screens.transaction.TransactionScreen
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun AppNavigation(
     navHostController: NavHostController,
@@ -39,6 +43,9 @@ fun AppNavigation(
 ) {
     NavigationTrackingSideEffect(navController = navHostController)
     NavHost(
+        modifier = Modifier.semantics {
+            testTagsAsResourceId = true
+        },
         navController = navHostController,
         startDestination = if (shouldShowOnBoarding) Screens.ONBOARDING_SCREEN else Screens.BOTTOM_TAB_NAVIGATION
     ) {

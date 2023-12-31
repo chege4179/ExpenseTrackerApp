@@ -175,7 +175,7 @@ fun AddTransactionBottomSheetContent(
                     )
                 )
                 Spacer(modifier = Modifier.size(16.dp))
-                var isExpanded = remember { mutableStateOf(false) }
+
                 val currentIndex =
                     if (formState.transactionCategory == null) 0
                     else
@@ -183,61 +183,16 @@ fun AddTransactionBottomSheetContent(
                             .map { it.transactionCategoryName }
                             .indexOf(formState.transactionCategory.transactionCategoryName)
 
-                ExposedDropdownMenuBox(
-                    expanded = isExpanded.value,
-                    onExpandedChange = {
-                        isExpanded.value = it
+
+                MenuSample(
+                    menuWidth = 300,
+                    selectedIndex = currentIndex,
+                    menuItems = transactionCategories.map { it.transactionCategoryName },
+                    onChangeSelectedIndex = {
+                        val selectedTransactionCategory = transactionCategories[it]
+                        onChangeTransactionCategory(selectedTransactionCategory)
                     }
-                ) {
-                    // text field
-                    OutlinedTextField(
-                        value = if (transactionCategories.isEmpty()) "" else transactionCategories[currentIndex].transactionCategoryName,
-                        onValueChange = {},
-                        modifier = Modifier.menuAnchor(),
-                        readOnly = true,
-                        trailingIcon = {
-                            ExposedDropdownMenuDefaults.TrailingIcon(
-                                expanded = isExpanded.value
-                            )
-                        },
-                        textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    )
-
-                    // menu
-                    ExposedDropdownMenu(
-                        scrollState = rememberScrollState(),
-                        expanded = isExpanded.value,
-                        onDismissRequest = { isExpanded.value = false }
-                    ) {
-                        transactionCategories.forEachIndexed { index, selectedOption ->
-                            DropdownMenuItem(
-                                text ={
-                                    Text(
-                                        text = selectedOption.transactionCategoryName,
-                                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
-                                    )
-                                },
-                                onClick = {
-                                    val selectedTransactionCategory = transactionCategories[index]
-                                    onChangeTransactionCategory(selectedTransactionCategory)
-                                },
-                            )
-                        }
-                    }
-                }
-
-
-//                MenuSample(
-//                    menuWidth = 300,
-//                    selectedIndex = currentIndex,
-//                    menuItems = transactionCategories.map { it.transactionCategoryName },
-//                    onChangeSelectedIndex = {
-//                        val selectedTransactionCategory = transactionCategories[it]
-//                        onChangeTransactionCategory(selectedTransactionCategory)
-//                    }
-//                )
+                )
             }
             Spacer(modifier = Modifier.size(16.dp))
             Row(

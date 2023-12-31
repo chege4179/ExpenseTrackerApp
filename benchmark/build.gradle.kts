@@ -36,15 +36,12 @@ android {
             matchingFallbacks += listOf("release")
         }
     }
-    testOptions {
-        managedDevices {
-            devices {
-                maybeCreate<ManagedVirtualDevice>(name = "pixel4api33").apply {
-                    device = "Pixel 4"
-                    apiLevel = 33
-                    systemImageSource = "google"
-                }
-            }
+
+    testOptions.managedDevices.devices {
+        create<ManagedVirtualDevice>(name = "pixel4api33").apply {
+            device = "Pixel 4"
+            apiLevel = 33
+            systemImageSource = "google"
         }
     }
 
@@ -53,9 +50,9 @@ android {
 }
 
 baselineProfile {
+//    managedDevices += "pixel4Api33"
+    useConnectedDevices = true
 
-    useConnectedDevices = false
-    managedDevices += "pixel4Api33"
 }
 
 
@@ -66,8 +63,8 @@ dependencies {
     implementation("androidx.benchmark:benchmark-macro-junit4:1.2.2")
 }
 
-androidComponents {
-    beforeVariants(selector().all()) {
-        it.enable = it.buildType == "benchmark"
-    }
-}
+//androidComponents {
+//    beforeVariants(selector().all()) {
+//        it.enable = it.buildType == "benchmark"
+//    }
+//}
