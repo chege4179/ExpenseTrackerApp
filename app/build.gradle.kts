@@ -76,18 +76,6 @@ android {
             proguardFiles("baseline-profiles-rule.pro")
         }
     }
-//    flavorDimensions += "version"
-//    productFlavors {
-//        create("staging") {
-//            signingConfig = signingConfigs.getByName("stagingRelease")
-//            applicationIdSuffix = ".staging"
-//            dimension = "version"
-//        }
-//        create("production") {
-//            dimension = "version"
-//        }
-//    }
-
     experimentalProperties["android.experimental.self-instrumenting"] = true
     ksp {
         arg(k ="room.schemaLocation", v= "$projectDir/schemas")
