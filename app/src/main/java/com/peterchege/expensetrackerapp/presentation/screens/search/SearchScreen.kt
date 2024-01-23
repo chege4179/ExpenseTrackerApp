@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,15 +45,17 @@ import com.peterchege.expensetrackerapp.core.util.convertTimeMillisToLocalDate
 import com.peterchege.expensetrackerapp.core.util.getFormattedDate
 import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.toExternalModel
+import com.peterchege.expensetrackerapp.presentation.components.CustomIconButton
 import com.peterchege.expensetrackerapp.presentation.components.MenuSample
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
+import com.peterchege.expensetrackerapp.R
 
 @Composable
 fun SearchScreen(
-    navigateToTransactionScreen:(String) -> Unit,
+    navigateToTransactionScreen: (String) -> Unit,
     viewModel: SearchScreenViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
@@ -66,11 +69,12 @@ fun SearchScreen(
     SearchScreenContent(
         uiState = uiState.value,
         transactionCategories = transactionCategories,
-        searchTransactions = { viewModel.searchTransactions() },
-        onChangeTransactionCategory = { viewModel.onChangeTransactionCategory(it) },
-        onChangeTransactionStartDate = { viewModel.onChangeTransactionStartDate(it) },
-        onChangeTransactionEndDate = { viewModel.onChangeTransactionEndDate(it) },
-        navigateToTransactionScreen = navigateToTransactionScreen
+        searchTransactions = viewModel::searchTransactions,
+        onChangeTransactionCategory = viewModel::onChangeTransactionCategory,
+        onChangeTransactionStartDate = viewModel::onChangeTransactionStartDate,
+        onChangeTransactionEndDate = viewModel::onChangeTransactionEndDate,
+        navigateToTransactionScreen = navigateToTransactionScreen,
+        eventFlow = viewModel.eventFlow
     )
 
 
@@ -80,18 +84,20 @@ fun SearchScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SearchScreenContent(
-    navigateToTransactionScreen:(String) -> Unit,
+    navigateToTransactionScreen: (String) -> Unit,
     uiState: SearchScreenState,
     transactionCategories: List<TransactionCategory>,
     searchTransactions: () -> Unit,
     onChangeTransactionCategory: (TransactionCategory) -> Unit,
     onChangeTransactionStartDate: (LocalDate) -> Unit,
-    onChangeTransactionEndDate: (LocalDate) -> Unit
+    onChangeTransactionEndDate: (LocalDate) -> Unit,
+    eventFlow: SharedFlow<UiEvent>
 
 
 ) {
-
-
+    val snackbarHostState = remember { SnackbarHostState() }
+    var showBottomSheet = remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
     val state = rememberDateRangePickerState()
 
     LaunchedEffect(key1 = state.selectedEndDateMillis, key2 = state.selectedStartDateMillis) {
@@ -102,15 +108,34 @@ fun SearchScreenContent(
             onChangeTransactionEndDate(convertTimeMillisToLocalDate(it))
         }
     }
-    var showBottomSheet = remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
+
+    LaunchedEffect(key1 = true) {
+        eventFlow.collectLatest { event ->
+            when (event) {
+                is UiEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.uiText
+                    )
+                }
+
+                is UiEvent.Navigate -> {
+
+                }
+                else -> {}
+            }
+        }
+    }
+
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Search",
+                        text = stringResource(id = R.string.search),
                         style = TextStyle(color = MaterialTheme.colorScheme.primary),
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
@@ -298,10 +323,14 @@ fun SearchScreenContent(
                                 }
                             }
                             Box(modifier = Modifier.weight(0.2f)) {
-                                Icon(
+                                CustomIconButton(
                                     imageVector = Icons.Default.Done,
-                                    contentDescription = "Okk"
+                                    contentDescription = "Done ",
+                                    onClick = {
+                                        showBottomSheet.value = false
+                                    }
                                 )
+
                             }
 
                         }

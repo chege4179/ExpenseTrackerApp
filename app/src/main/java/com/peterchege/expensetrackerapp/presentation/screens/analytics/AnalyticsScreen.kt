@@ -24,16 +24,18 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.google.accompanist.pager.*
+import com.peterchege.expensetrackerapp.R
 import com.peterchege.expensetrackerapp.presentation.screens.analytics.expenses.ExpensesAnalyticsScreen
 import com.peterchege.expensetrackerapp.presentation.screens.analytics.transactions.TransactionsAnalyticsScreen
 import kotlinx.coroutines.launch
@@ -41,13 +43,16 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AnalyticsScreen() {
+fun AnalyticsScreen(
+    navigateToTransactionScreen:(String) -> Unit,
+    navigateToExpenseScreen:(String) -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Analytics",
+                        text = stringResource(id = R.string.analytics),
                         style = TextStyle(color = MaterialTheme.colorScheme.primary),
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
@@ -70,7 +75,11 @@ fun AnalyticsScreen() {
                 .background(color = MaterialTheme.colorScheme.background)
         ) {
             Tabs(pagerState = pagerState)
-            TabsContent(pagerState = pagerState)
+            TabsContent(
+                pagerState = pagerState,
+                navigateToTransactionScreen = navigateToTransactionScreen,
+                navigateToExpenseScreen = navigateToExpenseScreen
+            )
         }
     }
 }
@@ -78,25 +87,22 @@ fun AnalyticsScreen() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Tabs(pagerState: PagerState) {
-    val list = listOf("Transactions", "Expenses")
+    val list = listOf(
+        stringResource(id = R.string.transactions),
+        stringResource(id = R.string.expenses),
+    )
     val scope = rememberCoroutineScope()
 
     TabRow(
         selectedTabIndex = pagerState.currentPage,
         contentColor = MaterialTheme.colorScheme.onBackground,
         containerColor = MaterialTheme.colorScheme.onBackground,
-        divider = {
-//            TabRowDefaults.(
-//                thickness = 3.dp,
-//                color = MaterialTheme.colorScheme.onBackground
-//            )
-        },
+        divider = {  },
         indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+            SecondaryIndicator(
+                modifier = Modifier.tabIndicatorOffset(currentTabPosition = tabPositions[pagerState.currentPage]),
                 height = 2.dp,
                 color = MaterialTheme.colorScheme.primary
-
             )
         }
     ) {
@@ -121,11 +127,15 @@ fun Tabs(pagerState: PagerState) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabsContent(pagerState: PagerState) {
+fun TabsContent(
+    pagerState: PagerState,
+    navigateToTransactionScreen:(String) -> Unit,
+    navigateToExpenseScreen:(String) -> Unit,
+) {
     HorizontalPager(state = pagerState) { page ->
         when (page) {
-            0 -> TransactionsAnalyticsScreen()
-            1 -> ExpensesAnalyticsScreen()
+            0 -> TransactionsAnalyticsScreen(navigateToTransactionScreen = navigateToTransactionScreen)
+            1 -> ExpensesAnalyticsScreen(navigateToExpenseScreen = navigateToExpenseScreen)
         }
     }
 }

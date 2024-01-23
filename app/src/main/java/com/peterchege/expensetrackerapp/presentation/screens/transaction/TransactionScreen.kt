@@ -15,49 +15,65 @@
  */
 package com.peterchege.expensetrackerapp.presentation.screens.transaction
 
-import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
+import com.peterchege.expensetrackerapp.R
+import com.peterchege.expensetrackerapp.domain.models.Transaction
+import com.peterchege.expensetrackerapp.presentation.alertDialogs.ConfirmDeleteTransactionDialog
 import com.peterchege.expensetrackerapp.presentation.components.ErrorComponent
 import com.peterchege.expensetrackerapp.presentation.components.LoadingComponent
 
 @Composable
 fun TransactionScreen(
-    navController: NavController,
-    viewModel: TransactionScreenViewModel = hiltViewModel()
+    viewModel: TransactionScreenViewModel = hiltViewModel(),
+    navigateBack:() -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val deleteTransactionUiState by viewModel.deleteTransactionUiState.collectAsStateWithLifecycle()
+
 
     TransactionScreenContent(
+        deleteTransactionUiState = deleteTransactionUiState,
         uiState = uiState,
-        deleteTransaction = { viewModel.deleteTransaction() }
+        deleteTransaction = { viewModel.deleteTransaction(navigateBack) },
+        setDeleteTransaction = viewModel::setDeleteTransaction,
+        toggleDeleteTransactionVisibility = viewModel::toggleDeleteDialogVisibility
+
     )
 
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TransactionScreenContent(
+    deleteTransactionUiState: DeleteTransactionUiState,
     uiState: TransactionScreenUiState,
     deleteTransaction: () -> Unit,
+    setDeleteTransaction: (Transaction?) -> Unit,
+    toggleDeleteTransactionVisibility: () -> Unit,
 
     ) {
     val context = LocalContext.current
@@ -68,7 +84,7 @@ fun TransactionScreenContent(
                 title = {
                     Text(
                         style = TextStyle(color = MaterialTheme.colorScheme.primary),
-                        text = "Transaction",
+                        text = stringResource(id = R.string.transactions),
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
                     )
@@ -83,15 +99,25 @@ fun TransactionScreenContent(
             )
         },
     ) { paddingValues ->
-        when(uiState){
+        when (uiState) {
             is TransactionScreenUiState.Loading -> {
                 LoadingComponent()
             }
+
             is TransactionScreenUiState.Error -> {
                 ErrorComponent(message = uiState.message)
             }
+
             is TransactionScreenUiState.Success -> {
                 val transactionInfo = uiState.transactionInfo
+                if (deleteTransactionUiState.isDeleteTransactionDialogVisible &&
+                    deleteTransactionUiState.deleteTransaction != null) {
+                    ConfirmDeleteTransactionDialog(
+                        closeDeleteDialog = toggleDeleteTransactionVisibility,
+                        transaction = deleteTransactionUiState.deleteTransaction,
+                        deleteTransaction = deleteTransaction
+                    )
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -99,60 +125,63 @@ fun TransactionScreenContent(
                         .padding(paddingValues)
                         .padding(10.dp)
                 ) {
-                    transactionInfo.let {
-                        it.transaction?.let { transaction ->
-                            Text(
-                                text = "Transaction ID :" + transaction.transactionId,
-                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
-                            )
-                            Text(
-                                text = "Name :" + transaction.transactionName,
-                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
-                            )
-                            Text(
-                                text = "Amount :" + transaction.transactionAmount,
-                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
-                            )
-                            Text(
-                                text = "Created On :" + transaction.transactionCreatedOn,
-                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
-                            )
-                            Text(
-                                text = "Created At :" + transaction.transactionCreatedAt,
-                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
-                            )
-                        }
-
-                        it.category?.let { category ->
-                            Text(
-                                text = "Category:" + category.transactionCategoryName,
-                                style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
-                            )
-                        }
-                        Button(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(
-                                contentColor = MaterialTheme.colorScheme.onBackground
-                            ),
-                            onClick = {
-                                deleteTransaction()
-                                Toast.makeText(context, "Transaction deleted", Toast.LENGTH_SHORT).show()
-
-                            }
-                        ) {
-                            Text(
-                                text = "Delete Transaction",
-                                style = TextStyle(color = MaterialTheme.colorScheme.primary),
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        transactionInfo?.let {
+                            it.transaction?.let { transaction ->
+                                Text(
+                                    text = "Transaction ID :" + transaction.transactionId,
+                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
 
                                 )
+                                Text(
+                                    text = "Name :" + transaction.transactionName,
+                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
 
+                                )
+                                Text(
+                                    text = "Amount :" + transaction.transactionAmount,
+                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
+
+                                )
+                                Text(
+                                    text = "Created On :" + transaction.transactionCreatedOn,
+                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
+                                )
+                                Text(
+                                    text = "Created At :" + transaction.transactionCreatedAt,
+                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                            it.category?.let { category ->
+                                Text(
+                                    text = "Category:" + category.transactionCategoryName,
+                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
+
+                                )
+                            }
                         }
                     }
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(
+                            contentColor = MaterialTheme.colorScheme.background,
+                            containerColor = MaterialTheme.colorScheme.onBackground,
+                            disabledContainerColor = MaterialTheme.colorScheme.primary,
+                            disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                        ),
+                        onClick = {
+                            setDeleteTransaction(transactionInfo.transaction)
+                            toggleDeleteTransactionVisibility()
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.delete_transaction),
+                            style = TextStyle(color = MaterialTheme.colorScheme.primary),
+                        )
 
+                    }
                 }
             }
         }

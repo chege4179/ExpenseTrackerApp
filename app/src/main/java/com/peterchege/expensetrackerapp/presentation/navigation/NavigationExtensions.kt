@@ -23,3 +23,7 @@ fun NavHostController.navigateToExpenseScreen(expenseId:String){
 fun NavHostController.navigateToAllExpenseScreen(){
     navigate(Screens.ALL_EXPENSES_SCREEN)
 }
+
+fun NavHostController.navigateToAboutScreen(){
+    navigate(Screens.ABOUT_SCREEN)
+}

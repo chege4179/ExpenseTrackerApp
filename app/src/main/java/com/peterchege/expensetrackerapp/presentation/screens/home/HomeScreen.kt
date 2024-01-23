@@ -69,6 +69,7 @@ fun HomeScreen(
     navigateToAllTransactionsScreen: () -> Unit,
     navigateToAllExpensesScreen: () -> Unit,
     navigateToTransactionScreen: (String) -> Unit,
+    navigateToExpenseScreen:(String) -> Unit,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -84,6 +85,7 @@ fun HomeScreen(
         navigateToAllTransactionsScreen = navigateToAllTransactionsScreen,
         navigateToAllExpensesScreen = navigateToAllExpensesScreen,
         navigateToTransactionScreen = navigateToTransactionScreen,
+        navigateToExpenseScreen = navigateToExpenseScreen,
         onChangeActiveIncomeId = {
             viewModel.onChangeActiveIncomeId(it)
         },
@@ -105,6 +107,7 @@ fun HomeScreenContent(
     navigateToAllTransactionsScreen: () -> Unit,
     navigateToAllExpensesScreen: () -> Unit,
     navigateToTransactionScreen: (String) -> Unit,
+    navigateToExpenseScreen:(String) -> Unit,
 
     ) {
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -325,11 +328,11 @@ fun HomeScreenContent(
                         } else {
                             items(
                                 items = uiState.expenses.take(n = 2),
-                                key = { it.expenseId }) {
+                                key = { it.expenseId }) { expense ->
                                 ExpenseCard(
-                                    expense = it,
-                                    onExpenseNavigate = {
-
+                                    expense = expense,
+                                    onExpenseNavigate = { expenseId ->
+                                        navigateToExpenseScreen(expenseId)
                                     }
                                 )
                             }

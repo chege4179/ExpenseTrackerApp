@@ -17,6 +17,7 @@ package com.peterchege.expensetrackerapp.core.util
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.widget.Toast
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.*
@@ -101,4 +102,8 @@ fun truncate(str:String, n:Int):String {
     }else{
         return str
     }
+}
+
+fun Context.toast(msg:String){
+    Toast.makeText(this,msg,Toast.LENGTH_LONG).show()
 }

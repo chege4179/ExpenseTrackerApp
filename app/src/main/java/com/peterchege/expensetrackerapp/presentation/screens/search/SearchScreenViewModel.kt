@@ -86,10 +86,10 @@ class SearchScreenViewModel @Inject constructor(
                 dates = datesInBetween,
                 categoryId = _uiState.value.transactionCategory!!.transactionCategoryId
             ).collect { transactions ->
-                    _uiState.value = _uiState.value.copy(transactions =
-                    transactions.map { it.toExternalModel() })
+                _uiState.value = _uiState.value.copy(transactions =
+                transactions.map { it.toExternalModel() })
 
-                }
+            }
         }
     }
 

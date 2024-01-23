@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.peterchege.expensetrackerapp.core.util.TestTags
 import com.peterchege.expensetrackerapp.domain.models.Income
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.IncomeInfoBottomSheetViewModel
+import com.peterchege.expensetrackerapp.R
 
 @Composable
 fun IncomeInfoBottomSheet(
@@ -81,7 +83,7 @@ fun IncomeInfoBottomSheetContent(
     ){
         Column(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.background)
+                .background(color = MaterialTheme.colorScheme.onBackground)
                 .fillMaxSize()
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -92,7 +94,7 @@ fun IncomeInfoBottomSheetContent(
                     style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     text = "Income Name : ${income.incomeName}",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp,
+                    fontSize = 20.sp,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(5.dp))
@@ -101,7 +103,7 @@ fun IncomeInfoBottomSheetContent(
                     style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     text = "Income Amount : ${income.incomeAmount}",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp,
+                    fontSize = 20.sp,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(5.dp))
@@ -110,7 +112,7 @@ fun IncomeInfoBottomSheetContent(
                     style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     text = "Income Created At : ${income.incomeCreatedAt}",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp,
+                    fontSize = 20.sp,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(5.dp))
@@ -120,18 +122,17 @@ fun IncomeInfoBottomSheetContent(
                         .testTag(tag = TestTags.CREATE_TRANSACTION_CATEGORY_SAVE_BUTTON)
                     ,
                     colors = ButtonColors(
-                        contentColor = MaterialTheme.colorScheme.background,
-                        containerColor = MaterialTheme.colorScheme.onBackground,
+                        contentColor = MaterialTheme.colorScheme.onBackground,
+                        containerColor = MaterialTheme.colorScheme.background,
                         disabledContainerColor = MaterialTheme.colorScheme.primary,
                         disabledContentColor = MaterialTheme.colorScheme.onPrimary,
                     ),
                     onClick = {
                         deleteIncome()
-
                     }
                 ){
                     Text(
-                        text = "Delete Income",
+                        text = stringResource(id = R.string.delete_income),
                         style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
 

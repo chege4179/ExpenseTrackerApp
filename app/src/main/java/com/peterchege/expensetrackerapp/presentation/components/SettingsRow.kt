@@ -16,12 +16,16 @@
 package com.peterchege.expensetrackerapp.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -39,14 +43,14 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun SettingsRow(
     title: String,
-    checked :Boolean,
-    onCheckedChange:(Boolean) -> Unit
+    onClick:() -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 0.dp)
             .clip(shape = RoundedCornerShape(13.dp))
+            .clickable { onClick() }
             ,
         shape = MaterialTheme.shapes.large,
     ) {
@@ -64,36 +68,11 @@ fun SettingsRow(
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
-            Switch(
-                colors = SwitchColors(
-                    checkedTrackColor = MaterialTheme.colorScheme.background,
-                    checkedBorderColor = MaterialTheme.colorScheme.onBackground,
-                    checkedIconColor = MaterialTheme.colorScheme.onBackground,
-                    checkedThumbColor = MaterialTheme.colorScheme.background,
-
-                    uncheckedBorderColor = MaterialTheme.colorScheme.primary,
-                    uncheckedIconColor = MaterialTheme.colorScheme.onPrimary,
-                    uncheckedThumbColor = MaterialTheme.colorScheme.primary,
-                    uncheckedTrackColor = MaterialTheme.colorScheme.onBackground,
-
-
-                    disabledCheckedBorderColor = MaterialTheme.colorScheme.background,
-                    disabledUncheckedBorderColor = MaterialTheme.colorScheme.onBackground,
-                    disabledCheckedIconColor = MaterialTheme.colorScheme.onBackground,
-                    disabledCheckedThumbColor = MaterialTheme.colorScheme.background,
-
-                    disabledCheckedTrackColor = MaterialTheme.colorScheme.primary,
-                    disabledUncheckedIconColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledUncheckedThumbColor = MaterialTheme.colorScheme.primary,
-                    disabledUncheckedTrackColor = MaterialTheme.colorScheme.onBackground,
-
-                ),
-                checked = checked,
-                onCheckedChange = {
-                    onCheckedChange(it)
-                },
-
-
+            CustomIconButton(
+                modifier =Modifier.size(28.dp),
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = "Toggle Theme",
+                onClick = onClick
             )
 
         }

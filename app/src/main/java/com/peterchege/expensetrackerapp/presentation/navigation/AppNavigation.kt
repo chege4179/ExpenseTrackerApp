@@ -28,6 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.core.util.TrackDisposableJank
+import com.peterchege.expensetrackerapp.presentation.screens.about.AboutScreen
 import com.peterchege.expensetrackerapp.presentation.screens.expense.ExpenseScreen
 import com.peterchege.expensetrackerapp.presentation.screens.expenses.AllExpensesScreen
 import com.peterchege.expensetrackerapp.presentation.screens.income.AllIncomeScreen
@@ -40,6 +41,7 @@ import com.peterchege.expensetrackerapp.presentation.screens.transaction.Transac
 fun AppNavigation(
     navHostController: NavHostController,
     shouldShowOnBoarding: Boolean,
+    openOSSMenu: () -> Unit,
 ) {
     NavigationTrackingSideEffect(navController = navHostController)
     NavHost(
@@ -53,20 +55,23 @@ fun AppNavigation(
         composable(Screens.ONBOARDING_SCREEN) {
             OnboardingScreen(
                 navigateHome = {
-                    navHostController.navigate(Screens.BOTTOM_TAB_NAVIGATION){
+                    navHostController.navigate(Screens.BOTTOM_TAB_NAVIGATION) {
 
                     }
                 }
             )
         }
         composable(route = Screens.BOTTOM_TAB_NAVIGATION) {
-            BottomNavigationWrapper(navHostController = navHostController)
+            BottomNavigationWrapper(
+                navHostController = navHostController,
+                openOSSMenu = openOSSMenu
+            )
         }
         composable(route = Screens.TRANSACTIONS_SCREEN + "/{id}") {
-            TransactionScreen(navController = navHostController)
+            TransactionScreen(navigateBack = { navHostController.navigate(Screens.BOTTOM_TAB_NAVIGATION) })
         }
         composable(route = Screens.ALL_TRANSACTIONS_SCREEN) {
-            AllTransactionsScreen(navController = navHostController)
+            AllTransactionsScreen(navigateToTransactionScreen = navHostController::navigateToTransactionScreen)
         }
 
         composable(route = Screens.ALL_EXPENSES_SCREEN) {
@@ -75,9 +80,12 @@ fun AppNavigation(
             )
         }
         composable(route = Screens.EXPENSE_SCREEN + "/{id}") {
-            ExpenseScreen()
+            ExpenseScreen(navigateBack = { navHostController.navigate(Screens.BOTTOM_TAB_NAVIGATION) })
         }
 
+        composable(route = Screens.ABOUT_SCREEN) {
+            AboutScreen()
+        }
 
         composable(route = Screens.ALL_INCOME_SCREEN) {
             AllIncomeScreen(navController = navHostController)

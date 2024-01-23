@@ -55,6 +55,7 @@ import com.peterchege.expensetrackerapp.presentation.screens.settings.SettingsSc
 @Composable
 fun BottomNavigationWrapper(
     navHostController: NavHostController,
+    openOSSMenu:() -> Unit,
 ) {
     val navController = rememberNavController()
 
@@ -103,7 +104,8 @@ fun BottomNavigationWrapper(
         ) {
             BottomNavigation(
                 navController = navController,
-                navHostController = navHostController
+                navHostController = navHostController,
+                openOSSMenu = openOSSMenu
             )
         }
 
@@ -115,7 +117,8 @@ fun BottomNavigationWrapper(
 fun BottomNavBar(
     items:List<BottomNavItem>,
     navController: NavController,
-    onItemClick:(BottomNavItem) -> Unit
+    onItemClick:(BottomNavItem) -> Unit,
+
 ){
     val backStackEntry = navController.currentBackStackEntryAsState()
     NavigationBar(
@@ -142,7 +145,8 @@ fun BottomNavBar(
 @Composable
 fun BottomNavigation(
     navController: NavHostController,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    openOSSMenu: () -> Unit
 ) {
     NavHost(
 
@@ -157,7 +161,8 @@ fun BottomNavigation(
                 navigateToAllExpensesScreen = navHostController::navigateToAllExpenseScreen,
                 navigateToAllIncomeScreen = navHostController::navigateToAllIncomeScreen,
                 navigateToAllTransactionsScreen = navHostController::navigateToAllTransactionsScreen,
-                navigateToTransactionScreen = navHostController::navigateToTransactionScreen
+                navigateToTransactionScreen = navHostController::navigateToTransactionScreen,
+                navigateToExpenseScreen = navHostController::navigateToExpenseScreen,
             )
         }
         composable(
@@ -170,12 +175,19 @@ fun BottomNavigation(
         composable(
             route = Screens.ANALYTICS_SCREEN
         ){
-            AnalyticsScreen()
+            AnalyticsScreen(
+                navigateToExpenseScreen = navHostController::navigateToExpenseScreen,
+                navigateToTransactionScreen = navHostController::navigateToTransactionScreen,
+
+            )
         }
         composable(
             route = Screens.SETTINGS_SCREEN
         ){
-            SettingsScreen()
+            SettingsScreen(
+                navigateToAboutScreen = navHostController::navigateToAboutScreen,
+                openOSSMenu = openOSSMenu
+            )
         }
 
 

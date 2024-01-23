@@ -30,4 +30,5 @@ object Constants {
 
     const val LIGHT_MODE = "LIGHT_MODE"
     const val DARK_MODE = "DARK_MODE"
+    const val FOLLOW_SYSTEM = "FOLLOW_SYSTEM"
 }

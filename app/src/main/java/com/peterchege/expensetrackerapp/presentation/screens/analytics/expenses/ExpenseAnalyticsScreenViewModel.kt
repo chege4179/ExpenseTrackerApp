@@ -42,8 +42,9 @@ class ExpenseAnalyticsScreenViewModel @Inject constructor(
 
     ) : ViewModel() {
 
-    val _expenseCategories = mutableStateOf<List<ExpenseCategoryInfoEntity>>(emptyList())
+    private val _expenseCategories = mutableStateOf<List<ExpenseCategoryInfoEntity>>(emptyList())
     val expenseCategories: State<List<ExpenseCategoryInfoEntity>> = _expenseCategories
+
 
     init {
         viewModelScope.launch {

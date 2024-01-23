@@ -50,15 +50,24 @@ class AllTransactionsScreenViewModel @Inject constructor(
     getAllTransactionCategoriesUseCase: GetAllTransactionCategoriesUseCase,
 ):ViewModel() {
 
-    val activeTransactionFilter = savedStateHandle.getStateFlow<String>(
+    val activeTransactionFilter = savedStateHandle.getStateFlow(
         key = "filter", initialValue = FilterConstants.ALL)
 
     val uiState = combine(
+        activeTransactionFilter,
         getAllTransactionCategoriesUseCase(),
         getTransactionsByCategoryUseCase(categoryId = activeTransactionFilter.value),
-    ){ transactionsCategoryEntities,transactionEntities ->
+    ){ transactionFilter, transactionsCategoryEntities,transactionEntities ->
+
         val transactionCategories = transactionsCategoryEntities.map { it.toExternalModel() }
         val transactions = transactionEntities.map { it.toExternalModel() }
+            .filter {
+                if (activeTransactionFilter.value != FilterConstants.ALL){
+                    it.transactionCategoryId == activeTransactionFilter.value
+                }else{
+                    true
+                }
+            }
         AllTransactionsScreenUiState.Success(
             transactions = transactions,
             transactionCategories = transactionCategories

@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.core.util.getNumericInitialValue
+import com.peterchege.expensetrackerapp.core.util.toast
 import com.peterchege.expensetrackerapp.domain.models.TransactionCategory
 import com.peterchege.expensetrackerapp.domain.toExternalModel
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddTransactionFormState
@@ -62,8 +64,19 @@ fun AddTransactionBottomSheet(
         .collectAsStateWithLifecycle(initialValue = emptyList())
         .value
         .map { it.toExternalModel() }
-
+    val context = LocalContext.current
     val formState = viewModel.formState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = true){
+        viewModel.eventFlow.collectLatest {
+            when(it){
+                is UiEvent.ShowSnackbar -> {
+                    context.toast(msg = it.uiText)
+                }
+                else -> {}
+            }
+        }
+    }
 
     AddTransactionBottomSheetContent(
         transactionCategories = transactionCategories,

@@ -32,6 +32,7 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,11 +47,12 @@ import com.peterchege.expensetrackerapp.presentation.components.ErrorComponent
 import com.peterchege.expensetrackerapp.presentation.components.LoadingComponent
 import com.peterchege.expensetrackerapp.presentation.components.TransactionCard
 import com.peterchege.expensetrackerapp.presentation.components.TransactionFilterCard
+import com.peterchege.expensetrackerapp.R
 
 @Composable
 fun AllTransactionsScreen(
     viewModel: AllTransactionsScreenViewModel = hiltViewModel(),
-    navController: NavController
+    navigateToTransactionScreen:(String) -> Unit,
 ) {
     val activeTransactionFilter by viewModel.activeTransactionFilter.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -59,7 +61,7 @@ fun AllTransactionsScreen(
         activeTransactionFilter = activeTransactionFilter,
         uiState = uiState,
         onChangeActiveTransactionFilter = { viewModel.onChangeActiveTransactionFilter(it) },
-        navController = navController
+        navigateToTransactionScreen = navigateToTransactionScreen
     )
 }
 
@@ -71,7 +73,7 @@ fun AllTransactionsScreenContent(
     activeTransactionFilter: String,
     uiState: AllTransactionsScreenUiState,
     onChangeActiveTransactionFilter: (String) -> Unit,
-    navController: NavController,
+    navigateToTransactionScreen:(String) -> Unit,
     ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -80,7 +82,7 @@ fun AllTransactionsScreenContent(
                 title = {
                     Text(
                         style = TextStyle(color = MaterialTheme.colorScheme.primary),
-                        text = "My Transactions",
+                        text = stringResource(id = R.string.my_transactions),
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
                     )
@@ -141,10 +143,7 @@ fun AllTransactionsScreenContent(
                         items(items = transactions) { transaction ->
                             TransactionCard(
                                 transaction = transaction,
-                                onTransactionNavigate = {
-                                    navController.navigate(Screens.TRANSACTIONS_SCREEN + "/$it")
-
-                                }
+                                onTransactionNavigate = navigateToTransactionScreen
                             )
                         }
                     }

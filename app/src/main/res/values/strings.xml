@@ -1,3 +1,41 @@
 <resources>
     <string name="app_name">Expense Tracker</string>
+
+    <string name="system_default">System Default</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="save">Save</string>
+    <string name="ok">ok</string>
+
+    <string name="delete_expense_description">Are you sure you want to delete this expense ?</string>
+    <string name="delete_transaction_description">Are you sure you want to delete this transaction ?</string>
+    <string name="delete_income_description">Are you sure you want to delete this income ?</string>
+
+    <string name="expense">Expense</string>
+    <string name="delete_expense">Delete Expense</string>
+
+    <string name="theme_settings">Theme Settings</string>
+
+    <string name="delete_transaction">Delete Transaction</string>
+    <string name="delete_income">Delete Income</string>
+    <string name="transactions">Transaction</string>
+    <string name="my_transactions">My Transactions</string>
+    <string name="expenses">Expenses</string>
+    <string name="analytics">Analytics</string>
+    <string name="about_app_header_text">About App</string>
+    <string name="search">Search</string>
+
+    <string name="about_app_text">
+        This app is built to help you keep track of your finances.
+        There are 3 categories of data you save, transactions, expenses and your income.
+        Your total income is calculated after deducting all your expenses and transactions.
+        The difference between a transaction and an expense is that a transaction is something
+        random you purchase on a daily basis while an expense is a bill you incur at the end of a
+        billing cycle such as an internet subscription, or your rent etc.
+    </string>
+
 </resources>

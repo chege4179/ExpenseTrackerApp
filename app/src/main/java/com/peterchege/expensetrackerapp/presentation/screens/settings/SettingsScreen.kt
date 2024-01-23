@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,17 +39,25 @@ import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.BuildConfig
 import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.core.util.getAppVersionName
+import com.peterchege.expensetrackerapp.presentation.alertDialogs.ThemeDialog
 import com.peterchege.expensetrackerapp.presentation.components.SettingsRow
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsScreenViewModel = hiltViewModel()
+    viewModel: SettingsScreenViewModel = hiltViewModel(),
+    openOSSMenu: () -> Unit,
+    navigateToAboutScreen:() -> Unit,
 
-) {
-    val theme = viewModel.theme.collectAsStateWithLifecycle()
+    ) {
+    val theme by viewModel.theme.collectAsStateWithLifecycle()
+    val uiState by viewModel.settingsScreenUiState.collectAsStateWithLifecycle()
     SettingsScreenContent(
-        theme = theme.value,
-        updateTheme = { viewModel.updateTheme(it) }
+        theme = theme,
+        uiState = uiState,
+        updateTheme = { viewModel.updateTheme(it) },
+        openOSSMenu = openOSSMenu,
+        toggleThemeDialogVisibility = viewModel::toggleThemeDialogVisibility,
+        navigateToAboutScreen = navigateToAboutScreen
     )
 }
 
@@ -57,8 +66,12 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreenContent(
     theme: String,
+    uiState: SettingsScreenUiState,
+    navigateToAboutScreen:() -> Unit,
+    toggleThemeDialogVisibility:() -> Unit,
     updateTheme: (String) -> Unit,
-    ) {
+    openOSSMenu: () -> Unit,
+) {
 
     val context = LocalContext.current
     Scaffold(
@@ -89,22 +102,32 @@ fun SettingsScreenContent(
                 .padding(paddingValues)
                 .padding(10.dp)
         ) {
+            if (uiState.isThemeDialogVisible){
+                ThemeDialog(
+                    changeTheme = updateTheme,
+                    toggleThemeDialog = toggleThemeDialogVisibility,
+                    currentTheme = theme
+                )
+            }
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 item {
                     SettingsRow(
+                        title = "About",
+                        onClick = navigateToAboutScreen
+                    )
+                }
+                item {
+                    SettingsRow(
                         title = "Dark Theme",
-                        checked = theme == Constants.DARK_MODE,
-                        onCheckedChange = {
-                            if (it) {
-                                updateTheme(Constants.DARK_MODE)
-
-                            } else {
-                                updateTheme(Constants.LIGHT_MODE)
-                            }
-
-                        }
+                        onClick = toggleThemeDialogVisibility
+                    )
+                }
+                item {
+                    SettingsRow(
+                        title = "Open Source Licenses",
+                        onClick = openOSSMenu
                     )
                 }
             }
@@ -129,7 +152,7 @@ fun SettingsScreenContent(
                     fontSize = 11.sp
                 )
                 Text(
-                    text = "Made with ❤️by Peter Chege 🇰🇪",
+                    text = "Made with ❤️ by Peter Chege 🇰🇪",
                     modifier = Modifier,
                     style = TextStyle(color = MaterialTheme.colorScheme.primary),
                     fontSize = 12.sp

@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.core.util.toast
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddExpenseCategoryFormState
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddExpenseCategoryScreenViewModel
 import kotlinx.coroutines.flow.SharedFlow
@@ -45,6 +47,17 @@ fun AddExpenseCategoryBottomSheet(
 ) {
     val formState = viewModel.formState.collectAsStateWithLifecycle()
 
+    val context = LocalContext.current
+    LaunchedEffect(key1 = true){
+        viewModel.eventFlow.collectLatest {
+            when(it){
+                is UiEvent.ShowSnackbar -> {
+                    context.toast(msg = it.uiText)
+                }
+                else -> {}
+            }
+        }
+    }
     AddExpenseCategoryBottomSheetContent(
         formState = formState.value,
         onChangeExpenseCategoryName = {

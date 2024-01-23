@@ -34,9 +34,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
@@ -52,10 +54,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
 import com.peterchege.expensetrackerapp.core.util.getNumericInitialValue
+import com.peterchege.expensetrackerapp.core.util.toast
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddIncomeFormState
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddIncomeScreenViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
 
 @Preview
 @Composable
@@ -73,6 +77,18 @@ fun AddIncomeBottomSheet(
     viewModel: AddIncomeScreenViewModel = hiltViewModel(),
 ) {
     val formState = viewModel.formState.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+    LaunchedEffect(key1 = true){
+        viewModel.eventFlow.collectLatest {
+            when(it){
+                is UiEvent.ShowSnackbar -> {
+                    context.toast(msg = it.uiText)
+                }
+                else -> {}
+            }
+        }
+    }
 
     AddIncomeBottomSheetContent(
         formState = formState.value,

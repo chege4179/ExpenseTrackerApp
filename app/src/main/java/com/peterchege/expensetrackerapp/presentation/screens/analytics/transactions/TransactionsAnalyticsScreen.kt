@@ -53,7 +53,8 @@ import com.peterchege.expensetrackerapp.presentation.theme.GreyColor
 
 @Composable
 fun TransactionsAnalyticsScreen(
-    viewModel: AnalyticsScreenViewModel = hiltViewModel()
+    viewModel: AnalyticsScreenViewModel = hiltViewModel(),
+    navigateToTransactionScreen:(String) -> Unit,
 ){
     val transactionsState = viewModel.graphData.value
         .map { data -> data.collectAsStateWithLifecycle(initialValue = emptyList()) }
@@ -92,6 +93,7 @@ fun TransactionsAnalyticsScreen(
         transactions = transactionsState.flatten(),
         activeFilterConstant = viewModel.activeFilterConstant.value,
         bars = transactions,
+        navigateToTransactionScreen = navigateToTransactionScreen,
         onChangeActiveFilterConstant = { viewModel.onChangeActiveFilterConstant(it) }
     )
 
@@ -110,6 +112,7 @@ fun TransactionsAnalyticsScreenContent(
     activeFilterConstant:String,
     bars:List<BarChartData.Bar>,
     onChangeActiveFilterConstant:(String) -> Unit,
+    navigateToTransactionScreen: (String) -> Unit
 
 
 ) {
@@ -243,10 +246,10 @@ fun TransactionsAnalyticsScreenContent(
             }
 
             items(items = transactionsState.reversed()) { transaction ->
-                TransactionCard(transaction = transaction,
-                    onTransactionNavigate = {
-
-                    })
+                TransactionCard(
+                    transaction = transaction,
+                    onTransactionNavigate = navigateToTransactionScreen
+                )
             }
 
         }

@@ -13,7 +13,7 @@ class ProfileVerifierLogger @Inject constructor(
     @ApplicationScope private val scope: CoroutineScope,
 ) {
     companion object {
-        private const val TAG = "ProfileInstaller"
+        private val TAG = ProfileVerifierLogger::class.java.simpleName
     }
 
     operator fun invoke() = scope.launch {

@@ -15,12 +15,15 @@
  */
 package com.peterchege.expensetrackerapp.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -28,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.metrics.performance.JankStats
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.presentation.navigation.AppNavigation
 import com.peterchege.expensetrackerapp.presentation.theme.ExpenseTrackerAppTheme
@@ -45,10 +49,9 @@ class MainActivity : ComponentActivity() {
             val viewModel: MainViewModel = hiltViewModel()
             val theme by viewModel.theme.collectAsStateWithLifecycle()
             val shouldShowOnboarding by viewModel.shouldShowOnboarding.collectAsStateWithLifecycle()
-            val isInDarkMode = theme == Constants.DARK_MODE
 
             ExpenseTrackerAppTheme(
-                darkTheme = isInDarkMode
+                darkTheme = shouldUseDarkTheme(theme = theme)
             ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -58,7 +61,10 @@ class MainActivity : ComponentActivity() {
                     val navHostController = rememberNavController()
                     AppNavigation(
                         navHostController = navHostController,
-                        shouldShowOnBoarding = shouldShowOnboarding
+                        shouldShowOnBoarding = shouldShowOnboarding,
+                        openOSSMenu = {
+                            startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+                        }
                     )
                 }
             }
@@ -75,4 +81,14 @@ class MainActivity : ComponentActivity() {
         super.onPause()
         lazyStats.get().isTrackingEnabled = false
     }
+}
+
+@Composable
+private fun shouldUseDarkTheme(
+    theme: String,
+): Boolean = when (theme) {
+    Constants.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+    Constants.LIGHT_MODE -> false
+    Constants.DARK_MODE -> true
+    else -> isSystemInDarkTheme()
 }

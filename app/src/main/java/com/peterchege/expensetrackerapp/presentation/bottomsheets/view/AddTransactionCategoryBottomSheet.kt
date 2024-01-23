@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
@@ -36,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.TestTags
 import com.peterchege.expensetrackerapp.core.util.UiEvent
+import com.peterchege.expensetrackerapp.core.util.toast
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddTransactionCategoryFormState
 import com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddTransactionCategoryScreenViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -50,6 +52,17 @@ fun AddTransactionCategoryBottomSheet(
 ){
 
     val formState = viewModel.formState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    LaunchedEffect(key1 = true){
+        viewModel.eventFlow.collectLatest {
+            when(it){
+                is UiEvent.ShowSnackbar -> {
+                    context.toast(msg = it.uiText)
+                }
+                else -> {}
+            }
+        }
+    }
 
     AddTransactionCategoryBottomSheetContent(
         formState = formState.value,
