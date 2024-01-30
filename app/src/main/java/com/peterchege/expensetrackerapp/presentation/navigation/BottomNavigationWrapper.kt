@@ -15,14 +15,27 @@
  */
 package com.peterchege.expensetrackerapp.presentation.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +47,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.navigation.NavController
@@ -49,13 +64,14 @@ import com.peterchege.expensetrackerapp.presentation.screens.analytics.Analytics
 import com.peterchege.expensetrackerapp.presentation.screens.home.HomeScreen
 import com.peterchege.expensetrackerapp.presentation.screens.search.SearchScreen
 import com.peterchege.expensetrackerapp.presentation.screens.settings.SettingsScreen
+import com.peterchege.expensetrackerapp.R
 
 
 @ExperimentalMaterial3Api
 @Composable
 fun BottomNavigationWrapper(
     navHostController: NavHostController,
-    openOSSMenu:() -> Unit,
+    openOSSMenu: () -> Unit,
 ) {
     val navController = rememberNavController()
 
@@ -64,32 +80,36 @@ fun BottomNavigationWrapper(
             BottomNavBar(
                 items = listOf(
                     BottomNavItem(
-                        name="Home",
-                        route = Screens.HOME_SCREEN  ,
-                        icon = Icons.Default.Home
+                        name = stringResource(id = R.string.home),
+                        route = Screens.HOME_SCREEN,
+                        selectedIcon = Icons.Default.Home,
+                        unselectedIcon = Icons.Outlined.Home,
                     ),
                     BottomNavItem(
-                        name="Search",
-                        route = Screens.SEARCH_SCREEN   ,
-                        icon = Icons.Default.Search
+                        name = stringResource(id = R.string.search),
+                        route = Screens.SEARCH_SCREEN,
+                        selectedIcon = Icons.Default.Search,
+                        unselectedIcon = Icons.Outlined.Search
                     ),
                     BottomNavItem(
-                        name="Analytics",
-                        route = Screens.ANALYTICS_SCREEN   ,
-                        icon = Icons.Outlined.BarChart
+                        name = stringResource(id = R.string.analytics),
+                        route = Screens.ANALYTICS_SCREEN,
+                        selectedIcon = Icons.Default.BarChart,
+                        unselectedIcon = Icons.Outlined.BarChart
                     ),
                     BottomNavItem(
-                        name="Settings",
-                        route = Screens.SETTINGS_SCREEN   ,
-                        icon = Icons.Default.Settings
+                        name = stringResource(id = R.string.settings),
+                        route = Screens.SETTINGS_SCREEN,
+                        selectedIcon = Icons.Default.Settings,
+                        unselectedIcon = Icons.Outlined.Settings
                     ),
                 ),
                 navController = navController,
                 onItemClick = {
-                    navController.navigate(it.route){
+                    navController.navigate(it.route) {
                         launchSingleTop = true
                         restoreState = true
-                        popUpTo(navController.graph.findStartDestination().id){
+                        popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
                     }
@@ -98,9 +118,10 @@ fun BottomNavigationWrapper(
         }
     ) { innerPadding ->
         // Apply the padding globally to the whole BottomNavScreensController
-        Box(modifier = Modifier
-            .background(Color.LightGray)
-            .padding(innerPadding)
+        Box(
+            modifier = Modifier
+                .background(Color.LightGray)
+                .padding(innerPadding)
         ) {
             BottomNavigation(
                 navController = navController,
@@ -115,33 +136,35 @@ fun BottomNavigationWrapper(
 @ExperimentalMaterial3Api
 @Composable
 fun BottomNavBar(
-    items:List<BottomNavItem>,
+    items: List<BottomNavItem>,
     navController: NavController,
-    onItemClick:(BottomNavItem) -> Unit,
+    onItemClick: (BottomNavItem) -> Unit,
 
-){
+    ) {
     val backStackEntry = navController.currentBackStackEntryAsState()
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.onBackground,
     ) {
         items.forEachIndexed { index, item ->
-            val selected = item.route == backStackEntry.value?.destination?.route
+            val isSelected = item.route == backStackEntry.value?.destination?.route
             NavigationBarItem(
                 icon = {
                     Icon(
-                        imageVector = item.icon,
+                        imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
                         contentDescription = item.name
                     )
                 },
-                label = { Text(text = item.name) },
-                selected = selected,
+                label = {
+                    Text(text = item.name,)
+                },
+                selected = isSelected,
                 onClick = { onItemClick(item) }
             )
         }
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun BottomNavigation(
     navController: NavHostController,
@@ -152,11 +175,18 @@ fun BottomNavigation(
 
         navController = navController,
         startDestination = Screens.HOME_SCREEN
-    ){
-
+    ) {
+        val enterAnimation = scaleInEnterTransition()
+        val exitAnimation = scaleOutExitTransition()
+        val popEnterAnimation = scaleInPopEnterTransition()
+        val popExitAnimation = scaleOutPopExitTransition()
         composable(
-            route = Screens.HOME_SCREEN
-        ){
+            route = Screens.HOME_SCREEN,
+            enterTransition = { enterAnimation },
+            exitTransition = { exitAnimation },
+            popEnterTransition = { popEnterAnimation },
+            popExitTransition = { popExitAnimation }
+        ) {
             HomeScreen(
                 navigateToAllExpensesScreen = navHostController::navigateToAllExpenseScreen,
                 navigateToAllIncomeScreen = navHostController::navigateToAllIncomeScreen,
@@ -166,24 +196,36 @@ fun BottomNavigation(
             )
         }
         composable(
-            route = Screens.SEARCH_SCREEN
-        ){
+            route = Screens.SEARCH_SCREEN,
+            enterTransition = { enterAnimation },
+            exitTransition = { exitAnimation },
+            popEnterTransition = { popEnterAnimation },
+            popExitTransition = { popExitAnimation }
+        ) {
             SearchScreen(
                 navigateToTransactionScreen = navHostController::navigateToTransactionScreen
             )
         }
         composable(
-            route = Screens.ANALYTICS_SCREEN
-        ){
+            route = Screens.ANALYTICS_SCREEN,
+            enterTransition = { enterAnimation },
+            exitTransition = { exitAnimation },
+            popEnterTransition = { popEnterAnimation },
+            popExitTransition = { popExitAnimation }
+        ) {
             AnalyticsScreen(
                 navigateToExpenseScreen = navHostController::navigateToExpenseScreen,
                 navigateToTransactionScreen = navHostController::navigateToTransactionScreen,
 
-            )
+                )
         }
         composable(
-            route = Screens.SETTINGS_SCREEN
-        ){
+            route = Screens.SETTINGS_SCREEN,
+            enterTransition = { enterAnimation },
+            exitTransition = { exitAnimation },
+            popEnterTransition = { popEnterAnimation },
+            popExitTransition = { popExitAnimation }
+        ) {
             SettingsScreen(
                 navigateToAboutScreen = navHostController::navigateToAboutScreen,
                 openOSSMenu = openOSSMenu

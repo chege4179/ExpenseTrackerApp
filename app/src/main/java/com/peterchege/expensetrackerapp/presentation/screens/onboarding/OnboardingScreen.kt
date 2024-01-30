@@ -25,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ import com.peterchege.expensetrackerapp.presentation.screens.onboarding.pages.Se
 import com.peterchege.expensetrackerapp.presentation.screens.onboarding.pages.WelcomeScreen
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import com.peterchege.expensetrackerapp.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -144,7 +146,7 @@ fun OnboardingScreenContent(
                     ),
                 ) {
                     Text(
-                        text = "Back",
+                        text = stringResource(id = R.string.back),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
                         style = TextStyle(
@@ -157,7 +159,7 @@ fun OnboardingScreenContent(
             Button(
                 modifier = Modifier
                     .width(180.dp)
-                    .testTag( "next"),
+                    .testTag("next"),
                 onClick = { proceed() },
                 colors = ButtonColors(
                     contentColor = MaterialTheme.colorScheme.background,
@@ -167,7 +169,10 @@ fun OnboardingScreenContent(
                 ),
             ) {
                 Text(
-                    text = if (pagerState.currentPage == 2) "Skip" else "Next",
+                    text = if (pagerState.currentPage == 2) 
+                        stringResource(id = R.string.finish) 
+                    else 
+                        stringResource(id = R.string.next),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
                     style = TextStyle(

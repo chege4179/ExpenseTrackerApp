@@ -25,9 +25,9 @@
     <string name="transactions">Transaction</string>
     <string name="my_transactions">My Transactions</string>
     <string name="expenses">Expenses</string>
-    <string name="analytics">Analytics</string>
+
     <string name="about_app_header_text">About App</string>
-    <string name="search">Search</string>
+
 
     <string name="about_app_text">
         This app is built to help you keep track of your finances.
@@ -37,5 +37,18 @@
         random you purchase on a daily basis while an expense is a bill you incur at the end of a
         billing cycle such as an internet subscription, or your rent etc.
     </string>
+
+    <string name="finish">Finish</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+
+
+    <!--  Bottom App Bar  -->
+
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="analytics">Analytics</string>
+    <string name="settings">Settings</string>
+
 
 </resources>

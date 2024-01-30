@@ -15,6 +15,7 @@
  */
 package com.peterchege.expensetrackerapp.presentation.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -36,7 +37,9 @@ import com.peterchege.expensetrackerapp.presentation.screens.onboarding.Onboardi
 import com.peterchege.expensetrackerapp.presentation.screens.transactions.AllTransactionsScreen
 import com.peterchege.expensetrackerapp.presentation.screens.transaction.TransactionScreen
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+    ExperimentalAnimationApi::class
+)
 @Composable
 fun AppNavigation(
     navHostController: NavHostController,
@@ -51,7 +54,10 @@ fun AppNavigation(
         navController = navHostController,
         startDestination = if (shouldShowOnBoarding) Screens.ONBOARDING_SCREEN else Screens.BOTTOM_TAB_NAVIGATION
     ) {
-
+        val enterAnimation = scaleInEnterTransition()
+        val exitAnimation = scaleOutExitTransition()
+        val popEnterAnimation = scaleInPopEnterTransition()
+        val popExitAnimation = scaleOutPopExitTransition()
         composable(Screens.ONBOARDING_SCREEN) {
             OnboardingScreen(
                 navigateHome = {
@@ -67,27 +73,64 @@ fun AppNavigation(
                 openOSSMenu = openOSSMenu
             )
         }
-        composable(route = Screens.TRANSACTIONS_SCREEN + "/{id}") {
+        composable(
+            route = Screens.TRANSACTIONS_SCREEN + "/{id}",
+            enterTransition = { enterAnimation },
+            exitTransition = { exitAnimation },
+            popEnterTransition = { popEnterAnimation },
+            popExitTransition = { popExitAnimation }
+
+        ) {
             TransactionScreen(navigateBack = { navHostController.navigate(Screens.BOTTOM_TAB_NAVIGATION) })
         }
-        composable(route = Screens.ALL_TRANSACTIONS_SCREEN) {
+        composable(
+            route = Screens.ALL_TRANSACTIONS_SCREEN,
+            enterTransition = { enterAnimation },
+            exitTransition = { exitAnimation },
+            popEnterTransition = { popEnterAnimation },
+            popExitTransition = { popExitAnimation }
+        ) {
             AllTransactionsScreen(navigateToTransactionScreen = navHostController::navigateToTransactionScreen)
         }
 
-        composable(route = Screens.ALL_EXPENSES_SCREEN) {
+        composable(
+            route = Screens.ALL_EXPENSES_SCREEN,
+            enterTransition = { enterAnimation },
+            exitTransition = { exitAnimation },
+            popEnterTransition = { popEnterAnimation },
+            popExitTransition = { popExitAnimation }
+        ) {
             AllExpensesScreen(
                 navigateToExpenseScreen = navHostController::navigateToExpenseScreen
             )
         }
-        composable(route = Screens.EXPENSE_SCREEN + "/{id}") {
+        composable(
+            route = Screens.EXPENSE_SCREEN + "/{id}",
+            enterTransition = { enterAnimation },
+            exitTransition = { exitAnimation },
+            popEnterTransition = { popEnterAnimation },
+            popExitTransition = { popExitAnimation }
+        ) {
             ExpenseScreen(navigateBack = { navHostController.navigate(Screens.BOTTOM_TAB_NAVIGATION) })
         }
 
-        composable(route = Screens.ABOUT_SCREEN) {
+        composable(
+            route = Screens.ABOUT_SCREEN,
+            enterTransition = { enterAnimation },
+            exitTransition = { exitAnimation },
+            popEnterTransition = { popEnterAnimation },
+            popExitTransition = { popExitAnimation }
+        ) {
             AboutScreen()
         }
 
-        composable(route = Screens.ALL_INCOME_SCREEN) {
+        composable(
+            route = Screens.ALL_INCOME_SCREEN,
+            enterTransition = { enterAnimation },
+            exitTransition = { exitAnimation },
+            popEnterTransition = { popEnterAnimation },
+            popExitTransition = { popExitAnimation }
+        ) {
             AllIncomeScreen(navController = navHostController)
         }
 

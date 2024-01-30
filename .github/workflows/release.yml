@@ -32,7 +32,7 @@ jobs:
             ${{ runner.os }}-gradle-    
 
       - name: Build Release App
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease -PenableComposeCompilerReports=true
 
       - name: Upload a Build Artifact (APK)
         uses: actions/upload-artifact@v2.2.4
