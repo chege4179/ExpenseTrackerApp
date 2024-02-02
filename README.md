@@ -4,6 +4,11 @@ This is a native android application built with Jetpack Compose to manage the us
 and visualizes the data in a bar and pie chart.The app is completely offline and all the data is in 
 a room database so no need for internet connection
 
+Currently available on the Play Store
+
+<a href='https://play.google.com/store/apps/details?id=com.peterchege.expensetrackerapp'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height='80px'/></a>
+
+
 ## Screenshots of the app
 <img src="screenshots/screenshot7.png" width="250"/> <img src="screenshots/screenshot2.png" width="250"/> <img src="screenshots/screenshot3.png" width="250"/>
 
