@@ -20,8 +20,10 @@ import com.android.build.api.dsl.Packaging
 val keyPasswordString: String = gradleLocalProperties(rootDir).getProperty("keyPassword")
 plugins {
     id ("com.android.application")
-    id ("org.jetbrains.kotlin.android")
-    id ("kotlin-android")
+    kotlin("android")
+    kotlin("plugin.serialization")
+    kotlin("plugin.parcelize")
+    kotlin("plugin.compose")
     id ("com.google.gms.google-services")
     id ("com.google.firebase.crashlytics")
     id ("org.jetbrains.kotlinx.kover")
@@ -42,8 +44,8 @@ android {
         applicationId= "com.peterchege.expensetrackerapp"
         minSdk =21
         targetSdk= 34
-        versionCode = 3
-        versionName= "3.0"
+        versionCode = 4
+        versionName= "4.0"
 
         testInstrumentationRunner ="com.peterchege.expensetrackerapp.HiltTestRunner"
         vectorDrawables {
@@ -89,15 +91,10 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
-    buildFeatures {
-        compose = true
-    }
+
     lint {
         abortOnError = false
         checkReleaseBuilds = false
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion= "1.5.4"
     }
     packaging {
         resources {
@@ -116,32 +113,36 @@ baselineProfile {
     automaticGenerationDuringBuild = false
 }
 
+composeCompiler {
+    enableStrongSkippingMode = true
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+}
 dependencies {
     baselineProfile(project(":benchmark"))
 
-    implementation ("androidx.core:core-ktx:1.12.0")
-    implementation ("androidx.compose.ui:ui:1.6.0-rc01")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.6.0-rc01")
-    implementation ("androidx.activity:activity-compose:1.8.2")
+    implementation ("androidx.core:core-ktx:1.13.1")
+    implementation ("androidx.compose.ui:ui:1.6.7")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.6.7")
+    implementation ("androidx.activity:activity-compose:1.9.0")
     testImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.6.0-rc01")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.6.7")
 
-    implementation("androidx.compose.material3:material3:1.2.0-beta02")
-    implementation("androidx.compose.material3:material3-window-size-class:1.2.0-beta02")
+    implementation("androidx.compose.material3:material3:1.2.1")
+    implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
 
 
     implementation("androidx.metrics:metrics-performance:1.0.0-beta01")
 
-    debugImplementation ("androidx.compose.ui:ui-tooling:1.6.0-rc01")
-    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.6.0-rc01")
-    implementation ("androidx.compose.material:material-icons-extended:1.6.0-rc01")
+    debugImplementation ("androidx.compose.ui:ui-tooling:1.6.7")
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.6.7")
+    implementation ("androidx.compose.material:material-icons-extended:1.6.7")
 
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    implementation("androidx.compose.foundation:foundation:1.5.4")
-    implementation("androidx.compose.foundation:foundation-layout:1.5.4")
-    implementation ("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.compose.foundation:foundation:1.6.7")
+    implementation("androidx.compose.foundation:foundation-layout:1.6.7")
+    implementation ("androidx.navigation:navigation-compose:2.7.7")
 
 
     // view model
@@ -150,25 +151,28 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 
     //paging
-    implementation("androidx.paging:paging-common-ktx:3.2.1")
-    implementation("androidx.paging:paging-compose:3.2.1")
+    implementation("androidx.paging:paging-common-ktx:3.3.0")
+    implementation("androidx.paging:paging-compose:3.3.0")
 
     //datastore
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     //coroutines
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.8.0")
 
     // dagger hilt
-    implementation ("com.google.dagger:hilt-android:2.50")
-    ksp("com.google.dagger:dagger-compiler:2.50")
-    ksp("com.google.dagger:hilt-compiler:2.50")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation ("com.google.dagger:hilt-android:2.51")
+    ksp("com.google.dagger:dagger-compiler:2.51")
+    ksp("com.google.dagger:hilt-compiler:2.51")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // coil
-    implementation ("io.coil-kt:coil-compose:2.5.0")
+    implementation ("io.coil-kt:coil-compose:2.6.0")
+
+    implementation ("com.google.android.play:review-ktx:2.0.1")
+    implementation ("com.google.android.play:app-update-ktx:2.1.0")
 
     // room
     implementation ("androidx.room:room-runtime:2.6.1")
@@ -185,7 +189,7 @@ dependencies {
 
     implementation("androidx.profileinstaller:profileinstaller:1.3.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation ("com.google.firebase:firebase-crashlytics")
     implementation ("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-perf")
@@ -204,15 +208,15 @@ dependencies {
 
     testImplementation ("androidx.arch.core:core-testing:2.2.0")
     // Instrumentation tests
-    androidTestImplementation ("com.google.dagger:hilt-android-testing:2.50")
-    kspAndroidTest ("com.google.dagger:hilt-android-compiler:2.48.1")
+    androidTestImplementation ("com.google.dagger:hilt-android-testing:2.51")
+    kspAndroidTest ("com.google.dagger:hilt-android-compiler:2.50")
     androidTestImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.arch.core:core-testing:2.2.0")
-    androidTestImplementation ("com.google.truth:truth:1.2.0")
+    androidTestImplementation ("com.google.truth:truth:1.4.2")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test:core-ktx:1.5.0")
     androidTestImplementation( "com.squareup.okhttp3:mockwebserver:4.12.0")
-    androidTestImplementation( "io.mockk:mockk-android:1.13.8")
+    androidTestImplementation( "io.mockk:mockk-android:1.13.9")
     androidTestImplementation ("androidx.test:runner:1.5.2")
 
     testImplementation ("org.robolectric:robolectric:4.11.1")

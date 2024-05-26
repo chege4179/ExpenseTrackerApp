@@ -15,9 +15,11 @@
  */
 package com.peterchege.expensetrackerapp.core.util
 
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.widget.Toast
+import com.google.android.play.core.review.ReviewManagerFactory
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.*
@@ -106,4 +108,28 @@ fun truncate(str:String, n:Int):String {
 
 fun Context.toast(msg:String){
     Toast.makeText(this,msg,Toast.LENGTH_LONG).show()
+}
+
+
+fun showReviewDialog(activity: Activity, onComplete: () -> Unit, onFailure: () -> Unit) {
+    val reviewManager = ReviewManagerFactory.create(activity.applicationContext)
+    reviewManager.requestReviewFlow()
+        .addOnCompleteListener {
+            if (it.isSuccessful) {
+                reviewManager.launchReviewFlow(activity, it.result)
+                    .addOnSuccessListener {
+                        onComplete()
+                    }
+                    .addOnFailureListener {
+                        onFailure()
+                    }
+            }else{
+                onFailure()
+            }
+        }
+        .addOnFailureListener {
+            it.printStackTrace()
+            onFailure()
+
+        }
 }

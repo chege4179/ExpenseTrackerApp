@@ -1,5 +1,6 @@
 package com.peterchege.expensetrackerapp.presentation.screens.onboarding
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -110,19 +111,22 @@ fun OnboardingScreenContent(
             .fillMaxSize()
     ) {
         HorizontalPager(state = pagerState) { page ->
-            when (page) {
-                0 -> {
-                    WelcomeScreen()
-                }
+            AnimatedContent(targetState = page, label = "page"){ page ->
+                when (page) {
+                    0 -> {
+                        WelcomeScreen()
+                    }
 
-                1 -> {
-                    SelectTransactionCategoryScreen(viewModel = viewModel)
-                }
+                    1 -> {
+                        SelectTransactionCategoryScreen(viewModel = viewModel)
+                    }
 
-                2 -> {
-                    SelectExpenseCategoryScreen(viewModel = viewModel)
+                    2 -> {
+                        SelectExpenseCategoryScreen(viewModel = viewModel)
+                    }
                 }
             }
+
 
         }
         Row(

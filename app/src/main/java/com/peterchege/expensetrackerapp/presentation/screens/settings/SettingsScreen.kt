@@ -16,6 +16,7 @@
 package com.peterchege.expensetrackerapp.presentation.screens.settings
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,6 +41,7 @@ import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.BuildConfig
 import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.core.util.getAppVersionName
+import com.peterchege.expensetrackerapp.core.util.showReviewDialog
 import com.peterchege.expensetrackerapp.presentation.alertDialogs.ThemeDialog
 import com.peterchege.expensetrackerapp.presentation.components.SettingsRow
 
@@ -46,7 +49,7 @@ import com.peterchege.expensetrackerapp.presentation.components.SettingsRow
 fun SettingsScreen(
     viewModel: SettingsScreenViewModel = hiltViewModel(),
     openOSSMenu: () -> Unit,
-    navigateToAboutScreen:() -> Unit,
+    navigateToAboutScreen: () -> Unit,
 
     ) {
     val theme by viewModel.theme.collectAsStateWithLifecycle()
@@ -67,8 +70,8 @@ fun SettingsScreen(
 fun SettingsScreenContent(
     theme: String,
     uiState: SettingsScreenUiState,
-    navigateToAboutScreen:() -> Unit,
-    toggleThemeDialogVisibility:() -> Unit,
+    navigateToAboutScreen: () -> Unit,
+    toggleThemeDialogVisibility: () -> Unit,
     updateTheme: (String) -> Unit,
     openOSSMenu: () -> Unit,
 ) {
@@ -102,7 +105,7 @@ fun SettingsScreenContent(
                 .padding(paddingValues)
                 .padding(10.dp)
         ) {
-            if (uiState.isThemeDialogVisible){
+            if (uiState.isThemeDialogVisible) {
                 ThemeDialog(
                     changeTheme = updateTheme,
                     toggleThemeDialog = toggleThemeDialogVisibility,
@@ -128,6 +131,19 @@ fun SettingsScreenContent(
                     SettingsRow(
                         title = "Open Source Licenses",
                         onClick = openOSSMenu
+                    )
+                }
+
+                item {
+                    SettingsRow(
+                        title = "Rate Us On Playstore",
+                        onClick = {
+                            showReviewDialog(
+                                activity = context as Activity,
+                                onComplete = {},
+                                onFailure = {}
+                            )
+                        }
                     )
                 }
             }
@@ -161,4 +177,17 @@ fun SettingsScreenContent(
         }
     }
 
+}
+
+@Preview
+@Composable
+fun SettingsScreenContentPreview() {
+    SettingsScreenContent(
+        theme = Constants.DARK_MODE,
+        uiState = SettingsScreenUiState(),
+        navigateToAboutScreen = {},
+        toggleThemeDialogVisibility = {},
+        updateTheme = {},
+        openOSSMenu = {}
+    )
 }
