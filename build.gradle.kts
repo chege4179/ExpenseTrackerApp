@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 plugins {
-    id("com.android.application") version "8.2.0" apply false
-    id("com.android.library") version "8.2.0" apply false
+    id("com.android.application") version "8.4.0" apply false
+    id("com.android.library") version "8.4.0" apply false
     kotlin("android") version "2.0.0" apply false
     kotlin("plugin.serialization")version "2.0.0" apply false
     kotlin("plugin.parcelize")version "2.0.0" apply false
@@ -27,8 +27,8 @@ plugins {
     id("com.google.gms.google-services") version "4.4.0" apply false
     id("com.google.firebase.crashlytics") version "2.9.9" apply false
     id("com.google.firebase.firebase-perf") version "1.4.2" apply false
-    id("com.android.test") version "8.2.0" apply false
-    id("androidx.baselineprofile") version "1.2.1" apply false
+    id("com.android.test") version "8.4.0" apply false
+    id("androidx.baselineprofile") version "1.2.4" apply false
     id("io.gitlab.arturbosch.detekt") version "1.23.3"
 }
 buildscript {

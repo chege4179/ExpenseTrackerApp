@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,15 +47,12 @@ class OnboardingScreenViewModel @Inject constructor(
     }
 
     fun addTransactionCategory(category: ExampleTransactionCategory) {
-        val old = ArrayList(_selectedTransactionCategories.value)
-        old.add(category)
-        _selectedTransactionCategories.value = old
+        _selectedTransactionCategories.update { it + category }
+
     }
 
     fun addExpenseCategory(category: ExampleExpenseCategory) {
-        val old = ArrayList(_selectedExpenseCategories.value)
-        old.add(category)
-        _selectedExpenseCategories.value = old
+        _selectedExpenseCategories.update { it + category }
     }
 
     fun removeTransactionCategory(category: ExampleTransactionCategory) {

@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -59,15 +60,15 @@ class SearchScreenViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     fun onChangeTransactionStartDate(date: LocalDate) {
-        _uiState.value = _uiState.value.copy(startDate = date)
+        _uiState.update { it.copy(startDate = date) }
     }
 
     fun onChangeTransactionEndDate(date: LocalDate) {
-        _uiState.value = _uiState.value.copy(endDate = date)
+        _uiState.update { it.copy(endDate = date) }
     }
 
     fun onChangeTransactionCategory(category: TransactionCategory) {
-        _uiState.value = _uiState.value.copy(transactionCategory = category)
+        _uiState.update { it.copy(transactionCategory = category) }
     }
 
 
@@ -86,8 +87,7 @@ class SearchScreenViewModel @Inject constructor(
                 dates = datesInBetween,
                 categoryId = _uiState.value.transactionCategory!!.transactionCategoryId
             ).collect { transactions ->
-                _uiState.value = _uiState.value.copy(transactions =
-                transactions.map { it.toExternalModel() })
+                _uiState.update { initialState -> initialState.copy(transactions = transactions.map { it.toExternalModel() }) }
 
             }
         }
