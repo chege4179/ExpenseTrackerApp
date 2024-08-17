@@ -165,26 +165,26 @@ dependencies {
 
 
     // view model
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
 
     //paging
-    implementation("androidx.paging:paging-common-ktx:3.3.0")
-    implementation("androidx.paging:paging-compose:3.3.0")
+    implementation("androidx.paging:paging-common-ktx:3.3.2")
+    implementation("androidx.paging:paging-compose:3.3.2")
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     //coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.8.0")
 
     // dagger hilt
-    implementation("com.google.dagger:hilt-android:2.51")
-    ksp("com.google.dagger:dagger-compiler:2.51")
-    ksp("com.google.dagger:hilt-compiler:2.51")
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    ksp("com.google.dagger:dagger-compiler:2.51.1")
+    ksp("com.google.dagger:hilt-compiler:2.51.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // coil
@@ -208,13 +208,13 @@ dependencies {
 
     implementation("androidx.profileinstaller:profileinstaller:1.3.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-perf")
 
     // Play services OSS
-    implementation("com.google.android.gms:play-services-oss-licenses:17.0.1")
+    implementation("com.google.android.gms:play-services-oss-licenses:17.1.0")
 
     // date picker
     implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
@@ -222,23 +222,23 @@ dependencies {
 
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    androidTestImplementation("app.cash.turbine:turbine:1.0.0")
-    testImplementation("io.mockk:mockk:1.13.8")
+    androidTestImplementation("app.cash.turbine:turbine:1.1.0")
+    testImplementation("io.mockk:mockk:1.13.12")
 
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     // Instrumentation tests
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.51")
-    kspAndroidTest("com.google.dagger:hilt-android-compiler:2.50")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    kspAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
     androidTestImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
     androidTestImplementation("com.google.truth:truth:1.4.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test:core-ktx:1.5.0")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test:core-ktx:1.6.1")
     androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
-    androidTestImplementation("io.mockk:mockk-android:1.13.9")
-    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("io.mockk:mockk-android:1.13.12")
+    androidTestImplementation("androidx.test:runner:1.6.2")
 
-    testImplementation("org.robolectric:robolectric:4.11.1")
+    testImplementation("org.robolectric:robolectric:4.13")
 }
 
 
