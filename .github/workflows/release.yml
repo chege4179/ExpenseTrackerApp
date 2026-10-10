@@ -18,6 +18,11 @@ jobs:
           DATA: ${{ secrets.PROPERTIES_CONTENT }}
         run: echo $DATA > /home/runner/work/ExpenseTrackerApp/ExpenseTrackerApp/local.properties
 
+      - name: Putting data into distribution.json
+        env:
+          DATA: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+        run: echo "$DATA" > /home/runner/work/ExpenseTrackerApp/ExpenseTrackerApp/distribution.json
+
       - name: Set up JDK
         uses: actions/setup-java@v6
         with:
@@ -25,8 +30,8 @@ jobs:
           java-version: 17
           cache: gradle
 
-      - name: Build Release App
-        run: ./gradlew assembleRelease -Pandroidx.baselineprofile.skipgeneration=true
+      - name: Build App with Gradle and upload to Firebase App Distribution
+        run: ./gradlew assembleRelease appDistributionUploadRelease -Pandroidx.baselineprofile.skipgeneration=true
 
       - name: Upload a Build Artifact (APK)
         uses: actions/upload-artifact@v7
@@ -34,10 +39,3 @@ jobs:
           name: app
           path: app/build/outputs/apk/release/app-release.apk
 
-      - name: Upload artifact to Firebase App Distribution
-        env:
-          CREDENTIAL_FILE_CONTENT: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-        run: |
-          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/firebase-credentials.json"
-          echo "$CREDENTIAL_FILE_CONTENT" > "$GOOGLE_APPLICATION_CREDENTIALS"
-          ./gradlew appDistributionUploadRelease -Pandroidx.baselineprofile.skipgeneration=true

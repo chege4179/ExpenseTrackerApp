@@ -83,6 +83,7 @@ android {
             firebaseAppDistribution {
                 artifactType = "APK"
                 groups = "trusted-testers"
+                serviceCredentialsFile = rootProject.file("distribution.json").path
             }
         }
         getByName("debug") {
