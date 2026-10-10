@@ -15,6 +15,11 @@
  */
 package com.peterchege.expensetrackerapp.presentation.screens.home
 
+import com.peterchege.expensetrackerapp.core.util.formatAmount
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
+import kotlinx.coroutines.flow.MutableSharedFlow
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +42,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,9 +59,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.annotation.ExperimentalCoilApi
 import com.peterchege.expensetrackerapp.R
 import com.peterchege.expensetrackerapp.core.util.Screens
 import com.peterchege.expensetrackerapp.core.util.TestTags
@@ -109,7 +113,7 @@ fun HomeScreen(
 
 }
 
-@OptIn(ExperimentalCoilApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeScreenContent(
@@ -157,7 +161,7 @@ fun HomeScreenContent(
         topBar = {
             TopAppBar(
                 modifier = Modifier.testTag(TestTags.HOME_SCREEN_TOP_APP_BAR_TAG),
-                colors = TopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.onBackground,
                     titleContentColor = MaterialTheme.colorScheme.onBackground,
                     scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
@@ -214,7 +218,7 @@ fun HomeScreenContent(
                                     fontSize = 16.sp
                                 )
                                 Text(
-                                    text = "KES $remainingIncome /=",
+                                    text = formatAmount(remainingIncome),
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 30.sp,
                                     style = TextStyle(color = MaterialTheme.colorScheme.primary)
@@ -403,5 +407,26 @@ fun HomeScreenContent(
     }
 }
 
-
-
+@ThemePreviews
+@Composable
+private fun HomeScreenPreview() {
+    PreviewSurface {
+        HomeScreenContent(
+            uiState = HomeScreenUiState.Success(
+                income = PreviewData.incomes,
+                expenses = PreviewData.expenses,
+                transactions = PreviewData.transactions,
+            ),
+            eventFlow = MutableSharedFlow(),
+            activeBottomSheet = null,
+            onChangeActiveBottomSheet = {},
+            activeIncomeId = null,
+            onChangeActiveIncomeId = {},
+            navigateToAllIncomeScreen = {},
+            navigateToAllTransactionsScreen = {},
+            navigateToAllExpensesScreen = {},
+            navigateToTransactionScreen = {},
+            navigateToExpenseScreen = {},
+        )
+    }
+}

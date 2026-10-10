@@ -15,6 +15,9 @@
  */
 package com.peterchege.expensetrackerapp.presentation.components
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.core.util.FilterConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -86,4 +89,15 @@ fun TransactionFilterCard(
         }
     }
 
+}
+
+@ThemePreviews
+@Composable
+private fun TransactionFilterCardPreview() {
+    PreviewSurface {
+        Row {
+            TransactionFilterCard(filterName = FilterConstants.TODAY, isActive = true, onClick = {})
+            TransactionFilterCard(filterName = FilterConstants.THIS_WEEK, isActive = false, onClick = {})
+        }
+    }
 }

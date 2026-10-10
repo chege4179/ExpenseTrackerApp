@@ -15,6 +15,11 @@
  */
 package com.peterchege.expensetrackerapp.presentation.components
 
+import com.peterchege.expensetrackerapp.core.util.formatAmount
+import androidx.compose.ui.text.style.TextOverflow
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,12 +36,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import androidx.compose.ui.platform.LocalContext
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.peterchege.expensetrackerapp.core.util.generateAvatarURL
 import com.peterchege.expensetrackerapp.domain.models.Transaction
 
-@ExperimentalCoilApi
 @Composable
 fun TransactionCard(
     transaction: Transaction,
@@ -71,18 +77,18 @@ fun TransactionCard(
                     modifier = Modifier
                         .width(48.dp)
                         .height(48.dp),
-                    painter = rememberImagePainter(
-                        data = generateAvatarURL(transaction.transactionName),
-                        builder = {
-                            crossfade(true)
-                        },
+                    painter = rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(generateAvatarURL(transaction.transactionName))
+                            .crossfade(true)
+                            .build()
                     ),
                     contentDescription = ""
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Column(
                     modifier = Modifier
-                        .width(140.dp)
+                        .weight(1f)
                         .fillMaxHeight(),
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.Center
@@ -90,17 +96,22 @@ fun TransactionCard(
                     Text(
                         text = transaction.transactionName,
                         fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         style = TextStyle(color = MaterialTheme.colorScheme.primary)
 
                     )
                     Text(
                         text = transaction.transactionCreatedOn,
-                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                        )
                     )
 
                 }
                 Text(
-                    text = "KES ${transaction.transactionAmount} /=",
+                    modifier = Modifier.padding(start = 8.dp),
+                    text = formatAmount(transaction.transactionAmount),
                     textAlign = TextAlign.Start,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(color = MaterialTheme.colorScheme.primary)
@@ -111,7 +122,7 @@ fun TransactionCard(
             }) {
                 Icon(
                     imageVector = Icons.Outlined.ChevronRight,
-                    tint = Color.Black,
+                    tint = MaterialTheme.colorScheme.primary,
                     contentDescription = "More "
                 )
 
@@ -120,4 +131,15 @@ fun TransactionCard(
 
     }
 
+}
+
+@ThemePreviews
+@Composable
+private fun TransactionCardPreview() {
+    PreviewSurface {
+        TransactionCard(
+            transaction = PreviewData.transaction,
+            onTransactionNavigate = {},
+        )
+    }
 }

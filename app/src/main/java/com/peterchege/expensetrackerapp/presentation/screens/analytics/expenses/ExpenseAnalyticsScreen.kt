@@ -15,6 +15,10 @@
  */
 package com.peterchege.expensetrackerapp.presentation.screens.analytics.expenses
 
+import com.peterchege.expensetrackerapp.core.util.formatAmount
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -33,7 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.github.tehras.charts.piechart.PieChart
@@ -153,7 +157,7 @@ fun ExpensesAnalyticsScreenContent(
                         style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
                     Text(
-                        text = "KES " + it.slice.value.toString() + "/=",
+                        text = formatAmount(it.slice.value),
                         modifier = Modifier.padding(3.dp),
                         fontSize = 17.sp,
                         style = TextStyle(color = MaterialTheme.colorScheme.primary)
@@ -163,5 +167,31 @@ fun ExpensesAnalyticsScreenContent(
             }
         }
 
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun ExpensesAnalyticsScreenPreview() {
+    PreviewSurface {
+        val sliceColors = listOf(
+            MaterialTheme.colorScheme.primary,
+            MaterialTheme.colorScheme.secondary,
+            MaterialTheme.colorScheme.tertiary,
+        )
+        ExpensesAnalyticsScreenContent(
+            pieData = PreviewData.expenseCategories.mapIndexed { index, category ->
+                PieDataInfo(
+                    slice = PieChartData.Slice(
+                        value = PreviewData.expenses[index].expenseAmount.toFloat(),
+                        color = sliceColors[index],
+                    ),
+                    expenseCategory = category,
+                )
+            },
+            navigateToExpenseScreen = {},
+            expenseCategories = PreviewData.expenseCategories,
+            expenses = PreviewData.expenses,
+        )
     }
 }

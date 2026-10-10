@@ -18,6 +18,7 @@ package com.peterchege.expensetrackerapp.presentation
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,14 +28,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.metrics.performance.JankStats
 import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.google.android.gms.oss.licenses.v2.OssLicensesMenuActivity
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.InstallState
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
@@ -43,7 +45,10 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.installStatus
 import com.peterchege.expensetrackerapp.core.util.Constants
 import com.peterchege.expensetrackerapp.presentation.navigation.AppNavigation
+import com.peterchege.expensetrackerapp.presentation.theme.DarkColorPalette
 import com.peterchege.expensetrackerapp.presentation.theme.ExpenseTrackerAppTheme
+import com.peterchege.expensetrackerapp.presentation.theme.LightColorPalette
+import com.peterchege.expensetrackerapp.presentation.theme.Typography
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -62,6 +67,11 @@ class MainActivity : ComponentActivity() {
     private lateinit var appUpdateManager: AppUpdateManager
     private val updateAvailable = MutableStateFlow(false)
     private var updateInfo: AppUpdateInfo? = null
+    private val updateFlowLauncher = registerForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        Timber.tag(tag).i("Update flow result code ${result.resultCode}")
+    }
     private val updateListener = InstallStateUpdatedListener { state: InstallState ->
         Timber.tag(tag).i("Install status ${state.installStatus}")
         if (state.installStatus() == InstallStatus.DOWNLOADED) {
@@ -107,6 +117,11 @@ class MainActivity : ComponentActivity() {
                         navHostController = navHostController,
                         shouldShowOnBoarding = shouldShowOnboarding,
                         openOSSMenu = {
+                            OssLicensesMenuActivity.setTheme(
+                                LightColorPalette,
+                                DarkColorPalette,
+                                Typography
+                            )
                             startActivity(Intent(this, OssLicensesMenuActivity::class.java))
                         }
                     )
@@ -139,7 +154,11 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startForInAppUpdate(it: AppUpdateInfo?) {
-        appUpdateManager.startUpdateFlowForResult(it!!, AppUpdateType.FLEXIBLE, this, 1101)
+        appUpdateManager.startUpdateFlowForResult(
+            it!!,
+            updateFlowLauncher,
+            AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE).build()
+        )
     }
 
     private fun checkForUpdate() {

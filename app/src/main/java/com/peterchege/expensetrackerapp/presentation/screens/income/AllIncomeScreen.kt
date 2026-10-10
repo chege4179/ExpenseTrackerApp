@@ -15,6 +15,10 @@
  */
 package com.peterchege.expensetrackerapp.presentation.screens.income
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
+import androidx.navigation.compose.rememberNavController
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,7 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,10 +42,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import coil.annotation.ExperimentalCoilApi
 import com.peterchege.expensetrackerapp.presentation.components.ErrorComponent
 import com.peterchege.expensetrackerapp.presentation.components.IncomeCard
 import com.peterchege.expensetrackerapp.presentation.components.LoadingComponent
@@ -67,7 +70,7 @@ fun AllIncomeScreen(
 }
 
 
-@OptIn(ExperimentalCoilApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AllIncomeScreenContent(
@@ -83,7 +86,7 @@ fun AllIncomeScreenContent(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                colors = TopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.onBackground,
                     titleContentColor = MaterialTheme.colorScheme.onBackground,
                     scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
@@ -137,4 +140,17 @@ fun AllIncomeScreenContent(
     }
 
 
+}
+
+@ThemePreviews
+@Composable
+private fun AllIncomeScreenPreview() {
+    PreviewSurface {
+        AllIncomeScreenContent(
+            navController = rememberNavController(),
+            uiState = AllIncomeScreenUiState.Success(incomes = PreviewData.incomes),
+            activeIncomeId = null,
+            onChangeActiveIncomeId = {},
+        )
+    }
 }

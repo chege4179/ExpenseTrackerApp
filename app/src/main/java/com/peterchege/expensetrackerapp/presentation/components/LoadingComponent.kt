@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.presentation.components
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,5 +28,13 @@ import androidx.compose.ui.Modifier
 fun LoadingComponent() {
     Box(modifier = Modifier.fillMaxSize()){
         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun LoadingComponentPreview() {
+    PreviewSurface {
+        LoadingComponent()
     }
 }

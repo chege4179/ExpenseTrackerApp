@@ -15,6 +15,19 @@
  */
 package com.peterchege.expensetrackerapp.presentation.components
 
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -26,13 +39,34 @@ import androidx.compose.ui.text.TextStyle
 
 @Composable
 fun ErrorComponent(message:String) {
-    Box(modifier = Modifier.fillMaxSize()){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Icon(
+            modifier = Modifier.size(48.dp),
+            imageVector = Icons.Outlined.ErrorOutline,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.error,
+        )
+        Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = message,
-            modifier = Modifier.align(Alignment.Center),
-            style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = MaterialTheme.colorScheme.primary,
+            )
         )
     }
+}
 
+@ThemePreviews
+@Composable
+private fun ErrorComponentPreview() {
+    PreviewSurface {
+        ErrorComponent(message = "Failed to load your data")
+    }
 }

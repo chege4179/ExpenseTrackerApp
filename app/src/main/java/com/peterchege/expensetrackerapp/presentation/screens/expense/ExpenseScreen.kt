@@ -1,5 +1,26 @@
+/*
+ * Copyright 2026 Expense Tracker App By Peter Chege
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.peterchege.expensetrackerapp.presentation.screens.expense
 
+import com.peterchege.expensetrackerapp.presentation.components.DeleteButton
+import com.peterchege.expensetrackerapp.presentation.components.DetailsCard
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
+import com.peterchege.expensetrackerapp.domain.use_case.ExpenseInfo
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -13,7 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -23,7 +44,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.peterchege.expensetrackerapp.R
 import com.peterchege.expensetrackerapp.domain.models.Expense
@@ -72,7 +93,7 @@ fun ExpenseScreenContent(
                         fontSize = 22.sp
                     )
                 },
-                colors = TopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.onBackground,
                     titleContentColor = MaterialTheme.colorScheme.onBackground,
                     scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
@@ -103,7 +124,7 @@ fun ExpenseScreenContent(
                     )
                 }
                 transactionInfo.let {
-                    if (it.expense != null && it.expenseCategory != null){
+                    if (it.expense != null){
                         val expense = it.expense
                         val category = it.expenseCategory
                         Column(
@@ -116,58 +137,48 @@ fun ExpenseScreenContent(
                             Column(
                                 modifier = Modifier.weight(1f)
                             ) {
-                                Text(
-                                    text = "Expense ID :" + expense.expenseId,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
-                                )
-                                Text(
-                                    text = "Name :" + expense.expenseName,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
-                                )
-                                Text(
-                                    text = "Amount :" + expense.expenseAmount,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
-                                )
-                                Text(
-                                    text = "Created On :" + expense.expenseCreatedOn,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-                                )
-                                Text(
-                                    text = "Created At :" + expense.expenseCreatedAt,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-                                )
-                                Text(
-                                    text = "Category:" + category.expenseCategoryName,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
+                                DetailsCard(
+                                    title = expense.expenseName,
+                                    amount = expense.expenseAmount,
+                                    details = listOf(
+                                        "Category" to category.expenseCategoryName,
+                                        "Date" to expense.expenseCreatedOn,
+                                        "Time" to expense.expenseCreatedAt,
+                                        "Expense ID" to expense.expenseId,
+                                    ),
                                 )
 
                             }
-                            Button(
-                                modifier = Modifier.fillMaxWidth(),
+                            DeleteButton(
+                                text = stringResource(id = R.string.delete_expense),
                                 onClick = {
                                     setDeleteExpense(it.expense)
                                 },
-                                colors = ButtonColors(
-                                    contentColor = MaterialTheme.colorScheme.background,
-                                    containerColor = MaterialTheme.colorScheme.onBackground,
-                                    disabledContainerColor = MaterialTheme.colorScheme.primary,
-                                    disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                                )
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.delete_expense),
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-                                )
-                            }
+                            )
                         }
                     }
                 }
             }
         }
 
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun ExpenseScreenPreview() {
+    PreviewSurface {
+        ExpenseScreenContent(
+            uiState = ExpenseScreenUiState.Success(
+                expenseInfo = ExpenseInfo(
+                    expense = PreviewData.expense,
+                    expenseCategory = PreviewData.expenseCategories.first(),
+                )
+            ),
+            deleteExpenseUiState = DeleteExpenseUiState(isDeleteExpenseDialogVisible = false),
+            setDeleteExpense = {},
+            toggleDeleteExpenseDialog = {},
+            deleteExpense = {},
+        )
     }
 }

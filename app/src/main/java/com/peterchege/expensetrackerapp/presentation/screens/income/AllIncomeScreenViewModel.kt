@@ -47,8 +47,8 @@ class AllIncomeScreenViewModel @Inject constructor(
         .map {
             AllIncomeScreenUiState.Success(it)
         }
-        .onStart { AllIncomeScreenUiState.Loading }
-        .catch { AllIncomeScreenUiState.Error(message = "Failed to your data") }
+        .onStart<AllIncomeScreenUiState> { emit(AllIncomeScreenUiState.Loading) }
+        .catch { emit(AllIncomeScreenUiState.Error(message = "Failed to load your data")) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),

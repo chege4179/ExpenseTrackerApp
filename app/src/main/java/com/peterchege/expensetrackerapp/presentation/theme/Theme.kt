@@ -23,7 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 
-private val DarkColorPalette = darkColorScheme(
+internal val DarkColorPalette = darkColorScheme(
     primary = Color.White,
     onPrimary = WhiteColorVariant,
 
@@ -36,7 +36,7 @@ private val DarkColorPalette = darkColorScheme(
 
     )
 
-private val LightColorPalette = lightColorScheme(
+internal val LightColorPalette = lightColorScheme(
     //text
     primary = Color.Black,
     onPrimary = BlackColorVariant,

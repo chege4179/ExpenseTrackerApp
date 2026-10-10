@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>MagicNumber:GeneralActions.kt$2_000</ID>
+    <ID>MagicNumber:HomeBaselineProfileGenerator.kt$5000</ID>
+    <ID>MagicNumber:OnboardingBaselineProfileGenerator.kt$10_000</ID>
+    <ID>MagicNumber:OnboardingBaselineProfileGenerator.kt$OnboardingBaselineProfileGenerator$5000</ID>
+    <ID>NewLineAtEndOfFile:Constants.kt$com.peterchege.benchmark.Constants.kt</ID>
+    <ID>NewLineAtEndOfFile:GeneralActions.kt$com.peterchege.benchmark.actions.GeneralActions.kt</ID>
+    <ID>NewLineAtEndOfFile:StartupBenchmark.kt$com.peterchege.benchmark.benchmarks.StartupBenchmark.kt</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.presentation.bottomsheets.view
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -31,7 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
@@ -150,5 +152,17 @@ fun AddExpenseCategoryBottomSheetContent(
         if (formState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun AddExpenseCategoryBottomSheetPreview() {
+    PreviewSurface {
+        AddExpenseCategoryBottomSheetContent(
+            formState = AddExpenseCategoryFormState(expenseCategoryName = "Groceries"),
+            onChangeExpenseCategoryName = {},
+            addExpenseCategory = {},
+        )
     }
 }

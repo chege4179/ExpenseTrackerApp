@@ -15,6 +15,12 @@
  */
 package com.peterchege.expensetrackerapp.presentation.screens.transaction
 
+import com.peterchege.expensetrackerapp.presentation.components.DeleteButton
+import com.peterchege.expensetrackerapp.presentation.components.DetailsCard
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
+import com.peterchege.expensetrackerapp.domain.models.TransactionInfo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -37,7 +43,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.peterchege.expensetrackerapp.R
 import com.peterchege.expensetrackerapp.domain.models.Transaction
@@ -89,7 +95,7 @@ fun TransactionScreenContent(
                         fontSize = 22.sp
                     )
                 },
-                colors = TopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.onBackground,
                     titleContentColor = MaterialTheme.colorScheme.onBackground,
                     scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
@@ -128,63 +134,48 @@ fun TransactionScreenContent(
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
-                        transactionInfo?.let {
-                            it.transaction?.let { transaction ->
-                                Text(
-                                    text = "Transaction ID :" + transaction.transactionId,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
-                                )
-                                Text(
-                                    text = "Name :" + transaction.transactionName,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
-                                )
-                                Text(
-                                    text = "Amount :" + transaction.transactionAmount,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
-                                )
-                                Text(
-                                    text = "Created On :" + transaction.transactionCreatedOn,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-                                )
-                                Text(
-                                    text = "Created At :" + transaction.transactionCreatedAt,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-                                )
-                            }
-                            it.category?.let { category ->
-                                Text(
-                                    text = "Category:" + category.transactionCategoryName,
-                                    style = TextStyle(color = MaterialTheme.colorScheme.primary)
-
-                                )
-                            }
+                        transactionInfo.transaction?.let { transaction ->
+                            DetailsCard(
+                                title = transaction.transactionName,
+                                amount = transaction.transactionAmount,
+                                details = listOfNotNull(
+                                    transactionInfo.category?.let { "Category" to it.transactionCategoryName },
+                                    "Date" to transaction.transactionCreatedOn,
+                                    "Time" to transaction.transactionCreatedAt,
+                                    "Transaction ID" to transaction.transactionId,
+                                ),
+                            )
                         }
                     }
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            contentColor = MaterialTheme.colorScheme.background,
-                            containerColor = MaterialTheme.colorScheme.onBackground,
-                            disabledContainerColor = MaterialTheme.colorScheme.primary,
-                            disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                        ),
+                    DeleteButton(
+                        text = stringResource(id = R.string.delete_transaction),
                         onClick = {
                             setDeleteTransaction(transactionInfo.transaction)
                             toggleDeleteTransactionVisibility()
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.delete_transaction),
-                            style = TextStyle(color = MaterialTheme.colorScheme.primary),
-                        )
-
-                    }
+                        },
+                    )
                 }
             }
         }
 
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun TransactionScreenPreview() {
+    PreviewSurface {
+        TransactionScreenContent(
+            deleteTransactionUiState = DeleteTransactionUiState(),
+            uiState = TransactionScreenUiState.Success(
+                transactionInfo = TransactionInfo(
+                    transaction = PreviewData.transaction,
+                    category = PreviewData.transactionCategories.first(),
+                )
+            ),
+            deleteTransaction = {},
+            setDeleteTransaction = {},
+            toggleDeleteTransactionVisibility = {},
+        )
     }
 }

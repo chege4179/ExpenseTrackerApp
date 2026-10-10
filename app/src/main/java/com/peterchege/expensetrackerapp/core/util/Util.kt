@@ -21,6 +21,7 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import com.google.android.play.core.review.ReviewManagerFactory
 import timber.log.Timber
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.time.*
 import java.util.*
@@ -38,7 +39,15 @@ fun localDateTimeToDate(localDate: LocalDate, localTime: LocalTime): Date {
 fun randomColorCode(): String {
     val random = Random()
     val nextInt = random.nextInt(0xffffff + 1)
-    return String.format("#%06x", nextInt).drop(1).capitalize(Locale.ROOT)
+    return String.format("#%06x", nextInt).drop(1).replaceFirstChar { it.titlecase(Locale.ROOT) }
+}
+
+/**
+ * Formats an amount as Kenyan shillings with thousands separators, e.g. "KES 25,000 /="
+ */
+fun formatAmount(amount: Number): String {
+    val formatter = NumberFormat.getIntegerInstance(Locale.US)
+    return "KES ${formatter.format(amount.toDouble())} /="
 }
 
 fun generateAvatarURL(name:String):String{

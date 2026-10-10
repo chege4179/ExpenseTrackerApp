@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.presentation.screens.settings
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
 import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.foundation.layout.*
@@ -24,7 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,7 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.BuildConfig
@@ -89,7 +91,7 @@ fun SettingsScreenContent(
                         fontSize = 22.sp
                     )
                 },
-                colors = TopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.onBackground,
                     titleContentColor = MaterialTheme.colorScheme.onBackground,
                     scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
@@ -179,15 +181,17 @@ fun SettingsScreenContent(
 
 }
 
-@Preview
+@ThemePreviews
 @Composable
-fun SettingsScreenContentPreview() {
-    SettingsScreenContent(
-        theme = Constants.DARK_MODE,
-        uiState = SettingsScreenUiState(),
-        navigateToAboutScreen = {},
-        toggleThemeDialogVisibility = {},
-        updateTheme = {},
-        openOSSMenu = {}
-    )
+private fun SettingsScreenPreview() {
+    PreviewSurface {
+        SettingsScreenContent(
+            theme = Constants.DARK_MODE,
+            uiState = SettingsScreenUiState(),
+            navigateToAboutScreen = {},
+            toggleThemeDialogVisibility = {},
+            updateTheme = {},
+            openOSSMenu = {},
+        )
+    }
 }

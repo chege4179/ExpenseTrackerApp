@@ -15,6 +15,9 @@
  */
 package com.peterchege.expensetrackerapp.presentation.components
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -86,7 +89,7 @@ fun ComposeMenu(
         OutlinedTextField(
             value = if (menuItems.isEmpty()) "" else truncate(menuItems[selectedIndex],15),
             onValueChange = {},
-            modifier = Modifier.menuAnchor(),
+            modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
             readOnly = true,
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
@@ -121,5 +124,33 @@ fun ComposeMenu(
                 )
             }
         }
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun MenuSamplePreview() {
+    PreviewSurface {
+        MenuSample(
+            selectedIndex = 0,
+            onChangeSelectedIndex = {},
+            menuItems = PreviewData.transactionCategories.map { it.transactionCategoryName },
+            menuWidth = 300,
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun ComposeMenuPreview() {
+    PreviewSurface {
+        ComposeMenu(
+            menuItems = PreviewData.transactionCategories.map { it.transactionCategoryName },
+            menuExpandedState = false,
+            selectedIndex = 1,
+            updateMenuExpandStatus = {},
+            onDismissMenuView = {},
+            onMenuItemclick = {},
+        )
     }
 }

@@ -77,8 +77,8 @@ class HomeScreenViewModel @Inject constructor(
         val transactions = transactionEntities.map { it.toExternalModel() }
         val expenses = expenseEntities.map { it.toExternalModel() }
         HomeScreenUiState.Success(expenses = expenses, income = incomes, transactions = transactions)
-    }.onStart { HomeScreenUiState.Loading }
-        .catch { HomeScreenUiState.Error(message = "Failed to load your data") }
+    }.onStart<HomeScreenUiState> { emit(HomeScreenUiState.Loading) }
+        .catch { emit(HomeScreenUiState.Error(message = "Failed to load your data")) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),

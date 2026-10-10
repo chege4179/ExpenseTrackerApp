@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.presentation.navigation
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -235,4 +237,42 @@ fun BottomNavigation(
 
     }
 
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@ThemePreviews
+@Composable
+private fun BottomNavBarPreview() {
+    PreviewSurface {
+        BottomNavBar(
+            items = listOf(
+                BottomNavItem(
+                    name = "Home",
+                    route = Screens.HOME_SCREEN,
+                    selectedIcon = Icons.Default.Home,
+                    unselectedIcon = Icons.Outlined.Home,
+                ),
+                BottomNavItem(
+                    name = "Search",
+                    route = Screens.SEARCH_SCREEN,
+                    selectedIcon = Icons.Default.Search,
+                    unselectedIcon = Icons.Outlined.Search,
+                ),
+                BottomNavItem(
+                    name = "Analytics",
+                    route = Screens.ANALYTICS_SCREEN,
+                    selectedIcon = Icons.Default.BarChart,
+                    unselectedIcon = Icons.Outlined.BarChart,
+                ),
+                BottomNavItem(
+                    name = "Settings",
+                    route = Screens.SETTINGS_SCREEN,
+                    selectedIcon = Icons.Default.Settings,
+                    unselectedIcon = Icons.Outlined.Settings,
+                ),
+            ),
+            navController = rememberNavController(),
+            onItemClick = {},
+        )
+    }
 }

@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.presentation.components
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,52 +47,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-@Preview
-@Composable
-fun HomeScreenCardActionsPreview(){
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        HomeScreenActionsCard(
-            name ="Add Transaction",
-            icon = Icons.Default.Add,
-            onClick = {
-
-            }
-        )
-        HomeScreenActionsCard(
-            name ="Add Transaction",
-            icon = Icons.Default.Add,
-            onClick = {
-
-            }
-        )
-        HomeScreenActionsCard(
-            name ="Add Transaction",
-            icon = Icons.Default.Add,
-            onClick = {
-
-            }
-        )
-        HomeScreenActionsCard(
-            name ="Add Transaction",
-            icon = Icons.Default.Add,
-            onClick = {
-
-            }
-        )
-        HomeScreenActionsCard(
-            name ="Add Transaction",
-            icon = Icons.Default.Add,
-            onClick = {
-
-            }
-        )
-    }
-
-}
 
 @Composable
 fun HomeScreenActionsCard(
@@ -134,4 +90,20 @@ fun HomeScreenActionsCard(
         )
     }
 
+}
+
+@ThemePreviews
+@Composable
+private fun HomeScreenActionsCardPreview() {
+    PreviewSurface {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            HomeScreenActionsCard(name = "Add Transaction", icon = Icons.Default.Add, onClick = {})
+            HomeScreenActionsCard(name = "Add Expense", icon = Icons.Default.Add, onClick = {})
+            HomeScreenActionsCard(name = "Add Income", icon = Icons.Default.Add, onClick = {})
+        }
+    }
 }

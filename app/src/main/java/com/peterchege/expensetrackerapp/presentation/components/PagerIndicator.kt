@@ -1,5 +1,23 @@
+/*
+ * Copyright 2026 Expense Tracker App By Peter Chege
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.peterchege.expensetrackerapp.presentation.components
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -179,4 +197,15 @@ private fun LazyListScope.indicatorItems(
 
 enum class IndicatorOrientation {
     Horizontal, Vertical
+}
+
+@ThemePreviews
+@Composable
+private fun PagerIndicatorPreview() {
+    PreviewSurface {
+        PagerIndicator(
+            pagerState = rememberPagerState(pageCount = { 3 }),
+            indicatorCount = 3,
+        )
+    }
 }

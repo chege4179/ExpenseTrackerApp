@@ -36,7 +36,7 @@ object DatabaseModule {
             ExpenseTrackerAppDatabase::class.java,
             Constants.DATABASE_NAME
         )
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(dropAllTables = false)
             .build()
     }
 }

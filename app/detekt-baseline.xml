@@ -1,0 +1,265 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>CyclomaticComplexMethod:HomeScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun HomeScreenContent( uiState: HomeScreenUiState, eventFlow: SharedFlow&lt;UiEvent&gt;, activeBottomSheet: BottomSheets?, onChangeActiveBottomSheet: (BottomSheets) -&gt; Unit, activeIncomeId: String?, onChangeActiveIncomeId: (String) -&gt; Unit, navigateToAllIncomeScreen: () -&gt; Unit, navigateToAllTransactionsScreen: () -&gt; Unit, navigateToAllExpensesScreen: () -&gt; Unit, navigateToTransactionScreen: (String) -&gt; Unit, navigateToExpenseScreen:(String) -&gt; Unit, )</ID>
+    <ID>CyclomaticComplexMethod:SearchScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun SearchScreenContent( navigateToTransactionScreen: (String) -&gt; Unit, uiState: SearchScreenState, transactionCategories: List&lt;TransactionCategory&gt;, searchTransactions: () -&gt; Unit, onChangeTransactionCategory: (TransactionCategory) -&gt; Unit, onChangeTransactionStartDate: (LocalDate) -&gt; Unit, onChangeTransactionEndDate: (LocalDate) -&gt; Unit, eventFlow: SharedFlow&lt;UiEvent&gt; )</ID>
+    <ID>EmptyClassBlock:AboutScreenViewModel.kt$AboutScreenViewModel${ }</ID>
+    <ID>ImplicitDefaultLocale:Util.kt$String.format("#%06x", nextInt)</ID>
+    <ID>LongMethod:AddExpenseBottomSheet.kt$@OptIn(ExperimentalComposeUiApi::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun AddExpenseBottomSheetContent( expenseCategories: List&lt;ExpenseCategory&gt;, formState: AddExpenseFormState, onChangeExpenseName: (String) -&gt; Unit, onChangeExpenseAmount: (String) -&gt; Unit, onChangeExpenseCategory: (ExpenseCategory) -&gt; Unit, addExpense: () -&gt; Unit, )</ID>
+    <ID>LongMethod:AddExpenseCategoryBottomSheet.kt$@OptIn(ExperimentalComposeUiApi::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun AddExpenseCategoryBottomSheetContent( formState: AddExpenseCategoryFormState, onChangeExpenseCategoryName: (String) -&gt; Unit, addExpenseCategory: () -&gt; Unit, )</ID>
+    <ID>LongMethod:AddIncomeBottomSheet.kt$@OptIn(ExperimentalComposeUiApi::class) @Composable fun AddIncomeBottomSheetContent( formState: AddIncomeFormState, onChangeIncomeName: (String) -&gt; Unit, onChangeIncomeAmount: (String) -&gt; Unit, addIncome: () -&gt; Unit )</ID>
+    <ID>LongMethod:AddTransactionBottomSheet.kt$@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun AddTransactionBottomSheetContent( transactionCategories:List&lt;TransactionCategory&gt;, formState:AddTransactionFormState, onChangeTransactionName:(String) -&gt; Unit, onChangeTransactionAmount:(String) -&gt; Unit, onChangeTransactionCategory:(TransactionCategory) -&gt; Unit, onChangeTransactionTime:(LocalTime) -&gt; Unit, onChangeTransactionDate:(LocalDate) -&gt; Unit, addTransaction:() -&gt; Unit )</ID>
+    <ID>LongMethod:AddTransactionCategoryBottomSheet.kt$@OptIn(ExperimentalComposeUiApi::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun AddTransactionCategoryBottomSheetContent( formState:AddTransactionCategoryFormState, onChangeTransactionCategoryName:(String) -&gt; Unit, addTransactionCategory:() -&gt; Unit )</ID>
+    <ID>LongMethod:AllExpensesScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun AllExpensesScreenContent( activeExpenseFilter: String, uiState: AllExpensesScreenUiState, onChangeActiveExpenseFilter: (String) -&gt; Unit, navigateToExpenseScreen: (String) -&gt; Unit, )</ID>
+    <ID>LongMethod:AllTransactionsScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun AllTransactionsScreenContent( activeTransactionFilter: String, uiState: AllTransactionsScreenUiState, onChangeActiveTransactionFilter: (String) -&gt; Unit, navigateToTransactionScreen:(String) -&gt; Unit, )</ID>
+    <ID>LongMethod:AppNavigation.kt$@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class, ExperimentalAnimationApi::class ) @Composable fun AppNavigation( navHostController: NavHostController, shouldShowOnBoarding: Boolean, openOSSMenu: () -&gt; Unit, )</ID>
+    <ID>LongMethod:BottomNavigationWrapper.kt$@OptIn(ExperimentalComposeUiApi::class, ExperimentalAnimationApi::class) @Composable fun BottomNavigation( navController: NavHostController, navHostController: NavHostController, openOSSMenu: () -&gt; Unit )</ID>
+    <ID>LongMethod:ExpenseAnalyticsScreen.kt$@OptIn(ExperimentalLayoutApi::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun ExpensesAnalyticsScreenContent( pieData: List&lt;PieDataInfo&gt;, navigateToExpenseScreen: (String) -&gt; Unit, expenseCategories: List&lt;ExpenseCategory&gt;, expenses:List&lt;Expense&gt;, )</ID>
+    <ID>LongMethod:ExpenseCard.kt$@Composable fun ExpenseCard( expense: Expense, onExpenseNavigate: (String) -&gt; Unit )</ID>
+    <ID>LongMethod:ExpenseScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun ExpenseScreenContent( uiState: ExpenseScreenUiState, deleteExpenseUiState: DeleteExpenseUiState, setDeleteExpense: (Expense?) -&gt; Unit, toggleDeleteExpenseDialog: () -&gt; Unit, deleteExpense: () -&gt; Unit, )</ID>
+    <ID>LongMethod:HomeScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun HomeScreenContent( uiState: HomeScreenUiState, eventFlow: SharedFlow&lt;UiEvent&gt;, activeBottomSheet: BottomSheets?, onChangeActiveBottomSheet: (BottomSheets) -&gt; Unit, activeIncomeId: String?, onChangeActiveIncomeId: (String) -&gt; Unit, navigateToAllIncomeScreen: () -&gt; Unit, navigateToAllTransactionsScreen: () -&gt; Unit, navigateToAllExpensesScreen: () -&gt; Unit, navigateToTransactionScreen: (String) -&gt; Unit, navigateToExpenseScreen:(String) -&gt; Unit, )</ID>
+    <ID>LongMethod:IncomeCard.kt$@Composable fun IncomeCard( income:Income, onIncomeNavigate: (String) -&gt; Unit )</ID>
+    <ID>LongMethod:IncomeInfoBottomSheet.kt$@Composable fun IncomeInfoBottomSheetContent( incomeNullable: Income?, deleteIncome:() -&gt; Unit, )</ID>
+    <ID>LongMethod:OnboardingScreen.kt$@OptIn(ExperimentalFoundationApi::class) @Composable fun OnboardingScreenContent( pagerState: PagerState, proceed: () -&gt; Unit, back: () -&gt; Unit, onClickPageIndicator: (Int) -&gt; Unit, selectedTransactionCategories: List&lt;ExampleTransactionCategory&gt;, selectedExpenseCategories: List&lt;ExampleExpenseCategory&gt;, onAddTransactionCategory: (ExampleTransactionCategory) -&gt; Unit, onRemoveTransactionCategory: (ExampleTransactionCategory) -&gt; Unit, onAddExpenseCategory: (ExampleExpenseCategory) -&gt; Unit, onRemoveExpenseCategory: (ExampleExpenseCategory) -&gt; Unit, )</ID>
+    <ID>LongMethod:PagerIndicator.kt$@OptIn(ExperimentalFoundationApi::class) @Composable fun PagerIndicator( modifier: Modifier = Modifier, pagerState: PagerState, indicatorCount: Int = 5, indicatorSize: Dp = 8.dp, indicatorShape: Shape = CircleShape, space: Dp = 6.dp, activeColor: Color = Color.Blue, inActiveColor: Color = Color.LightGray, orientation: IndicatorOrientation = IndicatorOrientation.Horizontal, onClick: ((Int) -&gt; Unit)? = null )</ID>
+    <ID>LongMethod:SearchScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun SearchScreenContent( navigateToTransactionScreen: (String) -&gt; Unit, uiState: SearchScreenState, transactionCategories: List&lt;TransactionCategory&gt;, searchTransactions: () -&gt; Unit, onChangeTransactionCategory: (TransactionCategory) -&gt; Unit, onChangeTransactionStartDate: (LocalDate) -&gt; Unit, onChangeTransactionEndDate: (LocalDate) -&gt; Unit, eventFlow: SharedFlow&lt;UiEvent&gt; )</ID>
+    <ID>LongMethod:SettingsScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun SettingsScreenContent( theme: String, uiState: SettingsScreenUiState, navigateToAboutScreen: () -&gt; Unit, toggleThemeDialogVisibility: () -&gt; Unit, updateTheme: (String) -&gt; Unit, openOSSMenu: () -&gt; Unit, )</ID>
+    <ID>LongMethod:TransactionCard.kt$@Composable fun TransactionCard( transaction: Transaction, onTransactionNavigate: (String) -&gt; Unit )</ID>
+    <ID>LongMethod:TransactionScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun TransactionScreenContent( deleteTransactionUiState: DeleteTransactionUiState, uiState: TransactionScreenUiState, deleteTransaction: () -&gt; Unit, setDeleteTransaction: (Transaction?) -&gt; Unit, toggleDeleteTransactionVisibility: () -&gt; Unit, )</ID>
+    <ID>LongMethod:TransactionsAnalyticsScreen.kt$@SuppressLint("UnusedMaterialScaffoldPaddingParameter") @Composable fun TransactionsAnalyticsScreenContent( transactionsState:List&lt;Transaction&gt;, transactions:List&lt;Transaction&gt;, activeFilterConstant:String, bars:List&lt;BarChartData.Bar&gt;, onChangeActiveFilterConstant:(String) -&gt; Unit, navigateToTransactionScreen: (String) -&gt; Unit )</ID>
+    <ID>LongParameterList:PagerIndicator.kt$( itemCount: Int, currentItem: Int, indicatorCount: Int, indicatorShape: Shape, activeColor: Color, inActiveColor: Color, indicatorSize: Dp, onClick: ((Int) -&gt; Unit)? )</ID>
+    <ID>MagicNumber:AddExpenseBottomSheet.kt$0.5f</ID>
+    <ID>MagicNumber:AddExpenseScreenViewModel.kt$AddExpenseScreenViewModel$5000L</ID>
+    <ID>MagicNumber:AddTransactionBottomSheet.kt$0.5f</ID>
+    <ID>MagicNumber:AlarmReceiver.kt$AlarmReceiver$123</ID>
+    <ID>MagicNumber:AllExpensesScreenViewModel.kt$AllExpensesScreenViewModel$5000L</ID>
+    <ID>MagicNumber:AllIncomeScreenViewModel.kt$AllIncomeScreenViewModel$5000L</ID>
+    <ID>MagicNumber:AllTransactionsScreenViewModel.kt$AllTransactionsScreenViewModel$5000L</ID>
+    <ID>MagicNumber:AndroidAlarmScheduler.kt$AndroidAlarmScheduler$21</ID>
+    <ID>MagicNumber:Color.kt$0xFF7D7D89</ID>
+    <ID>MagicNumber:ColorUtil.kt$0x1000000</ID>
+    <ID>MagicNumber:DateUtil.kt$6</ID>
+    <ID>MagicNumber:DateUtil.kt$7</ID>
+    <ID>MagicNumber:DateUtil.kt$7L</ID>
+    <ID>MagicNumber:DropDownMenu.kt$15</ID>
+    <ID>MagicNumber:ExpenseCard.kt$15</ID>
+    <ID>MagicNumber:FirebaseAnalyticsHelper.kt$FirebaseAnalyticsHelper$100</ID>
+    <ID>MagicNumber:FirebaseAnalyticsHelper.kt$FirebaseAnalyticsHelper$40</ID>
+    <ID>MagicNumber:HomeScreen.kt$0.8f</ID>
+    <ID>MagicNumber:HomeScreenActionsCard.kt$5</ID>
+    <ID>MagicNumber:HomeScreenViewModel.kt$HomeScreenViewModel$5000L</ID>
+    <ID>MagicNumber:IncomeCard.kt$15</ID>
+    <ID>MagicNumber:MainViewModel.kt$MainViewModel$5000L</ID>
+    <ID>MagicNumber:PagerIndicator.kt$.5f</ID>
+    <ID>MagicNumber:PagerIndicator.kt$.8f</ID>
+    <ID>MagicNumber:SearchScreen.kt$0.2f</ID>
+    <ID>MagicNumber:SearchScreen.kt$0.5f</ID>
+    <ID>MagicNumber:SelectExpenseCategoryScreen.kt$0.85f</ID>
+    <ID>MagicNumber:SelectTransactionCategoryScreen.kt$0.85f</ID>
+    <ID>MagicNumber:SettingsScreenViewModel.kt$SettingsScreenViewModel$5000L</ID>
+    <ID>MagicNumber:TransactionCard.kt$15</ID>
+    <ID>MagicNumber:TransactionsAnalyticsScreen.kt$3</ID>
+    <ID>MagicNumber:Util.kt$0xffffff</ID>
+    <ID>MagicNumber:Util.kt$20</ID>
+    <ID>MagicNumber:WelcomeScreen.kt$0.85f</ID>
+    <ID>MatchingDeclarationName:AnalyticsEvents.kt$AnalyticsEvent</ID>
+    <ID>MatchingDeclarationName:ExpenseAnalyticsScreen.kt$PieDataInfo</ID>
+    <ID>MaxLineLength:AddExpenseBottomSheet.kt$expenseCategories.map { it.expenseCategoryName }.indexOf(formState.selectedExpenseCategory.expenseCategoryName)</ID>
+    <ID>MaxLineLength:AllExpensesScreen.kt$val isVisible = if (activeExpenseFilter == FilterConstants.ALL) true else (activeExpenseFilter == expense.expenseCategoryId)</ID>
+    <ID>MaxLineLength:CreateExpenseCategoryUseCase.kt$CreateExpenseCategoryUseCase$val existingExpenseCategory = repository.getExpenseCategoryByName(name = expenseCategory.expenseCategoryName)</ID>
+    <ID>MaxLineLength:SearchScreen.kt$menuItems = transactionCategories.map { transactionCategory -&gt; transactionCategory.transactionCategoryName }</ID>
+    <ID>MaxLineLength:SearchScreenViewModel.kt$SearchScreenViewModel$_uiState.update { initialState -&gt; initialState.copy(transactions = transactions.map { it.toExternalModel() }) }</ID>
+    <ID>MaxLineLength:Util.kt$return "https://ui-avatars.com/api/?background=${color}&amp;color=fff&amp;name=${splitname}&amp;bold=true&amp;fontsize=0.6&amp;rounded=true"</ID>
+    <ID>MaxLineLength:WelcomeScreen.kt$description = "Expense Tracker App is an app that allows you to track your income , daily transactions and expenses "</ID>
+    <ID>NewLineAtEndOfFile:AboutScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.screens.about.AboutScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:AddExpenseCategoryScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddExpenseCategoryScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:AddExpenseScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddExpenseScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:AddIncomeScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddIncomeScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:AddTransactionCategoryScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddTransactionCategoryScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:AddTransactionScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.AddTransactionScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:AlarmItem.kt$com.peterchege.expensetrackerapp.core.alarm.AlarmItem.kt</ID>
+    <ID>NewLineAtEndOfFile:AlarmReceiver.kt$com.peterchege.expensetrackerapp.core.alarm.AlarmReceiver.kt</ID>
+    <ID>NewLineAtEndOfFile:AlarmScheduler.kt$com.peterchege.expensetrackerapp.core.alarm.AlarmScheduler.kt</ID>
+    <ID>NewLineAtEndOfFile:AllExpensesScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.screens.expenses.AllExpensesScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:AllIncomeScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.screens.income.AllIncomeScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:AllTransactionsScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.screens.transactions.AllTransactionsScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:AnalyticsExtensions.kt$com.peterchege.expensetrackerapp.core.analytics.analytics.AnalyticsExtensions.kt</ID>
+    <ID>NewLineAtEndOfFile:AnalyticsHelper.kt$com.peterchege.expensetrackerapp.core.analytics.analytics.AnalyticsHelper.kt</ID>
+    <ID>NewLineAtEndOfFile:AnalyticsModule.kt$com.peterchege.expensetrackerapp.core.di.AnalyticsModule.kt</ID>
+    <ID>NewLineAtEndOfFile:AndroidAlarmScheduler.kt$com.peterchege.expensetrackerapp.core.alarm.AndroidAlarmScheduler.kt</ID>
+    <ID>NewLineAtEndOfFile:BottomNavItem.kt$com.peterchege.expensetrackerapp.domain.models.BottomNavItem.kt</ID>
+    <ID>NewLineAtEndOfFile:ColorUtil.kt$com.peterchege.expensetrackerapp.core.util.ColorUtil.kt</ID>
+    <ID>NewLineAtEndOfFile:Constants.kt$com.peterchege.expensetrackerapp.core.util.Constants.kt</ID>
+    <ID>NewLineAtEndOfFile:CrashlyticsTree.kt$com.peterchege.expensetrackerapp.core.analytics.crashlytics.CrashlyticsTree.kt</ID>
+    <ID>NewLineAtEndOfFile:CreateExpenseCategoryUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.CreateExpenseCategoryUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:CreateExpenseUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.CreateExpenseUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:CreateIncomeUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.CreateIncomeUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:CreateTransactionCategoryUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.CreateTransactionCategoryUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:CreateTransactionCategoryUseCaseTest.kt$com.peterchege.expensetrackerapp.domain.CreateTransactionCategoryUseCaseTest.kt</ID>
+    <ID>NewLineAtEndOfFile:CreateTransactionUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.CreateTransactionUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:DatabaseModule.kt$com.peterchege.expensetrackerapp.core.di.DatabaseModule.kt</ID>
+    <ID>NewLineAtEndOfFile:DatastoreModule.kt$com.peterchege.expensetrackerapp.core.di.DatastoreModule.kt</ID>
+    <ID>NewLineAtEndOfFile:DateConverter.kt$com.peterchege.expensetrackerapp.core.room.converters.DateConverter.kt</ID>
+    <ID>NewLineAtEndOfFile:DefaultCategories.kt$com.peterchege.expensetrackerapp.core.util.DefaultCategories.kt</ID>
+    <ID>NewLineAtEndOfFile:DefaultData.kt$com.peterchege.expensetrackerapp.core.util.DefaultData.kt</ID>
+    <ID>NewLineAtEndOfFile:DeleteExpenseByIdUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.DeleteExpenseByIdUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:DeleteIncomeByIdUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.DeleteIncomeByIdUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:DeleteTransactionUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.DeleteTransactionUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:DispatchersModule.kt$com.peterchege.expensetrackerapp.core.di.DispatchersModule.kt</ID>
+    <ID>NewLineAtEndOfFile:ExampleUnitTest.kt$com.peterchege.expensetrackerapp.ExampleUnitTest.kt</ID>
+    <ID>NewLineAtEndOfFile:Expense.kt$com.peterchege.expensetrackerapp.domain.models.Expense.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseAnalyticsScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.screens.analytics.expenses.ExpenseAnalyticsScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseCategory.kt$com.peterchege.expensetrackerapp.domain.models.ExpenseCategory.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseCategoryEntity.kt$com.peterchege.expensetrackerapp.core.room.entities.ExpenseCategoryEntity.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseCategoryInfo.kt$com.peterchege.expensetrackerapp.domain.models.ExpenseCategoryInfo.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseCategoryRepository.kt$com.peterchege.expensetrackerapp.domain.repository.ExpenseCategoryRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseCategoryRepositoryImpl.kt$com.peterchege.expensetrackerapp.data.ExpenseCategoryRepositoryImpl.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseEntity.kt$com.peterchege.expensetrackerapp.core.room.entities.ExpenseEntity.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseEntityDao.kt$com.peterchege.expensetrackerapp.core.room.dao.ExpenseEntityDao.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseRepository.kt$com.peterchege.expensetrackerapp.domain.repository.ExpenseRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseRepositoryImpl.kt$com.peterchege.expensetrackerapp.data.ExpenseRepositoryImpl.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.screens.expense.ExpenseScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseTrackerApp.kt$com.peterchege.expensetrackerapp.core.di.ExpenseTrackerApp.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpenseTrackerAppDatabase.kt$com.peterchege.expensetrackerapp.core.room.database.ExpenseTrackerAppDatabase.kt</ID>
+    <ID>NewLineAtEndOfFile:FilterConstants.kt$com.peterchege.expensetrackerapp.core.util.FilterConstants.kt</ID>
+    <ID>NewLineAtEndOfFile:FirebaseAnalyticsHelper.kt$com.peterchege.expensetrackerapp.core.analytics.analytics.FirebaseAnalyticsHelper.kt</ID>
+    <ID>NewLineAtEndOfFile:GetAllExpenseCategoriesUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.GetAllExpenseCategoriesUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GetAllExpensesUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.GetAllExpensesUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GetAllIncomeUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.GetAllIncomeUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GetAllTransactionCategoriesUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.GetAllTransactionCategoriesUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GetExpensesByCategoryUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.GetExpensesByCategoryUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GetFilteredTransactionsUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GetFilteredTransactionsUseCaseTest.kt$com.peterchege.expensetrackerapp.domain.use_case.GetFilteredTransactionsUseCaseTest.kt</ID>
+    <ID>NewLineAtEndOfFile:GetIncomeByIdUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.GetIncomeByIdUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GetSingleExpenseUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.GetSingleExpenseUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GetSingleTransactionUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.GetSingleTransactionUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GetTransactionsByCategoryUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.GetTransactionsByCategoryUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GetTransactionsForACertainDayUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.GetTransactionsForACertainDayUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:IncomeEntity.kt$com.peterchege.expensetrackerapp.core.room.entities.IncomeEntity.kt</ID>
+    <ID>NewLineAtEndOfFile:IncomeEntityDao.kt$com.peterchege.expensetrackerapp.core.room.dao.IncomeEntityDao.kt</ID>
+    <ID>NewLineAtEndOfFile:IncomeInfoBottomSheetViewModel.kt$com.peterchege.expensetrackerapp.presentation.bottomsheets.viewModels.IncomeInfoBottomSheetViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:IncomeRepository.kt$com.peterchege.expensetrackerapp.domain.repository.IncomeRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:IncomeRepositoryImpl.kt$com.peterchege.expensetrackerapp.data.IncomeRepositoryImpl.kt</ID>
+    <ID>NewLineAtEndOfFile:JankStatsExtensions.kt$com.peterchege.expensetrackerapp.core.util.JankStatsExtensions.kt</ID>
+    <ID>NewLineAtEndOfFile:MainActivity.kt$com.peterchege.expensetrackerapp.presentation.MainActivity.kt</ID>
+    <ID>NewLineAtEndOfFile:MainDispatcherRule.kt$com.peterchege.expensetrackerapp.MainDispatcherRule.kt</ID>
+    <ID>NewLineAtEndOfFile:MainViewModel.kt$com.peterchege.expensetrackerapp.presentation.MainViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:Mappers.kt$com.peterchege.expensetrackerapp.domain.Mappers.kt</ID>
+    <ID>NewLineAtEndOfFile:NavigationExtensions.kt$com.peterchege.expensetrackerapp.presentation.navigation.NavigationExtensions.kt</ID>
+    <ID>NewLineAtEndOfFile:OnboardingScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.screens.onboarding.OnboardingScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:ProfileVerifierLogger.kt$com.peterchege.expensetrackerapp.core.util.ProfileVerifierLogger.kt</ID>
+    <ID>NewLineAtEndOfFile:RepositoryModule.kt$com.peterchege.expensetrackerapp.core.di.RepositoryModule.kt</ID>
+    <ID>NewLineAtEndOfFile:Resource.kt$com.peterchege.expensetrackerapp.core.util.Resource.kt</ID>
+    <ID>NewLineAtEndOfFile:Response.kt$com.peterchege.expensetrackerapp.core.util.Response.kt</ID>
+    <ID>NewLineAtEndOfFile:Screens.kt$com.peterchege.expensetrackerapp.core.util.Screens.kt</ID>
+    <ID>NewLineAtEndOfFile:SearchScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.screens.search.SearchScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:SearchTransactionsUseCase.kt$com.peterchege.expensetrackerapp.domain.use_case.SearchTransactionsUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:SettingsScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.screens.settings.SettingsScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:Shape.kt$com.peterchege.expensetrackerapp.presentation.theme.Shape.kt</ID>
+    <ID>NewLineAtEndOfFile:TestTags.kt$com.peterchege.expensetrackerapp.core.util.TestTags.kt</ID>
+    <ID>NewLineAtEndOfFile:Theme.kt$com.peterchege.expensetrackerapp.presentation.theme.Theme.kt</ID>
+    <ID>NewLineAtEndOfFile:Transaction.kt$com.peterchege.expensetrackerapp.domain.models.Transaction.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionCategory.kt$com.peterchege.expensetrackerapp.domain.models.TransactionCategory.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionCategoryEntity.kt$com.peterchege.expensetrackerapp.core.room.entities.TransactionCategoryEntity.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionCategoryEntityDao.kt$com.peterchege.expensetrackerapp.core.room.dao.TransactionCategoryEntityDao.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionCategoryRepository.kt$com.peterchege.expensetrackerapp.domain.repository.TransactionCategoryRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionCategoryRepositoryImpl.kt$com.peterchege.expensetrackerapp.data.TransactionCategoryRepositoryImpl.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionEntity.kt$com.peterchege.expensetrackerapp.core.room.entities.TransactionEntity.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionEntityDao.kt$com.peterchege.expensetrackerapp.core.room.dao.TransactionEntityDao.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionInfo.kt$com.peterchege.expensetrackerapp.domain.models.TransactionInfo.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionRepository.kt$com.peterchege.expensetrackerapp.domain.repository.TransactionRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionRepositoryImpl.kt$com.peterchege.expensetrackerapp.data.TransactionRepositoryImpl.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.screens.transaction.TransactionScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:TransactionsAnalyticsScreenViewModel.kt$com.peterchege.expensetrackerapp.presentation.screens.analytics.transactions.TransactionsAnalyticsScreenViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:Transitions.kt$com.peterchege.expensetrackerapp.presentation.navigation.Transitions.kt</ID>
+    <ID>NewLineAtEndOfFile:Type.kt$com.peterchege.expensetrackerapp.presentation.theme.Type.kt</ID>
+    <ID>NewLineAtEndOfFile:UiEvent.kt$com.peterchege.expensetrackerapp.core.util.UiEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:UserPreferenceRepositoryImpl.kt$com.peterchege.expensetrackerapp.data.UserPreferenceRepositoryImpl.kt</ID>
+    <ID>NewLineAtEndOfFile:UserPreferences.kt$com.peterchege.expensetrackerapp.core.datastore.preferences.UserPreferences.kt</ID>
+    <ID>NewLineAtEndOfFile:UserPreferencesRepository.kt$com.peterchege.expensetrackerapp.domain.repository.UserPreferencesRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:Util.kt$com.peterchege.expensetrackerapp.core.util.Util.kt</ID>
+    <ID>PackageNaming:CreateExpenseCategoryUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:CreateExpenseUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:CreateIncomeUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:CreateTransactionCategoryUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:CreateTransactionUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:DeleteExpenseByIdUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:DeleteIncomeByIdUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:DeleteTransactionUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetAllExpenseCategoriesUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetAllExpensesUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetAllIncomeUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetAllTransactionCategoriesUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetExpensesByCategoryUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetFilteredTransactionsUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetFilteredTransactionsUseCaseTest.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetIncomeByIdUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetSingleExpenseUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetSingleTransactionUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetTransactionsByCategoryUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:GetTransactionsForACertainDayUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PackageNaming:SearchTransactionsUseCase.kt$package com.peterchege.expensetrackerapp.domain.use_case</ID>
+    <ID>PrintStackTrace:MainActivity.kt$MainActivity$e</ID>
+    <ID>ReturnCount:GetFilteredTransactionsUseCase.kt$GetFilteredTransactionsUseCase$operator fun invoke(filter: String): Flow&lt;List&lt;TransactionEntity&gt;&gt;</ID>
+    <ID>TooGenericExceptionCaught:MainActivity.kt$MainActivity$e: Exception</ID>
+    <ID>TooManyFunctions:Util.kt$com.peterchege.expensetrackerapp.core.util.Util.kt</ID>
+    <ID>TopLevelPropertyNaming:Transitions.kt$private const val AnimDurationLong = 500</ID>
+    <ID>TopLevelPropertyNaming:Transitions.kt$private const val AnimDurationShort = 300</ID>
+    <ID>UnusedParameter:AboutScreen.kt$viewModel: AboutScreenViewModel = hiltViewModel()</ID>
+    <ID>UnusedParameter:AllIncomeScreen.kt$activeIncomeId: String?</ID>
+    <ID>UnusedParameter:AllIncomeScreen.kt$navController: NavController</ID>
+    <ID>UnusedParameter:ExpenseAnalyticsScreen.kt$expenseCategories: List&lt;ExpenseCategory&gt;</ID>
+    <ID>UnusedParameter:ExpenseAnalyticsScreen.kt$expenses:List&lt;Expense&gt;</ID>
+    <ID>UnusedParameter:ExpenseAnalyticsScreen.kt$navigateToExpenseScreen: (String) -&gt; Unit</ID>
+    <ID>UnusedPrivateProperty:AddExpenseCategoryScreenViewModel.kt$AddExpenseCategoryScreenViewModel$private val savedStateHandle: SavedStateHandle</ID>
+    <ID>UnusedPrivateProperty:AddExpenseScreenViewModel.kt$AddExpenseScreenViewModel$private val savedStateHandle: SavedStateHandle</ID>
+    <ID>UnusedPrivateProperty:AlarmReceiver.kt$AlarmReceiver$val message = intent?.getStringExtra("message") ?: return</ID>
+    <ID>UnusedPrivateProperty:AllIncomeScreen.kt$val modalSheetState = rememberModalBottomSheetState()</ID>
+    <ID>UnusedPrivateProperty:ExpenseScreen.kt$val context = LocalContext.current</ID>
+    <ID>UnusedPrivateProperty:GetFilteredTransactionsUseCaseTest.kt$GetFilteredTransactionsUseCaseTest$val result = getFilteredTransactionUseCase(FilterConstants.THIS_WEEK)</ID>
+    <ID>UnusedPrivateProperty:GetFilteredTransactionsUseCaseTest.kt$GetFilteredTransactionsUseCaseTest$val result = getFilteredTransactionUseCase(FilterConstants.TODAY)</ID>
+    <ID>UnusedPrivateProperty:HomeScreen.kt$val scope = rememberCoroutineScope()</ID>
+    <ID>UnusedPrivateProperty:TransactionScreen.kt$val context = LocalContext.current</ID>
+    <ID>UtilityClassWithPublicConstructor:AnalyticsEvents.kt$AnalyticsEvent$ParamKeys</ID>
+    <ID>UtilityClassWithPublicConstructor:AnalyticsEvents.kt$AnalyticsEvent$Types</ID>
+    <ID>VariableNaming:AddExpenseCategoryScreenViewModel.kt$AddExpenseCategoryScreenViewModel$val _formState = MutableStateFlow(AddExpenseCategoryFormState())</ID>
+    <ID>VariableNaming:AddExpenseScreenViewModel.kt$AddExpenseScreenViewModel$val _formState = MutableStateFlow(AddExpenseFormState())</ID>
+    <ID>VariableNaming:AddIncomeScreenViewModel.kt$AddIncomeScreenViewModel$val _formState = MutableStateFlow(AddIncomeFormState())</ID>
+    <ID>VariableNaming:TransactionsAnalyticsScreenViewModel.kt$AnalyticsScreenViewModel$val _activeFilterConstant = mutableStateOf(FilterConstants.THIS_WEEK)</ID>
+    <ID>VariableNaming:TransactionsAnalyticsScreenViewModel.kt$AnalyticsScreenViewModel$val _barDataList = mutableStateOf&lt;List&lt;BarChartData.Bar&gt;&gt;(emptyList())</ID>
+    <ID>VariableNaming:TransactionsAnalyticsScreenViewModel.kt$AnalyticsScreenViewModel$val _graphData = mutableStateOf&lt;List&lt;Flow&lt;List&lt;TransactionEntity&gt;&gt;&gt;&gt;(emptyList())</ID>
+    <ID>WildcardImport:AddExpenseBottomSheet.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:AddExpenseBottomSheet.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:AddExpenseCategoryBottomSheet.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:AddExpenseCategoryBottomSheet.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:AddTransactionBottomSheet.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:AddTransactionBottomSheet.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:AddTransactionCategoryBottomSheet.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:AddTransactionCategoryBottomSheet.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:AddTransactionScreenViewModel.kt$import com.peterchege.expensetrackerapp.core.util.*</ID>
+    <ID>WildcardImport:AnalyticsScreen.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:CreateTransactionCategoryUseCaseTest.kt$import io.mockk.*</ID>
+    <ID>WildcardImport:DropDownMenu.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:DropDownMenu.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:DropDownMenu.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:ExampleUnitTest.kt$import org.junit.Assert.*</ID>
+    <ID>WildcardImport:ExpenseAnalyticsScreen.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:GetFilteredTransactionsUseCase.kt$import com.peterchege.expensetrackerapp.core.util.*</ID>
+    <ID>WildcardImport:GetFilteredTransactionsUseCaseTest.kt$import org.junit.Assert.*</ID>
+    <ID>WildcardImport:GraphFilterCard.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:HomeScreenViewModelTest.kt$import io.mockk.*</ID>
+    <ID>WildcardImport:MainDispatcherRule.kt$import kotlinx.coroutines.test.*</ID>
+    <ID>WildcardImport:PagerIndicator.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:PagerIndicator.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:SearchScreen.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:SearchScreen.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:SettingsScreen.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:TransactionCard.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:TransactionCard.kt$import androidx.compose.material3.*</ID>
+    <ID>WildcardImport:TransactionsAnalyticsScreen.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:TransactionsAnalyticsScreen.kt$import androidx.compose.runtime.*</ID>
+    <ID>WildcardImport:TransactionsAnalyticsScreenViewModel.kt$import com.peterchege.expensetrackerapp.core.util.*</ID>
+    <ID>WildcardImport:Util.kt$import java.time.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

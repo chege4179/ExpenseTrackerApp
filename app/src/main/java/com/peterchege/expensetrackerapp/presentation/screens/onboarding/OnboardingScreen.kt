@@ -1,5 +1,24 @@
+/*
+ * Copyright 2026 Expense Tracker App By Peter Chege
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.peterchege.expensetrackerapp.presentation.screens.onboarding
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.core.util.ExampleExpenseCategory
+import com.peterchege.expensetrackerapp.core.util.ExampleTransactionCategory
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
@@ -31,7 +50,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.peterchege.expensetrackerapp.presentation.components.PagerIndicator
 import com.peterchege.expensetrackerapp.presentation.screens.onboarding.pages.SelectExpenseCategoryScreen
@@ -49,9 +68,16 @@ fun OnboardingScreen(
 ) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 3 })
     val coroutineScope = rememberCoroutineScope()
+    val selectedTransactionCategories by viewModel.selectedTransactionCategories.collectAsStateWithLifecycle()
+    val selectedExpenseCategories by viewModel.selectedExpenseCategories.collectAsStateWithLifecycle()
     OnboardingScreenContent(
-        viewModel = viewModel,
         pagerState = pagerState,
+        selectedTransactionCategories = selectedTransactionCategories,
+        selectedExpenseCategories = selectedExpenseCategories,
+        onAddTransactionCategory = viewModel::addTransactionCategory,
+        onRemoveTransactionCategory = viewModel::removeTransactionCategory,
+        onAddExpenseCategory = viewModel::addExpenseCategory,
+        onRemoveExpenseCategory = viewModel::removeExpenseCategory,
         proceed = {
             coroutineScope.launch {
                 when (pagerState.currentPage) {
@@ -103,7 +129,12 @@ fun OnboardingScreenContent(
     proceed: () -> Unit,
     back: () -> Unit,
     onClickPageIndicator: (Int) -> Unit,
-    viewModel: OnboardingScreenViewModel,
+    selectedTransactionCategories: List<ExampleTransactionCategory>,
+    selectedExpenseCategories: List<ExampleExpenseCategory>,
+    onAddTransactionCategory: (ExampleTransactionCategory) -> Unit,
+    onRemoveTransactionCategory: (ExampleTransactionCategory) -> Unit,
+    onAddExpenseCategory: (ExampleExpenseCategory) -> Unit,
+    onRemoveExpenseCategory: (ExampleExpenseCategory) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -118,11 +149,19 @@ fun OnboardingScreenContent(
                     }
 
                     1 -> {
-                        SelectTransactionCategoryScreen(viewModel = viewModel)
+                        SelectTransactionCategoryScreen(
+                            selectedTransactionCategories = selectedTransactionCategories,
+                            onAddCategory = onAddTransactionCategory,
+                            onRemoveCategory = onRemoveTransactionCategory,
+                        )
                     }
 
                     2 -> {
-                        SelectExpenseCategoryScreen(viewModel = viewModel)
+                        SelectExpenseCategoryScreen(
+                            selectedExpenseCategories = selectedExpenseCategories,
+                            onAddCategory = onAddExpenseCategory,
+                            onRemoveCategory = onRemoveExpenseCategory,
+                        )
                     }
                 }
             }
@@ -202,4 +241,23 @@ fun OnboardingScreenContent(
         }
     }
 
+}
+
+@ThemePreviews
+@Composable
+private fun OnboardingScreenPreview() {
+    PreviewSurface {
+        OnboardingScreenContent(
+            pagerState = rememberPagerState(pageCount = { 3 }),
+            proceed = {},
+            back = {},
+            onClickPageIndicator = {},
+            selectedTransactionCategories = emptyList(),
+            selectedExpenseCategories = emptyList(),
+            onAddTransactionCategory = {},
+            onRemoveTransactionCategory = {},
+            onAddExpenseCategory = {},
+            onRemoveExpenseCategory = {},
+        )
+    }
 }

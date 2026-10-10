@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.presentation.components
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -76,5 +78,13 @@ fun SettingsRow(
             )
 
         }
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun SettingsRowPreview() {
+    PreviewSurface {
+        SettingsRow(title = "Theme", onClick = {})
     }
 }

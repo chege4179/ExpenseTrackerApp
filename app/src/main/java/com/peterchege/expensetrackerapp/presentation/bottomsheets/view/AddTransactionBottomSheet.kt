@@ -15,6 +15,11 @@
  */
 package com.peterchege.expensetrackerapp.presentation.bottomsheets.view
 
+import com.peterchege.expensetrackerapp.core.util.toDisplayTime
+import com.peterchege.expensetrackerapp.core.util.toDisplayDate
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -36,7 +41,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.UiEvent
@@ -224,7 +229,7 @@ fun AddTransactionBottomSheetContent(
                     verticalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     Text(
-                        text = formState.transactionDate.toString(),
+                        text = formState.transactionDate.toDisplayDate(),
                         modifier = Modifier.fillMaxWidth(0.5f),
                         style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
@@ -254,7 +259,7 @@ fun AddTransactionBottomSheetContent(
                     verticalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     Text(
-                        text = formState.transactionTime.toString(),
+                        text = formState.transactionTime.toDisplayTime(),
                         modifier = Modifier.fillMaxWidth(0.5f),
                         style = TextStyle(color = MaterialTheme.colorScheme.primary)
                     )
@@ -347,5 +352,26 @@ fun AddTransactionBottomSheetContent(
             }
 
         }
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun AddTransactionBottomSheetPreview() {
+    PreviewSurface {
+        AddTransactionBottomSheetContent(
+            transactionCategories = PreviewData.transactionCategories,
+            formState = AddTransactionFormState(
+                transactionName = "Lunch at Java",
+                transactionAmount = 850,
+                transactionCategory = PreviewData.transactionCategories.first(),
+            ),
+            onChangeTransactionName = {},
+            onChangeTransactionAmount = {},
+            onChangeTransactionCategory = {},
+            onChangeTransactionTime = {},
+            onChangeTransactionDate = {},
+            addTransaction = {},
+        )
     }
 }

@@ -15,6 +15,13 @@
  */
 package com.peterchege.expensetrackerapp.presentation.screens.analytics.transactions
 
+import java.util.Locale
+import java.text.NumberFormat
+import com.peterchege.expensetrackerapp.presentation.theme.LightBlueColor
+import com.peterchege.expensetrackerapp.core.util.formatAmount
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -32,10 +39,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import coil.annotation.ExperimentalCoilApi
 import com.github.tehras.charts.bar.BarChart
 import com.github.tehras.charts.bar.BarChartData
 import com.github.tehras.charts.bar.renderer.bar.SimpleBarDrawer
@@ -70,13 +76,13 @@ fun TransactionsAnalyticsScreen(
                 } else {
                     (transactionsState.indexOf(a) + 1).toString()
                 },
-                color = MaterialTheme.colorScheme.primary
+                color = LightBlueColor
             )
         } else {
             BarChartData.Bar(
                 value = total,
                 label = "",
-                color = MaterialTheme.colorScheme.primary
+                color = LightBlueColor
             )
         }
 
@@ -103,7 +109,6 @@ fun TransactionsAnalyticsScreen(
 
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TransactionsAnalyticsScreenContent(
@@ -135,7 +140,7 @@ fun TransactionsAnalyticsScreenContent(
 
                     ) {
                     Text(
-                        text = "KES ${transactions.sumOf { it.transactionAmount }} /=",
+                        text = formatAmount(transactions.sumOf { it.transactionAmount }),
                         fontWeight = FontWeight.Bold,
                         fontSize = 21.sp,
                         style = TextStyle(color = MaterialTheme.colorScheme.primary)
@@ -195,6 +200,10 @@ fun TransactionsAnalyticsScreenContent(
                             axisLineColor = MaterialTheme.colorScheme.primary
                         ),
                         yAxisDrawer = SimpleYAxisDrawer(
+                            labelTextColor = MaterialTheme.colorScheme.primary,
+                            labelValueFormatter = { value ->
+                                NumberFormat.getIntegerInstance(Locale.US).format(value)
+                            },
                             axisLineThickness = 1.dp,
                             axisLineColor = MaterialTheme.colorScheme.primary
 
@@ -257,3 +266,23 @@ fun TransactionsAnalyticsScreenContent(
 
 }
 
+@ThemePreviews
+@Composable
+private fun TransactionsAnalyticsScreenPreview() {
+    PreviewSurface {
+        TransactionsAnalyticsScreenContent(
+            transactionsState = PreviewData.transactions,
+            transactions = PreviewData.transactions,
+            activeFilterConstant = FilterConstants.LAST_7_DAYS,
+            bars = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat").mapIndexed { index, day ->
+                BarChartData.Bar(
+                    value = (index + 1) * 400f,
+                    label = day,
+                    color = LightBlueColor,
+                )
+            },
+            onChangeActiveFilterConstant = {},
+            navigateToTransactionScreen = {},
+        )
+    }
+}

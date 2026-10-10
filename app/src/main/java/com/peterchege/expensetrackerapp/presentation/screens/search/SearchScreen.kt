@@ -15,6 +15,11 @@
  */
 package com.peterchege.expensetrackerapp.presentation.screens.search
 
+import com.peterchege.expensetrackerapp.core.util.toDisplayDate
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
+import kotlinx.coroutines.flow.MutableSharedFlow
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -36,7 +41,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.peterchege.expensetrackerapp.core.util.Screens
@@ -141,7 +146,7 @@ fun SearchScreenContent(
                         fontSize = 22.sp
                     )
                 },
-                colors = TopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.onBackground,
                     titleContentColor = MaterialTheme.colorScheme.onBackground,
                     scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
@@ -187,11 +192,11 @@ fun SearchScreenContent(
                         verticalArrangement = Arrangement.SpaceEvenly,
                     ) {
                         Text(
-                            text = "Start Date : " + uiState.startDate.toString(),
+                            text = "Start Date : " + uiState.startDate.toDisplayDate(),
                             style = TextStyle(color = MaterialTheme.colorScheme.primary)
                         )
                         Text(
-                            text = "End Date : " + uiState.endDate.toString(),
+                            text = "End Date : " + uiState.endDate.toDisplayDate(),
                             style = TextStyle(color = MaterialTheme.colorScheme.primary)
                         )
                         Button(
@@ -260,8 +265,8 @@ fun SearchScreenContent(
                     if (uiState.transactions.isNotEmpty()) {
                         Text(
                             text = "A total of ${uiState.transactions.size} transactions have been made " +
-                                    "between ${uiState.startDate}" +
-                                    " and ${uiState.endDate}",
+                                    "between ${uiState.startDate.toDisplayDate()}" +
+                                    " and ${uiState.endDate.toDisplayDate()}",
                             style = TextStyle(color = MaterialTheme.colorScheme.primary),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.fillMaxWidth()
@@ -358,4 +363,19 @@ fun SearchScreenContent(
     }
 }
 
-
+@ThemePreviews
+@Composable
+private fun SearchScreenPreview() {
+    PreviewSurface {
+        SearchScreenContent(
+            navigateToTransactionScreen = {},
+            uiState = SearchScreenState(transactions = PreviewData.transactions),
+            transactionCategories = PreviewData.transactionCategories,
+            searchTransactions = {},
+            onChangeTransactionCategory = {},
+            onChangeTransactionStartDate = {},
+            onChangeTransactionEndDate = {},
+            eventFlow = MutableSharedFlow(),
+        )
+    }
+}

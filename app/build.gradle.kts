@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import com.android.build.api.dsl.ManagedVirtualDevice
-import com.android.build.api.dsl.Packaging
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 
@@ -32,7 +30,6 @@ fun getProperty(name: String): String {
 //val keyPasswordString: String = gradleLocalProperties(rootDir).getProperty("keyPassword")
 plugins {
     id("com.android.application")
-    kotlin("android")
     kotlin("plugin.serialization")
     kotlin("plugin.parcelize")
     kotlin("plugin.compose")
@@ -50,14 +47,14 @@ plugins {
 
 android {
     namespace = "com.peterchege.expensetrackerapp"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.peterchege.expensetrackerapp"
-        minSdk = 21
-        targetSdk = 35
-        versionCode = 4
-        versionName = "4.0"
+        minSdk = 24
+        targetSdk = 36
+        versionCode = 5
+        versionName = "5.0"
 
         testInstrumentationRunner = "com.peterchege.expensetrackerapp.HiltTestRunner"
         vectorDrawables {
@@ -81,7 +78,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            baselineProfile.automaticGenerationDuringBuild = true
         }
         getByName("debug") {
             isDebuggable = true
@@ -102,9 +98,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
     }
     buildFeatures {
         compose = true
@@ -130,6 +123,17 @@ androidComponents {
 baselineProfile {
     saveInSrc = true
     automaticGenerationDuringBuild = false
+    variants {
+        create("release") {
+            automaticGenerationDuringBuild = true
+        }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+    }
 }
 
 composeCompiler {
@@ -140,67 +144,68 @@ composeCompiler {
 dependencies {
     baselineProfile(project(":benchmark"))
 
-    implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.compose.ui:ui:1.7.6")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.7.6")
-    implementation("androidx.activity:activity-compose:1.9.3")
+    implementation("androidx.core:core-ktx:1.19.1")
+    implementation("androidx.compose.ui:ui:1.12.1")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.12.1")
+    implementation("androidx.activity:activity-compose:1.13.0")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.6")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.12.1")
 
-    implementation("androidx.compose.material3:material3:1.3.1")
-    implementation("androidx.compose.material3:material3-window-size-class:1.3.1")
+    implementation("androidx.compose.material3:material3:1.4.0")
+    implementation("androidx.compose.material3:material3-window-size-class:1.4.0")
 
 
-    implementation("androidx.metrics:metrics-performance:1.0.0-beta01")
+    implementation("androidx.metrics:metrics-performance:1.0.0")
 
-    debugImplementation("androidx.compose.ui:ui-tooling:1.7.6")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.6")
-    implementation("androidx.compose.material:material-icons-extended:1.7.6")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.12.1")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.12.1")
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
-    implementation("androidx.compose.foundation:foundation:1.7.6")
-    implementation("androidx.compose.foundation:foundation-layout:1.7.6")
-    implementation("androidx.navigation:navigation-compose:2.8.5")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.2")
+    implementation("androidx.compose.foundation:foundation:1.12.1")
+    implementation("androidx.compose.foundation:foundation-layout:1.12.1")
+    implementation("androidx.navigation:navigation-compose:2.10.2")
 
 
     // view model
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.11.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.11.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.11.0")
 
     //paging
-    implementation("androidx.paging:paging-common-ktx:3.3.5")
-    implementation("androidx.paging:paging-compose:3.3.5")
+    implementation("androidx.paging:paging-common-ktx:3.5.2")
+    implementation("androidx.paging:paging-compose:3.5.2")
 
     //datastore
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("androidx.datastore:datastore-preferences:1.2.1")
 
     //coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.11.0")
 
     // dagger hilt
-    implementation("com.google.dagger:hilt-android:2.53.1")
-    ksp("com.google.dagger:dagger-compiler:2.53.1")
-    ksp("com.google.dagger:hilt-compiler:2.53.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("com.google.dagger:hilt-android:2.60.1")
+    ksp("com.google.dagger:dagger-compiler:2.60.1")
+    ksp("com.google.dagger:hilt-compiler:2.60.1")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel-compose:1.4.0")
 
     // coil
-    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("io.coil-kt.coil3:coil-compose:3.6.3")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.6.3")
 
     implementation("com.google.android.play:review-ktx:2.0.2")
     implementation("com.google.android.play:app-update-ktx:2.1.0")
 
     // room
-    implementation("androidx.room:room-runtime:2.6.1")
-    ksp("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    implementation("androidx.room:room-paging:2.6.1")
+    implementation("androidx.room:room-runtime:2.8.5")
+    ksp("androidx.room:room-compiler:2.8.5")
+    implementation("androidx.room:room-ktx:2.8.5")
+    implementation("androidx.room:room-paging:2.8.5")
 
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("androidx.core:core-splashscreen:1.2.0")
     //timber
     implementation("com.jakewharton.timber:timber:5.0.1")
 
@@ -209,37 +214,36 @@ dependencies {
 
     implementation("androidx.profileinstaller:profileinstaller:1.4.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation(platform("com.google.firebase:firebase-bom:35.0.0"))
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-perf")
 
     // Play services OSS
-    implementation("com.google.android.gms:play-services-oss-licenses:17.1.0")
+    implementation("com.google.android.gms:play-services-oss-licenses:17.5.2")
 
     // date picker
-    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.9.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    androidTestImplementation("app.cash.turbine:turbine:1.1.0")
-    testImplementation("io.mockk:mockk:1.13.13")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
+    androidTestImplementation("app.cash.turbine:turbine:1.2.1")
+    testImplementation("io.mockk:mockk:1.14.11")
 
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     // Instrumentation tests
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.53.1")
-    kspAndroidTest("com.google.dagger:hilt-android-compiler:2.53.1")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.60.1")
+    kspAndroidTest("com.google.dagger:hilt-android-compiler:2.60.1")
     androidTestImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
-    androidTestImplementation("com.google.truth:truth:1.4.4")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test:core-ktx:1.6.1")
-    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
-    androidTestImplementation("io.mockk:mockk-android:1.13.12")
-    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("com.google.truth:truth:1.4.5")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test:core-ktx:1.7.0")
+    androidTestImplementation("io.mockk:mockk-android:1.14.11")
+    androidTestImplementation("androidx.test:runner:1.7.0")
 
-    testImplementation("org.robolectric:robolectric:4.14.1")
+    testImplementation("org.robolectric:robolectric:4.17")
 }
 
 

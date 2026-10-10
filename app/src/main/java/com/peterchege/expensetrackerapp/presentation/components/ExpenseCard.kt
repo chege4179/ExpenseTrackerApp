@@ -1,5 +1,25 @@
+/*
+ * Copyright 2026 Expense Tracker App By Peter Chege
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.peterchege.expensetrackerapp.presentation.components
 
+import com.peterchege.expensetrackerapp.core.util.formatAmount
+import androidx.compose.ui.text.style.TextOverflow
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,13 +50,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import androidx.compose.ui.platform.LocalContext
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.peterchege.expensetrackerapp.core.util.generateAvatarURL
 import com.peterchege.expensetrackerapp.domain.models.Expense
 import com.peterchege.expensetrackerapp.domain.models.Transaction
 
-@ExperimentalCoilApi
 @Composable
 fun ExpenseCard(
     expense: Expense,
@@ -71,18 +92,18 @@ fun ExpenseCard(
                     modifier = Modifier
                         .width(48.dp)
                         .height(48.dp),
-                    painter = rememberImagePainter(
-                        data = generateAvatarURL(expense.expenseName),
-                        builder = {
-                            crossfade(true)
-                        },
+                    painter = rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(generateAvatarURL(expense.expenseName))
+                            .crossfade(true)
+                            .build()
                     ),
                     contentDescription = "Expense Image"
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Column(
                     modifier = Modifier
-                        .width(140.dp)
+                        .weight(1f)
                         .fillMaxHeight(),
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.Center
@@ -90,17 +111,22 @@ fun ExpenseCard(
                     Text(
                         text = expense.expenseName,
                         fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         style = TextStyle(color = MaterialTheme.colorScheme.primary)
 
                     )
                     Text(
                         text = expense.expenseCreatedOn,
-                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                        )
                     )
 
                 }
                 Text(
-                    text = "KES ${expense.expenseAmount} /=",
+                    modifier = Modifier.padding(start = 8.dp),
+                    text = formatAmount(expense.expenseAmount),
                     textAlign = TextAlign.Start,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(color = MaterialTheme.colorScheme.primary)
@@ -113,7 +139,7 @@ fun ExpenseCard(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ChevronRight,
-                    tint = Color.Black,
+                    tint = MaterialTheme.colorScheme.primary,
                     contentDescription = "More "
                 )
 
@@ -122,4 +148,15 @@ fun ExpenseCard(
 
     }
 
+}
+
+@ThemePreviews
+@Composable
+private fun ExpenseCardPreview() {
+    PreviewSurface {
+        ExpenseCard(
+            expense = PreviewData.expense,
+            onExpenseNavigate = {},
+        )
+    }
 }

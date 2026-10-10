@@ -15,6 +15,11 @@
  */
 package com.peterchege.expensetrackerapp.presentation.bottomsheets.view
 
+import com.peterchege.expensetrackerapp.presentation.components.DeleteButton
+import com.peterchege.expensetrackerapp.presentation.components.DetailsCard
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewData
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.peterchege.expensetrackerapp.core.util.TestTags
 import com.peterchege.expensetrackerapp.domain.models.Income
@@ -76,88 +81,38 @@ fun IncomeInfoBottomSheetContent(
     incomeNullable: Income?,
     deleteIncome:() -> Unit,
 ){
-    Box(
+    Column(
         modifier = Modifier
+            .background(color = MaterialTheme.colorScheme.onBackground)
             .fillMaxWidth()
-            .height(250.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
     ){
-        Column(
-            modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.onBackground)
-                .fillMaxSize()
-                .padding(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            incomeNullable?.let { income: Income ->
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
-                    text = "Income Name : ${income.incomeName}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
-                    text = "Income Amount : ${income.incomeAmount}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    style = TextStyle(color = MaterialTheme.colorScheme.primary),
-                    text = "Income Created At : ${income.incomeCreatedAt}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag(tag = TestTags.CREATE_TRANSACTION_CATEGORY_SAVE_BUTTON)
-                    ,
-                    colors = ButtonColors(
-                        contentColor = MaterialTheme.colorScheme.onBackground,
-                        containerColor = MaterialTheme.colorScheme.background,
-                        disabledContainerColor = MaterialTheme.colorScheme.primary,
-                        disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-                    ),
-                    onClick = {
-                        deleteIncome()
-                    }
-                ){
-                    Text(
-                        text = stringResource(id = R.string.delete_income),
-                        style = TextStyle(color = MaterialTheme.colorScheme.primary)
-                    )
-
-                }
-            }
-
-
+        incomeNullable?.let { income: Income ->
+            DetailsCard(
+                title = income.incomeName,
+                amount = income.incomeAmount,
+                details = listOf(
+                    "Date" to income.incomeCreatedAt,
+                ),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            DeleteButton(
+                modifier = Modifier.testTag(tag = TestTags.CREATE_TRANSACTION_CATEGORY_SAVE_BUTTON),
+                text = stringResource(id = R.string.delete_income),
+                onClick = deleteIncome,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
-
-
 }
 
-@Preview
+@ThemePreviews
 @Composable
-fun IncomeInfoBottomSheetPreview(){
-    IncomeInfoBottomSheetContent(
-        incomeNullable = Income(
-            incomeName = "Test",
-            incomeAmount = 3000,
-            incomeId = "dkfjfjf",
-            incomeCreatedAt = "djdhddjdk"
-        ),
-        deleteIncome = {
-
-        }
-    )
+private fun IncomeInfoBottomSheetPreview() {
+    PreviewSurface {
+        IncomeInfoBottomSheetContent(
+            incomeNullable = PreviewData.income,
+            deleteIncome = {},
+        )
+    }
 }

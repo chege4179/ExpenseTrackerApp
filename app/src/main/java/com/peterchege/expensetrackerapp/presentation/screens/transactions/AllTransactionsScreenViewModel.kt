@@ -72,9 +72,9 @@ class AllTransactionsScreenViewModel @Inject constructor(
             transactions = transactions,
             transactionCategories = transactionCategories
         )
-    }.onStart {
-        AllTransactionsScreenUiState.Loading
-    }.catch { AllTransactionsScreenUiState.Error(message = "Failed to fetch categories") }
+    }.onStart<AllTransactionsScreenUiState> {
+        emit(AllTransactionsScreenUiState.Loading)
+    }.catch { emit(AllTransactionsScreenUiState.Error(message = "Failed to fetch categories")) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),

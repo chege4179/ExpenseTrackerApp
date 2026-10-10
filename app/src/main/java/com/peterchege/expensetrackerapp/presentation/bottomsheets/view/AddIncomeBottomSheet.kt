@@ -15,6 +15,8 @@
  */
 package com.peterchege.expensetrackerapp.presentation.bottomsheets.view
 
+import com.peterchege.expensetrackerapp.presentation.preview.ThemePreviews
+import com.peterchege.expensetrackerapp.presentation.preview.PreviewSurface
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,7 +50,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -61,16 +63,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 
-@Preview
-@Composable
-fun AddIncomeBottomSheetPreview() {
-    AddIncomeBottomSheetContent(
-        formState = AddIncomeFormState(),
-        onChangeIncomeName = { },
-        onChangeIncomeAmount = { },
-        addIncome = { }
-    )
-}
 
 @Composable
 fun AddIncomeBottomSheet(
@@ -213,5 +205,18 @@ fun AddIncomeBottomSheetContent(
 
             }
         }
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun AddIncomeBottomSheetPreview() {
+    PreviewSurface {
+        AddIncomeBottomSheetContent(
+            formState = AddIncomeFormState(incomeName = "Salary", incomeAmount = 120000),
+            onChangeIncomeName = {},
+            onChangeIncomeAmount = {},
+            addIncome = {},
+        )
     }
 }
