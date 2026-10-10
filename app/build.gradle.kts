@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
@@ -40,6 +41,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("com.google.firebase.firebase-perf")
+    id("com.google.firebase.appdistribution")
     id("com.google.android.gms.oss-licenses-plugin")
     id("androidx.baselineprofile")
 
@@ -78,6 +80,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            firebaseAppDistribution {
+                artifactType = "APK"
+                groups = "trusted-testers"
+            }
         }
         getByName("debug") {
             isDebuggable = true

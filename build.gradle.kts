@@ -27,6 +27,7 @@ plugins {
     id("com.google.gms.google-services") version "4.5.0" apply false
     id("com.google.firebase.crashlytics") version "3.0.8" apply false
     id("com.google.firebase.firebase-perf") version "2.0.2" apply false
+    id("com.google.firebase.appdistribution") version "5.3.0" apply false
     id("com.android.test") version "9.4.1" apply false
     id("androidx.baselineprofile") version "1.5.0" apply false
     id("io.gitlab.arturbosch.detekt") version "1.23.8"

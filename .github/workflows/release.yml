@@ -35,9 +35,9 @@ jobs:
           path: app/build/outputs/apk/release/app-release.apk
 
       - name: Upload artifact to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          groups: trusted-testers
-          file: app/build/outputs/apk/release/app-release.apk
+        env:
+          CREDENTIAL_FILE_CONTENT: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/firebase-credentials.json"
+          echo "$CREDENTIAL_FILE_CONTENT" > "$GOOGLE_APPLICATION_CREDENTIALS"
+          ./gradlew appDistributionUploadRelease -Pandroidx.baselineprofile.skipgeneration=true
